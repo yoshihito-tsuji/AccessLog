@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- ラベル（一意の識別子） -->
+    <key>Label</key>
+    <string>com.releases.download-tracker</string>
+
+    <!-- 実行するプログラム -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/yoshihitotsuji/Claude_Code/AccessLog/track_downloads.sh</string>
+    </array>
+
+    <!-- 作業ディレクトリ -->
+    <key>WorkingDirectory</key>
+    <string>/Users/yoshihitotsuji/Claude_Code/AccessLog</string>
+
+    <!-- 標準出力ログ -->
+    <key>StandardOutPath</key>
+    <string>/Users/yoshihitotsuji/Claude_Code/AccessLog/tracker.log</string>
+
+    <!-- エラー出力ログ -->
+    <key>StandardErrorPath</key>
+    <string>/Users/yoshihitotsuji/Claude_Code/AccessLog/tracker_error.log</string>
+
+    <!-- スケジュール設定: 毎日00:05に実行 -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>0</integer>
+        <key>Minute</key>
+        <integer>5</integer>
+    </dict>
+
+    <!-- 起動時に実行しない -->
+    <key>RunAtLoad</key>
+    <false/>
+
+    <!-- 終了時に自動再起動しない -->
+    <key>KeepAlive</key>
+    <false/>
+
+    <!-- プロセスが失敗しても成功とみなす -->
+    <key>SuccessfulExit</key>
+    <false/>
+</dict>
+</plist>
