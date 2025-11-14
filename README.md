@@ -296,18 +296,72 @@ launchctl load ~/Library/LaunchAgents/com.releases.download-tracker.plist
 - **Mac起動が必須**: スリープ状態では実行されない
 - 00:00-00:10はラジオ録音で確実に起動中
 
-### 5. ダッシュボード設定
+### 5. ダッシュボード設定（GitHub Pages公開）
 
-#### 5.1 API URL設定
-`dashboard.html`の226行目を編集:
+#### 5.1 GitHub Pages有効化
+
+1. **GitHubリポジトリページにアクセス**
+   ```
+   https://github.com/yoshihito-tsuji/AccessLog
+   ```
+
+2. **Settings > Pages**
+   - 左メニューから「Pages」を選択
+
+3. **Source設定**
+   - Source: **Deploy from a branch**
+   - Branch: **main**
+   - Folder: **/docs**
+   - 「Save」をクリック
+
+4. **公開URL確認**
+   - 数分後、以下のURLで公開される:
+     ```
+     https://yoshihito-tsuji.github.io/AccessLog/
+     ```
+
+5. **動作確認**
+   - URLにアクセス
+   - パスワード入力プロンプトが表示される
+   - `AccessLog20251114` を入力
+   - ダッシュボードが正常に表示されることを確認
+
+#### 5.2 パスワード変更（オプション）
+
+**注意**: パスワードはJavaScriptで平文保存されます。高度なセキュリティは提供しません。
+
+1. [docs/index.html](docs/index.html) を編集
+2. 11行目の `ACCESS_PASSWORD` を変更:
+   ```javascript
+   const ACCESS_PASSWORD = 'YourNewPassword2025';
+   ```
+3. 変更をGitHubにpush
+4. 数分後にGitHub Pagesに反映
+
+#### 5.3 ローカルでの動作確認（オプション）
+
+GitHub Pagesへのpush前にローカルでテスト:
+
+```bash
+cd /Users/yoshihitotsuji/Claude_Code/AccessLog/docs
+python3 -m http.server 8080
+# ブラウザで http://localhost:8080/ を開く
+```
+
+#### 5.4 API URL設定（初回のみ）
+
+`docs/index.html`の16行目を確認:
 
 ```javascript
 const API_URL = 'https://script.google.com/macros/s/AKfycbxZx9xCYNYVepuxRsPpWwd4k4zpuq1yivyC6P3nWEEnbYHaIyelOdgVAGvHhi7-rzYeYw/exec';
 ```
 
-実際のGoogle Apps Script URLに置き換える。
+実際のGoogle Apps Script URLに置き換える（既に設定済み）。
 
-#### 5.2 アクセス方法
+#### 5.5 従来のローカルアクセス方法
+
+GitHub Pagesを使わず、ローカルでHTMLファイルを開く場合:
+
 ```bash
 # ファイルを直接開く
 open /Users/yoshihitotsuji/Claude_Code/AccessLog/dashboard.html
@@ -323,6 +377,30 @@ file:///Users/yoshihitotsuji/Claude_Code/AccessLog/dashboard.html
 ### 日常的な使用
 
 #### ダッシュボード表示
+
+**方法1: GitHub Pages（推奨）**
+
+どこからでもアクセス可能なWeb版ダッシュボード:
+
+```
+URL: https://yoshihito-tsuji.github.io/AccessLog/
+```
+
+1. URLにアクセス
+2. パスワードを入力（デフォルト: `AccessLog20251114`）
+3. ダッシュボードが表示される
+
+**アクセス可能デバイス**:
+- iPhone / iPad
+- Mac / Windows PC
+- その他スマートフォン・タブレット
+
+**パスワード変更方法**:
+- [docs/index.html](docs/index.html)の11行目 `ACCESS_PASSWORD` を編集
+- 変更後、GitHubにpushすると反映（数分後）
+
+**方法2: ローカルファイル（従来方式）**
+
 ```bash
 open /Users/yoshihitotsuji/Claude_Code/AccessLog/dashboard.html
 ```
@@ -542,7 +620,21 @@ cat /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker_error.log
    chmod +x /Users/yoshihitotsuji/Claude_Code/AccessLog/track_downloads.sh
    ```
 
-### 4. ダッシュボードが表示されない
+4. **launchd環境でHomebrewコマンドが見つからない**
+   - **症状**: tracker_error.logに「GitHub CLI (gh) がインストールされていません」と記録される
+   - **原因**: launchd環境ではPATHに `/opt/homebrew/bin` や `/usr/local/bin` が含まれていない
+   - **解決策**: `track_downloads.sh` の冒頭に以下を追加済み（2025-11-14対応済み）
+     ```bash
+     export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+     ```
+   - **確認方法**:
+     ```bash
+     # PATH制限環境でテスト
+     PATH=/usr/bin:/bin:/usr/sbin:/sbin bash track_downloads.sh
+     # → エラーが出る場合は、スクリプトにPATH設定が必要
+     ```
+
+### 5. ダッシュボードが表示されない
 
 #### 確認ポイント
 1. **API URLが正しいか**
@@ -557,7 +649,7 @@ cat /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker_error.log
    - Apps Scriptエディタで「実行」をクリック
    - 実行ログでエラーを確認
 
-### 5. データが0件
+### 6. データが0件
 
 #### 原因
 - Google Sheetsにデータがまだアップロードされていない
@@ -578,7 +670,7 @@ bash track_downloads.sh
 ✅ Google Sheetsにアップロードしました
 ```
 
-### 6. GaQデータが表示されない
+### 7. GaQデータが表示されない
 
 #### 過去の問題と解決
 **問題**: 全データがPoPuPに分類される
@@ -735,6 +827,114 @@ if (appData[appName][date]?.[versionName] !== undefined) {
   - PoPuP_v1.1.0_windows.zip: 2 DL
 - **PoPuP v1.0.0**:
   - popup-v1.0.0.zip: 1 DL
+
+### 2025年11月14日 - PATH問題修正
+
+#### 問題発見
+- **症状**: ダッシュボードが11/13時点で止まっている
+- **原因**: launchd環境で `gh` と `jq` コマンドが見つからず、`track_downloads.sh` が即終了
+- **根本原因**: launchd環境では `/opt/homebrew/bin` や `/usr/local/bin` がPATHに含まれていない
+
+#### 切り分け検証
+```bash
+# PATH制限環境でテスト実行
+PATH=/usr/bin:/bin:/usr/sbin:/sbin bash track_downloads.sh
+# 結果: "GitHub CLI (gh) がインストールされていません" エラーで終了
+```
+
+#### 恒久対策実施
+1. **track_downloads.sh修正**
+   - 冒頭（`set -e`の直後）に以下を追加:
+     ```bash
+     export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+     ```
+   - 構文チェック: `bash -n track_downloads.sh` → OK
+
+2. **動作確認**
+   - 手動実行: CSV生成成功（downloads_2025-11-14.csv）
+   - launchd再読み込み: `launchctl unload && launchctl load`
+   - 即時実行: `launchctl kickstart -k gui/$(id -u)/com.releases.download-tracker`
+   - tracker.log: 正常なログ記録を確認
+   - tracker_error.log: エラーなし（空）
+   - Google Sheets: 2025-11-14データ追加確認（総行数 43→57行）
+
+3. **ドキュメント更新**
+   - README.mdトラブルシューティングに「launchd環境でHomebrewコマンドが見つからない」を追加
+   - 作業ログに今回の修正内容を記録
+
+#### 検証結果
+- ✅ PATH問題解決
+- ✅ launchd経由での自動実行正常化
+- ✅ Google Sheetsへのデータアップロード確認
+- ✅ システム本番稼働復旧
+
+### 2025年11月14日 - GitHub Pages公開対応
+
+#### 実装内容
+
+**目的**: どこからでもアクセス可能なWeb版ダッシュボードを公開
+
+**1. ディレクトリ構成変更**
+- `docs/` ディレクトリ作成
+- `dashboard.html` → `docs/index.html` に移設
+- パスワード保護機能を追加
+
+**2. 簡易パスワード保護実装**
+- **パスワード**: `AccessLog20251114`（変更可能）
+- **実装方法**: JavaScriptによるsessionStorage認証
+- **動作**:
+  1. ページアクセス時にプロンプト表示
+  2. 正しいパスワード入力でダッシュボード表示
+  3. セッション中は再入力不要
+  4. 不正なパスワードでアクセス拒否画面
+
+**3. セキュリティ考慮事項**
+- パスワードはJavaScriptソースに平文保存（高度なセキュリティは提供しない）
+- ダウンロード数データは元々GitHub上で公開情報
+- Google Apps Script APIは読み取り専用
+- 秘匿情報（credentials.json）は.gitignore済み
+
+**4. GitHub Pages設定手順**
+
+Yoshihitoさんが実施する手順:
+1. GitHubリポジトリ > Settings > Pages
+2. Source: **Deploy from a branch**
+3. Branch: **main**, Folder: **/docs**
+4. Save
+
+公開URL: `https://yoshihito-tsuji.github.io/AccessLog/`
+
+**5. ローカル動作確認**
+```bash
+cd docs
+python3 -m http.server 8080
+# http://localhost:8080/ でアクセス確認
+```
+
+#### 実装ファイル
+- [docs/index.html](docs/index.html): パスワード保護付きダッシュボード
+  - 11行目: `ACCESS_PASSWORD` 定数（パスワード設定）
+  - 16行目: `API_URL` 定数（Google Apps Script URL）
+  - 229-267行目: パスワード認証ロジック
+
+#### READMEドキュメント更新
+- **セットアップ手順**: GitHub Pages有効化方法追加
+- **使用方法**: Web版アクセス手順追加（パスワード入力含む）
+- **パスワード変更方法**: 手順記載
+
+#### 次ステップ
+Yoshihitoさんによる作業:
+1. GitHubにコミット＆プッシュ
+2. GitHub Pages設定（Settings > Pages）
+3. 公開URL動作確認
+4. iPhone/iPadでアクセステスト
+
+#### メリット
+- ✅ iPhone/iPadからアクセス可能
+- ✅ Mac以外のデバイスから確認可能
+- ✅ URLを共有するだけで他者も閲覧可能（パスワードあり）
+- ✅ 完全無料（GitHub Pagesは無料）
+- ✅ HTTPS対応（セキュア接続）
 
 ---
 

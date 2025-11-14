@@ -21,6 +21,9 @@
 
 set -e
 
+# launchd環境でもHomebrewコマンドが使えるようPATHを設定
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+
 # 色設定
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
