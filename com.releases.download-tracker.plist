@@ -38,6 +38,13 @@
     <key>RunAtLoad</key>
     <false/>
 
+    <!-- 環境変数: launchd環境でもHomebrewコマンドが使えるようPATHを設定 -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+
     <!-- 終了時に自動再起動しない -->
     <key>KeepAlive</key>
     <false/>

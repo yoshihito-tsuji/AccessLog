@@ -21,8 +21,14 @@
 
 set -e
 
-# launchd環境でもHomebrewコマンドが使えるようPATHを設定
-export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+# Homebrew PATHを安全に追加（既に含まれている場合はスキップ）
+# launchd環境ではplist側で設定済み、手動実行時にも対応
+if [[ ":$PATH:" != *":/opt/homebrew/bin:"* ]]; then
+    export PATH="/opt/homebrew/bin:$PATH"
+fi
+if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
+    export PATH="/usr/local/bin:$PATH"
+fi
 
 # 色設定
 GREEN='\033[0;32m'

@@ -230,66 +230,57 @@ source ~/.zshrc
 
 ### 4. 自動実行設定（launchd）
 
-#### 4.1 plistファイル確認
-ファイル: `~/Library/LaunchAgents/com.releases.download-tracker.plist`
+#### 4.1 自動セットアップスクリプト（推奨）
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.releases.download-tracker</string>
+**簡単な方法**: セットアップスクリプトを使用
 
-    <key>ProgramArguments</key>
-    <array>
-        <string>/bin/bash</string>
-        <string>/Users/yoshihitotsuji/Claude_Code/AccessLog/track_downloads.sh</string>
-    </array>
-
-    <key>WorkingDirectory</key>
-    <string>/Users/yoshihitotsuji/Claude_Code/AccessLog</string>
-
-    <key>StandardOutPath</key>
-    <string>/Users/yoshihitotsuji/Claude_Code/AccessLog/tracker.log</string>
-
-    <key>StandardErrorPath</key>
-    <string>/Users/yoshihitotsuji/Claude_Code/AccessLog/tracker_error.log</string>
-
-    <!-- スケジュール設定: 毎日00:05に実行 -->
-    <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key>
-        <integer>0</integer>
-        <key>Minute</key>
-        <integer>5</integer>
-    </dict>
-
-    <key>RunAtLoad</key>
-    <false/>
-
-    <key>KeepAlive</key>
-    <false/>
-</dict>
-</plist>
+```bash
+bash scripts/setup_launchd.sh
 ```
 
-#### 4.2 launchd登録
+このスクリプトは以下を自動的に実行します:
+1. Git管理下の`com.releases.download-tracker.plist`を`~/Library/LaunchAgents/`にコピー
+2. 既存の登録があればアンロード
+3. launchdへロード
+4. 即座にkickstart（動作確認）
+5. 登録状態の確認
+
+**注意**: plistファイルはリポジトリ直下の`com.releases.download-tracker.plist`がソースオブトゥルース（信頼できる唯一の情報源）です。`~/Library/LaunchAgents/`配下のファイルは、このファイルをコピーして使用します。
+
+#### 4.2 手動セットアップ（詳細な制御が必要な場合）
+
+**plistファイルのコピー**:
+```bash
+cp com.releases.download-tracker.plist ~/Library/LaunchAgents/
+```
+
+**launchd登録**:
 ```bash
 launchctl load ~/Library/LaunchAgents/com.releases.download-tracker.plist
 ```
 
-#### 4.3 登録確認
+**登録確認**:
 ```bash
 launchctl list | grep releases
 # 出力: -	0	com.releases.download-tracker
 ```
 
-#### 4.4 設定変更時の再読み込み
+**設定変更時の再読み込み**:
 ```bash
 launchctl unload ~/Library/LaunchAgents/com.releases.download-tracker.plist
 launchctl load ~/Library/LaunchAgents/com.releases.download-tracker.plist
 ```
+
+または、`scripts/setup_launchd.sh`を再実行するだけでも可。
+
+#### 4.3 plist設定内容
+
+Git管理下のファイル: `com.releases.download-tracker.plist`
+
+主要設定:
+- **実行スケジュール**: 毎日00:05
+- **環境変数**: `PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin`（Homebrewコマンド利用のため）
+- **ログ出力**: tracker.log（標準出力）、tracker_error.log（エラー出力）
 
 **重要**:
 - **実行時刻**: 毎日00:05（当初は23:55だったが、ラジオ録音中の安定した起動時間に変更）
@@ -623,15 +614,43 @@ cat /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker_error.log
 4. **launchd環境でHomebrewコマンドが見つからない**
    - **症状**: tracker_error.logに「GitHub CLI (gh) がインストールされていません」と記録される
    - **原因**: launchd環境ではPATHに `/opt/homebrew/bin` や `/usr/local/bin` が含まれていない
-   - **解決策**: `track_downloads.sh` の冒頭に以下を追加済み（2025-11-14対応済み）
+   - **解決策（現在の実装・2025-11-15最終版）**:
+     - **plist側**: `com.releases.download-tracker.plist`に`EnvironmentVariables`ブロックを追加（Git管理下）
+       ```xml
+       <key>EnvironmentVariables</key>
+       <dict>
+           <key>PATH</key>
+           <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+       </dict>
+       ```
+     - **スクリプト側**: `track_downloads.sh`で不足分のみを安全に追加（手動実行時にも対応）
+       ```bash
+       # Homebrew PATHを安全に追加（既に含まれている場合はスキップ）
+       if [[ ":$PATH:" != *":/opt/homebrew/bin:"* ]]; then
+           export PATH="/opt/homebrew/bin:$PATH"
+       fi
+       if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
+           export PATH="/usr/local/bin:$PATH"
+       fi
+       ```
+     - **理由**: plist側で設定することで確実性を担保しつつ、スクリプト側でも冗長性を持たせることで、手動実行時や異なる環境でも動作する堅牢な設計
+   - **plist更新後の反映方法**:
      ```bash
-     export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+     # 自動セットアップスクリプト使用（推奨）
+     bash scripts/setup_launchd.sh
+
+     # または手動で
+     launchctl unload ~/Library/LaunchAgents/com.releases.download-tracker.plist
+     launchctl load ~/Library/LaunchAgents/com.releases.download-tracker.plist
+     launchctl kickstart -k gui/$(id -u)/com.releases.download-tracker
      ```
    - **確認方法**:
      ```bash
-     # PATH制限環境でテスト
-     PATH=/usr/bin:/bin:/usr/sbin:/sbin bash track_downloads.sh
-     # → エラーが出る場合は、スクリプトにPATH設定が必要
+     # tracker.logで最新実行を確認
+     tail -50 tracker.log
+
+     # エラーログ確認
+     cat tracker_error.log
      ```
 
 ### 5. ダッシュボードが表示されない
@@ -935,6 +954,175 @@ Yoshihitoさんによる作業:
 - ✅ URLを共有するだけで他者も閲覧可能（パスワードあり）
 - ✅ 完全無料（GitHub Pagesは無料）
 - ✅ HTTPS対応（セキュア接続）
+
+### 2025年11月15日 - launchd環境変数恒久対策
+
+#### 問題背景
+- 2025-11-14のPATH問題修正（track_downloads.sh内でPATH設定）は暫定対応
+- スクリプト側とlaunchd側の二重設定で冗長性が高い
+- より確実な対策として、launchd plist自体に環境変数を設定する恒久対策を実施
+
+#### 実施内容
+
+**1. com.releases.download-tracker.plist修正**
+- `EnvironmentVariables`ブロックを追加（42-46行目）
+  ```xml
+  <key>EnvironmentVariables</key>
+  <dict>
+      <key>PATH</key>
+      <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+  ```
+
+**2. launchdへの反映**
+```bash
+launchctl unload ~/Library/LaunchAgents/com.releases.download-tracker.plist
+launchctl load ~/Library/LaunchAgents/com.releases.download-tracker.plist
+launchctl kickstart -k gui/$(id -u)/com.releases.download-tracker
+```
+- エラーなしで実行完了
+
+**3. 動作検証結果**
+
+tracker.log（2025-11-15 15:41:34実行分）:
+- ✅ 「GitHub CLI (gh) がインストールされていません」警告なし
+- ✅ GaQ (Mac): 4 DL、GaQ (Windows): 0 DL、PoPuP: 44 DL を正常取得
+- ✅ downloads_2025-11-15.csv および downloads_all.csv を正常更新
+
+Google Sheets反映:
+- ✅ 手動で `upload_to_sheets.py` 実行後、11/15データ14件をアップロード
+- ✅ 総行数: 57行 → 71行（+14行）
+
+ダッシュボードAPI確認:
+- ✅ Google Apps Script API経由で最新7日分のデータ取得成功
+- ✅ 11/15日付が正常に含まれ、PoPuP: +1 DL、GaQ: 変化なしを確認
+
+**4. READMEドキュメント更新**
+- トラブルシューティング4番: 暫定対応と恒久対応を明記
+- 作業ログ: 今回の恒久対策実施内容を記録
+
+#### 効果
+- ✅ launchd実行時も確実にHomebrewコマンド（gh、jq）が利用可能
+- ✅ track_downloads.sh内のPATH設定との二重対策で高い信頼性
+- ✅ 今後のトラブルシューティング時に参照可能なドキュメント整備
+
+### 2025年11月15日 - 堅牢性向上とコード整理
+
+#### 問題背景
+- plistファイルが`~/Library/LaunchAgents/`のみに存在し、Git管理外で追跡困難
+- track_downloads.sh内のPATH設定が完全上書き形式で冗長
+- launchd設定の手動セットアップ手順が複雑でミスしやすい
+
+#### 実施内容
+
+**1. plistファイルのGit管理化**
+- `~/Library/LaunchAgents/com.releases.download-tracker.plist`をリポジトリ直下にコピー
+- リポジトリ直下のファイルをソースオブトゥルース（信頼できる唯一の情報源）として管理
+- `~/Library/LaunchAgents/`配下は、このファイルをコピーして使用する運用に変更
+
+**2. track_downloads.shのPATH設定を安全なロジックに改善**
+
+変更前（完全上書き）:
+```bash
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+```
+
+変更後（不足分のみ追加）:
+```bash
+# Homebrew PATHを安全に追加（既に含まれている場合はスキップ）
+if [[ ":$PATH:" != *":/opt/homebrew/bin:"* ]]; then
+    export PATH="/opt/homebrew/bin:$PATH"
+fi
+if [[ ":$PATH:" != *":/usr/local/bin:"* ]]; then
+    export PATH="/usr/local/bin:$PATH"
+fi
+```
+
+**理由**:
+- launchd環境ではplist側で完全なPATHを設定済み（二重設定を回避）
+- 手動実行時や異なる環境でも、不足分だけを前置することで既存のPATHを保持
+- より安全で柔軟な設計
+
+**3. scripts/setup_launchd.sh作成（自動化）**
+
+実装内容:
+- Git管理下のplistを`~/Library/LaunchAgents/`へコピー
+- 既存登録のアンロード（存在チェック付き）
+- launchdへのロード
+- 即座にkickstart（動作確認）
+- 登録状態の確認と成功・失敗の明示的な表示
+
+実行方法:
+```bash
+bash scripts/setup_launchd.sh
+```
+
+実行結果（2025-11-15 15:51:35）:
+```
+========================================
+launchd設定セットアップ
+========================================
+
+[1/4] plistファイルの確認
+✅ plistファイルを確認: /Users/yoshihitotsuji/Claude_Code/AccessLog/com.releases.download-tracker.plist
+
+[2/4] plistを~/Library/LaunchAgentsにコピー
+✅ コピー成功: /Users/yoshihitotsuji/Library/LaunchAgents/com.releases.download-tracker.plist
+
+[3/4] launchdへの登録
+既存の登録を検出、アンロード中...
+✅ アンロード完了
+ロード中...
+✅ ロード成功
+
+[4/4] 動作確認（kickstart）
+✅ kickstart成功（即座に実行されました）
+
+========================================
+登録確認
+========================================
+✅ launchdに正常に登録されています
+
+登録情報:
+7483	0	com.releases.download-tracker
+
+次回実行予定: 毎日 00:05
+
+ログファイル:
+  - 標準出力: /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker.log
+  - エラー出力: /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker_error.log
+
+========================================
+セットアップ完了
+========================================
+```
+
+**4. 動作検証**
+
+tracker.log（2025-11-15 15:51:35実行分）:
+- ✅ 「GitHub CLI (gh) がインストールされていません」警告なし
+- ✅ GaQ、PoPuP全リポジトリのダウンロード数を正常取得
+- ✅ downloads_2025-11-15.csv および downloads_all.csv を正常更新
+
+CSV更新確認:
+```
+-rw-r--r--  1 yoshihitotsuji  staff  7922 Nov 15 15:51 downloads_all.csv
+-rw-r--r--  1 yoshihitotsuji  staff  2226 Nov 15 15:51 downloads_2025-11-15.csv
+```
+
+tracker_error.log: 空（エラーなし）
+
+**5. READMEドキュメント更新**
+- セットアップ手順: `scripts/setup_launchd.sh`の使い方を推奨方法として追記
+- トラブルシューティング4番: plist側とスクリプト側の二重対策の理由を明記
+- 作業ログ: 今回の改善内容を記録
+
+#### 効果
+- ✅ **plistのバージョン管理**: Git管理下でplistを追跡可能、変更履歴が明確
+- ✅ **セットアップの自動化**: 1コマンドで確実にlaunchd設定完了、人的ミス削減
+- ✅ **PATH設定の最適化**: 二重設定を回避しつつ、手動実行時も動作する柔軟性
+- ✅ **堅牢性の向上**: plist側とスクリプト側の二重対策で高い信頼性
+- ✅ **保守性の向上**: シンプルで明確なコード、トラブルシューティングが容易
 
 ---
 
