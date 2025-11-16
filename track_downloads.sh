@@ -34,12 +34,74 @@ fi
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # 出力先ディレクトリ
 OUTPUT_DIR="/Users/yoshihitotsuji/Claude_Code/AccessLog"
 CURRENT_DATE=$(date "+%Y-%m-%d")
 CURRENT_DATETIME=$(date "+%Y-%m-%d %H:%M:%S")
+
+# エラーログファイル
+ERROR_LOG="${OUTPUT_DIR}/tracker_error.log"
+
+# エラーハンドリング関数
+log_error() {
+    local message="$1"
+    echo -e "${RED}❌ エラー: ${message}${NC}" >&2
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: ${message}" >> "${ERROR_LOG}"
+}
+
+# GitHub API呼び出し関数（エラー詳細を記録）
+fetch_releases() {
+    local repo="$1"
+    local temp_file=$(mktemp)
+    local http_code
+    local api_output
+
+    # GitHub API呼び出し（エラー出力を一時ファイルに保存）
+    if api_output=$(gh api "repos/${repo}/releases?per_page=100" 2>"${temp_file}"); then
+        echo "$api_output"
+        rm -f "${temp_file}"
+        return 0
+    else
+        local exit_code=$?
+        local error_message=$(cat "${temp_file}" 2>/dev/null || echo "不明なエラー")
+        log_error "GitHub API呼び出し失敗: ${repo}"
+        log_error "終了コード: ${exit_code}"
+        log_error "詳細: ${error_message}"
+        rm -f "${temp_file}"
+        return 1
+    fi
+}
+
+# GitHub API呼び出し（リトライ付き）
+fetch_releases_with_retry() {
+    local repo="$1"
+    local max_attempts=3
+    local base_delay=5  # 秒
+
+    for attempt in $(seq 1 $max_attempts); do
+        echo -e "${BLUE}  API呼び出し試行 ${attempt}/${max_attempts}...${NC}" >&2
+
+        if releases_json=$(fetch_releases "${repo}"); then
+            echo "$releases_json"
+            return 0
+        fi
+
+        # 最後の試行でなければリトライ
+        if [ $attempt -lt $max_attempts ]; then
+            local delay=$((base_delay * (2 ** (attempt - 1))))  # 指数バックオフ: 5秒, 10秒, 20秒
+            log_error "リトライ ${attempt}/${max_attempts}: ${delay}秒後に再試行します"
+            echo -e "${YELLOW}  ${delay}秒後に再試行します...${NC}" >&2
+            sleep $delay
+        fi
+    done
+
+    log_error "最大リトライ回数(${max_attempts}回)に達しました: ${repo}"
+    echo -e "${RED}  最大リトライ回数に達しました${NC}" >&2
+    return 1
+}
 
 # 日次ログファイル (日付ごと)
 DAILY_LOG="${OUTPUT_DIR}/downloads_${CURRENT_DATE}.csv"
@@ -107,25 +169,28 @@ for idx in "${!REPO_NAMES[@]}"; do
 
     echo -e "${BLUE}--- ${repo_display_name} (${repo}) ---${NC}"
 
-    # 全リリースデータを1回のAPI呼び出しで取得
-    releases_json=$(gh api "repos/${repo}/releases?per_page=100" 2>/dev/null)
+    # 全リリースデータを1回のAPI呼び出しで取得（リトライ付き）
+    if ! releases_json=$(fetch_releases_with_retry "${repo}"); then
+        echo -e "${YELLOW}  API呼び出しに失敗しました（詳細はtracker_error.logを確認）${NC}"
+        echo ""
+        continue
+    fi
 
     # リリース数をJSON配列長から取得
-    release_count=$(echo "$releases_json" | jq 'length' 2>/dev/null || echo "0")
+    if ! release_count=$(echo "$releases_json" | jq 'length' 2>/dev/null); then
+        log_error "jq処理失敗: ${repo} のリリースカウント取得"
+        echo -e "${YELLOW}  JSON解析に失敗しました${NC}"
+        echo ""
+        continue
+    fi
 
-    if [ "$release_count" = "0" ]; then
+    if [ "$release_count" = "0" ] || [ -z "$releases_json" ] || [ "$releases_json" = "[]" ]; then
         echo -e "${YELLOW}  リリースが見つかりませんでした${NC}"
         echo ""
         continue
     fi
 
     total_release_count=$((total_release_count + release_count))
-
-    if [ -z "$releases_json" ] || [ "$releases_json" = "[]" ]; then
-        echo -e "${YELLOW}  リリースが見つかりませんでした${NC}"
-        echo ""
-        continue
-    fi
 
     # jqを使用してデータを処理
     echo "$releases_json" | jq -r '

@@ -22,16 +22,32 @@ import os
 import sys
 import csv
 import json
+import logging
 from datetime import datetime
 from pathlib import Path
+
+# ログ設定
+LOG_FILE = '/Users/yoshihitotsuji/Claude_Code/AccessLog/tracker_error.log'
+logging.basicConfig(
+    level=logging.INFO,
+    format='[%(asctime)s] %(levelname)s: %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+    handlers=[
+        logging.FileHandler(LOG_FILE, mode='a'),  # 追記モード
+        logging.StreamHandler()  # 標準出力にも表示
+    ]
+)
+logger = logging.getLogger(__name__)
 
 # Google Sheets API用ライブラリのインポート（オプション）
 try:
     import gspread
     from oauth2client.service_account import ServiceAccountCredentials
     GSPREAD_AVAILABLE = True
+    logger.info("gspread/oauth2clientライブラリを正常にインポート")
 except ImportError:
     GSPREAD_AVAILABLE = False
+    logger.warning("gspreadライブラリがインストールされていません")
     print("⚠️  gspreadライブラリがインストールされていません")
     print("   インストール: pip install gspread oauth2client")
 
@@ -74,6 +90,7 @@ def aggregate_by_version(data):
 def upload_to_google_sheets(data, gaq_versions, popup_versions):
     """Google Sheetsにデータをアップロード"""
     if not GSPREAD_AVAILABLE:
+        logger.error("Google Sheets連携がスキップされました（gspreadが未インストール）")
         print("❌ Google Sheets連携がスキップされました（gspreadが未インストール）")
         return False
 
@@ -82,14 +99,17 @@ def upload_to_google_sheets(data, gaq_versions, popup_versions):
     spreadsheet_id = os.environ.get('SPREADSHEET_ID')
 
     if not spreadsheet_id:
+        logger.error("環境変数 SPREADSHEET_ID が設定されていません")
         print("❌ 環境変数 SPREADSHEET_ID が設定されていません")
         return False
 
     if not os.path.exists(credentials_path):
+        logger.error(f"認証ファイルが見つかりません: {credentials_path}")
         print(f"❌ 認証ファイルが見つかりません: {credentials_path}")
         return False
 
     try:
+        logger.info(f"Google Sheets認証開始: {credentials_path}")
         # Google Sheets認証
         scope = [
             'https://spreadsheets.google.com/feeds',
@@ -97,19 +117,26 @@ def upload_to_google_sheets(data, gaq_versions, popup_versions):
         ]
         credentials = ServiceAccountCredentials.from_json_keyfile_name(credentials_path, scope)
         client = gspread.authorize(credentials)
+        logger.info("Google Sheets認証成功")
 
         # スプレッドシートを開く
+        logger.info(f"スプレッドシート接続: {spreadsheet_id}")
         spreadsheet = client.open_by_key(spreadsheet_id)
+        logger.info(f"スプレッドシート '{spreadsheet.title}' を開きました")
 
         # 日次データシート
         try:
             daily_sheet = spreadsheet.worksheet('DailyData')
+            logger.info("DailyDataシートを取得")
         except gspread.WorksheetNotFound:
+            logger.warning("DailyDataシートが見つかりません。新規作成します")
             daily_sheet = spreadsheet.add_worksheet(title='DailyData', rows=1000, cols=10)
             daily_sheet.append_row(['記録日時', 'リポジトリ', 'リリース名', 'タグ', 'アセット名', 'ダウンロード数'])
+            logger.info("DailyDataシートを作成しました")
 
         # 当日のデータを削除（冪等性を確保）
         today = datetime.now().strftime('%Y-%m-%d')
+        logger.info(f"当日データの重複チェック: {today}")
         all_values = daily_sheet.get_all_values()
 
         # 削除する行のインデックスを収集（降順にソートして後ろから削除）
@@ -123,18 +150,27 @@ def upload_to_google_sheets(data, gaq_versions, popup_versions):
             daily_sheet.delete_rows(row_idx)
 
         if rows_to_delete:
+            logger.info(f"削除した既存レコード数: {len(rows_to_delete)}件")
             print(f"   削除した既存レコード数: {len(rows_to_delete)}件")
 
-        # データを追加
-        for row in data:
-            daily_sheet.append_row([
+        # データを追加（バッチ処理でAPI呼び出し回数を削減）
+        logger.info(f"DailyDataシートにデータ追加開始: {len(data)}件")
+        rows_to_add = [
+            [
                 row['記録日時'],
                 row['リポジトリ'],
                 row['リリース名'],
                 row['タグ'],
                 row['アセット名'],
                 row['ダウンロード数']
-            ])
+            ]
+            for row in data
+        ]
+        if rows_to_add:
+            daily_sheet.append_rows(rows_to_add, value_input_option='RAW')
+            logger.info(f"DailyDataシートにデータ追加完了: {len(data)}件（1回のAPI呼び出し）")
+        else:
+            logger.info("追加するデータがありません")
 
         # バージョン別集計シート（GaQ）
         try:
@@ -153,9 +189,11 @@ def upload_to_google_sheets(data, gaq_versions, popup_versions):
         for row_idx in reversed(gaq_rows_to_delete):
             gaq_sheet.delete_rows(row_idx)
 
-        # データを追加
-        for version, count in gaq_versions.items():
-            gaq_sheet.append_row([today, version, count])
+        # データを追加（バッチ処理でAPI呼び出し回数を削減）
+        gaq_rows_to_add = [[today, version, count] for version, count in gaq_versions.items()]
+        if gaq_rows_to_add:
+            gaq_sheet.append_rows(gaq_rows_to_add, value_input_option='RAW')
+            logger.info(f"GaQ_Summaryシートにデータ追加完了: {len(gaq_rows_to_add)}件（1回のAPI呼び出し）")
 
         # バージョン別集計シート（PoPuP）
         try:
@@ -174,33 +212,42 @@ def upload_to_google_sheets(data, gaq_versions, popup_versions):
         for row_idx in reversed(popup_rows_to_delete):
             popup_sheet.delete_rows(row_idx)
 
-        # データを追加
-        for version, count in popup_versions.items():
-            popup_sheet.append_row([today, version, count])
+        # データを追加（バッチ処理でAPI呼び出し回数を削減）
+        popup_rows_to_add = [[today, version, count] for version, count in popup_versions.items()]
+        if popup_rows_to_add:
+            popup_sheet.append_rows(popup_rows_to_add, value_input_option='RAW')
+            logger.info(f"PoPuP_Summaryシートにデータ追加完了: {len(popup_rows_to_add)}件（1回のAPI呼び出し）")
 
+        logger.info("Google Sheetsへのアップロードが完了しました")
         print("✅ Google Sheetsにアップロードしました")
         return True
 
     except Exception as e:
+        logger.error(f"Google Sheetsへのアップロードに失敗しました: {e}", exc_info=True)
         print(f"❌ Google Sheetsへのアップロードに失敗しました: {e}")
         return False
 
 
 def main():
     """メイン処理"""
+    logger.info("upload_to_sheets.py 実行開始")
+
     # 当日のCSVファイルを読み込み
     today = datetime.now().strftime('%Y-%m-%d')
     csv_path = Path(__file__).parent / f'downloads_{today}.csv'
 
     if not csv_path.exists():
+        logger.error(f"CSVファイルが見つかりません: {csv_path}")
         print(f"❌ CSVファイルが見つかりません: {csv_path}")
         sys.exit(1)
 
+    logger.info(f"CSVファイル読み込み開始: {csv_path}")
     print(f"📊 ダウンロード統計のGoogle Sheetsアップロード")
     print(f"   CSVファイル: {csv_path}\n")
 
     # CSVを読み込み
     data = read_daily_csv(csv_path)
+    logger.info(f"CSVファイル読み込み完了: {len(data)}件")
     print(f"   読み込んだレコード数: {len(data)}件")
 
     # バージョン別に集計
