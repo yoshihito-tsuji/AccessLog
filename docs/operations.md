@@ -44,27 +44,34 @@ open /Users/yoshihitotsuji/Claude_Code/AccessLog/dashboard.html
   - 合計ダウンロード数
   - バージョン別推移グラフ（3つ）
 
+### 自動実行の仕組み
+
+**毎日00:05に自動実行**され、以下の処理が完全自動で行われます：
+
+1. ✅ GitHub APIからダウンロード数取得
+2. ✅ CSVファイルに記録（日次・累積）
+3. ✅ **Google Sheetsに自動アップロード**（2025-11-17追加）
+4. ✅ ダッシュボードが最新データを表示
+
+**手動操作は不要です**。ダッシュボードにアクセスするだけで最新データを確認できます。
+
 ### 手動実行（テスト・確認用）
 
-#### データ取得のみ
+#### 完全実行（データ取得 + Google Sheetsアップロード）
+
+**推奨：** 以下のコマンドで全処理を実行
+
 ```bash
 cd /Users/yoshihitotsuji/Claude_Code/AccessLog
 bash track_downloads.sh
 ```
 
-#### Google Sheetsアップロードのみ
-```bash
-cd /Users/yoshihitotsuji/Claude_Code/AccessLog
-SPREADSHEET_ID="1-n-CpA9U8kwqTRxhbKBhNOj0-lcZjLG1MJXLhxgdQPs" \
-GOOGLE_SHEETS_CREDENTIALS="/Users/yoshihitotsuji/Claude_Code/AccessLog/credentials.json" \
-python3 upload_to_sheets.py
-```
+このコマンドは以下を自動的に実行します：
+- GitHub APIからダウンロード数取得
+- CSVファイルに記録
+- Google Sheetsに自動アップロード
 
-#### 完全実行（データ取得 + アップロード）
-```bash
-cd /Users/yoshihitotsuji/Claude_Code/AccessLog
-bash track_downloads.sh
-```
+**注意：** 2025-11-17以降、`track_downloads.sh`は自動的にGoogle Sheetsアップロードを実行するため、個別に`upload_to_sheets.py`を実行する必要はありません。
 
 ### 動作確認
 

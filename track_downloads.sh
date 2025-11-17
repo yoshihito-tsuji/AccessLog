@@ -231,3 +231,23 @@ echo -e "${GREEN}✅ ログファイルに記録しました${NC}"
 echo "  - 日次ログ: ${DAILY_LOG}"
 echo "  - 累積ログ: ${CUMULATIVE_LOG}"
 echo ""
+
+# Google Sheetsへのアップロード
+echo -e "${BLUE}Google Sheetsにアップロード中...${NC}"
+
+SPREADSHEET_ID="1-n-CpA9U8kwqTRxhbKBhNOj0-lcZjLG1MJXLhxgdQPs" \
+GOOGLE_SHEETS_CREDENTIALS="${OUTPUT_DIR}/credentials.json" \
+python3 "${OUTPUT_DIR}/upload_to_sheets.py"
+
+upload_exit_code=$?
+
+if [ $upload_exit_code -eq 0 ]; then
+    echo -e "${GREEN}✅ Google Sheetsにアップロードしました${NC}"
+    echo ""
+else
+    log_error "Google Sheetsへのアップロードに失敗しました（終了コード: ${upload_exit_code}）"
+    echo -e "${RED}❌ Google Sheetsへのアップロードに失敗しました${NC}"
+    echo -e "${YELLOW}   詳細は tracker_error.log を確認してください${NC}"
+    echo ""
+    exit 1
+fi
