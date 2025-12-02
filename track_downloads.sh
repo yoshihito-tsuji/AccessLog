@@ -37,13 +37,15 @@ BLUE='\033[0;34m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# 出力先ディレクトリ
-OUTPUT_DIR="/Users/yoshihitotsuji/Claude_Code/AccessLog"
+# 出力先ディレクトリ（スクリプトの絶対パスから取得）
+BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
+OUTPUT_DIR="${BASE_DIR}/data"
+DAILY_DIR="${OUTPUT_DIR}/daily"
 CURRENT_DATE=$(date "+%Y-%m-%d")
 CURRENT_DATETIME=$(date "+%Y-%m-%d %H:%M:%S")
 
-# エラーログファイル
-ERROR_LOG="${OUTPUT_DIR}/tracker_error.log"
+# エラーログファイル（ルートディレクトリに維持）
+ERROR_LOG="${BASE_DIR}/tracker_error.log"
 
 # エラーハンドリング関数
 log_error() {
@@ -104,7 +106,7 @@ fetch_releases_with_retry() {
 }
 
 # 日次ログファイル (日付ごと)
-DAILY_LOG="${OUTPUT_DIR}/downloads_${CURRENT_DATE}.csv"
+DAILY_LOG="${DAILY_DIR}/downloads_${CURRENT_DATE}.csv"
 
 # 累積ログファイル (すべての記録)
 CUMULATIVE_LOG="${OUTPUT_DIR}/downloads_all.csv"
@@ -113,8 +115,8 @@ CUMULATIVE_LOG="${OUTPUT_DIR}/downloads_all.csv"
 REPO_NAMES=("yoshihito-tsuji/GaQ_app" "yoshihito-tsuji/Pop_app")
 REPO_DISPLAY_NAMES=("GaQ" "PoPuP")
 
-# ディレクトリ作成
-mkdir -p "${OUTPUT_DIR}"
+# ディレクトリ作成（日次ディレクトリも含む）
+mkdir -p "${DAILY_DIR}"
 
 echo -e "${BLUE}========================================"
 echo "GitHub Release ダウンロード数追跡"
@@ -236,8 +238,8 @@ echo ""
 echo -e "${BLUE}Google Sheetsにアップロード中...${NC}"
 
 SPREADSHEET_ID="1-n-CpA9U8kwqTRxhbKBhNOj0-lcZjLG1MJXLhxgdQPs" \
-GOOGLE_SHEETS_CREDENTIALS="${OUTPUT_DIR}/credentials.json" \
-python3 "${OUTPUT_DIR}/upload_to_sheets.py"
+GOOGLE_SHEETS_CREDENTIALS="${BASE_DIR}/credentials.json" \
+python3 "${BASE_DIR}/upload_to_sheets.py"
 
 upload_exit_code=$?
 

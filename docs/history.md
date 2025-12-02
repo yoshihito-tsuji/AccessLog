@@ -412,4 +412,71 @@ tracker_error.log: 空（エラーなし）
 - ✅ **堅牢性の向上**: plist側とスクリプト側の二重対策で高い信頼性
 - ✅ **保守性の向上**: シンプルで明確なコード、トラブルシューティングが容易
 
+### 2025年12月2日 - PoPuP Mac版追加とデータファイル整理
+
+#### 背景
+- PoPuP v1.3.0でMac版（.dmg）がリリース
+- ルートディレクトリにCSVファイルが20日分（11/13〜12/02）蓄積し、管理が煩雑化
+
+#### 実施内容
+
+**1. PoPuP Mac/Windows分類の実装**
+
+google_apps_script.js（74-78行目、268-276行目）:
+- `PoPuP (Mac)` / `PoPuP (Windows)` の2系列に分離
+- 判定ロジック（140-162行目）:
+  - tag/releaseName/assetName に `mac`, `darwin`, `macos`, `universal`, `.dmg` を含めば Mac
+  - `win`, `windows`, `.exe`, `.msi` を含めば Windows
+  - どちらでもなければ安全側で Windows
+- 空データレスポンスにも新キー追加（268-276行目）
+
+docs/index.html（287-316行目）:
+- カラーパレットに `PoPuP (Mac)` と `PoPuP (Windows)` を追加
+  - PoPuP (Mac): 濃紺、ティール、スカイブルー、ライトブルー、ゴールド
+  - PoPuP (Windows): 濃紺、インディゴ、バイオレット、オレンジ、ピンク
+- サンプルデータ生成関数も4系列対応（354-370行目）
+
+**2. データファイル整理（data/daily/構成）**
+
+ディレクトリ構造:
+```
+AccessLog/
+├── data/
+│   ├── daily/              # 日別CSVファイル
+│   │   ├── downloads_2025-11-13.csv
+│   │   ├── downloads_2025-11-14.csv
+│   │   └── ...
+│   └── downloads_all.csv   # 全期間統合ファイル
+├── track_downloads.sh
+├── upload_to_sheets.py
+└── tracker.log / tracker_error.log  # ルートに維持
+```
+
+track_downloads.sh（40-48、108-119行目）:
+- `BASE_DIR="$(cd "$(dirname "$0")" && pwd)"` でスクリプトの絶対パス取得
+- `OUTPUT_DIR="${BASE_DIR}/data"`, `DAILY_DIR="${OUTPUT_DIR}/daily"` 設定
+- `DAILY_LOG="${DAILY_DIR}/downloads_${CURRENT_DATE}.csv"` に変更
+- `mkdir -p "${DAILY_DIR}"` で日次ディレクトリ自動作成
+
+upload_to_sheets.py（237行目）:
+- `csv_path = Path(__file__).parent / "data" / "daily" / f'downloads_{today}.csv'` に変更
+
+**3. ドキュメント更新**
+
+README.md:
+- 主要ファイルセクション: `data/daily/downloads_YYYY-MM-DD.csv`, `data/downloads_all.csv` に更新
+- すぐ確認コマンド: `ls -t data/daily/downloads_*.csv`, `tail data/downloads_all.csv` に修正
+
+docs/data-structure.md（54-68行目）:
+- API レスポンス例に `PoPuP (Mac)` と `PoPuP (Windows)` を追加
+
+docs/operations.md（87行目）:
+- CSV確認コマンドを `data/daily/downloads_*.csv` に修正
+
+#### 効果
+- ✅ **PoPuP Mac版のカウント対応**: v1.3.0以降のMac/Windowsダウンロード数を正確に追跡
+- ✅ **データファイル整理**: ルートディレクトリがすっきり、日別ファイルが `data/daily/` に集約
+- ✅ **保守性向上**: ファイル構成が明確になり、バックアップやメンテナンスが容易に
+- ✅ **拡張性確保**: 今後のアプリ追加やデータ形式変更に柔軟に対応可能
+
 ---

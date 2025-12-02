@@ -23,15 +23,17 @@ GaQ Transcriber（Mac/Windows）と PoPuP の GitHub Releases ダウンロード
 ### すぐ確認したいときのコマンド
 - ログ: `tail -n 50 tracker.log` / `tail -n 50 tracker_error.log`
 - launchd 状態: `launchctl list | grep com.releases.download-tracker`
-- 直近の CSV: `ls -t downloads_*.csv | head -n 5`
+- 直近の CSV: `ls -t data/daily/downloads_*.csv | head -n 5`
+- 統合CSV: `tail -n 20 data/downloads_all.csv`
 
 ## 主要ファイル
 - `track_downloads.sh` : GitHub API から日次 CSV を生成
 - `upload_to_sheets.py` : 認証情報 (`credentials.json`) と `SPREADSHEET_ID` で Sheets を更新
-- `dashboard.html` : Chart.js ベースのローカルダッシュボード
+- `docs/index.html` : Chart.js ベースのダッシュボード（GitHub Pages公開版）
 - `com.releases.download-tracker.plist` : launchd ジョブ定義
 - `tracker.log` / `tracker_error.log` : 自動実行ログ
-- `downloads_all.csv` : 全期間の累積データ（Apps Script やバックアップのソース）
+- `data/daily/downloads_YYYY-MM-DD.csv` : 日別ダウンロードデータ
+- `data/downloads_all.csv` : 全期間の累積データ（Apps Script やバックアップのソース）
 
 ## ドキュメントガイド
 詳細チュートリアルや作業ログは `docs/` に移動しました。必要なトピックだけ参照できます。

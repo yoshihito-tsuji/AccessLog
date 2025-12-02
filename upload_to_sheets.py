@@ -234,7 +234,7 @@ def main():
 
     # 当日のCSVファイルを読み込み
     today = datetime.now().strftime('%Y-%m-%d')
-    csv_path = Path(__file__).parent / f'downloads_{today}.csv'
+    csv_path = Path(__file__).parent / "data" / "daily" / f'downloads_{today}.csv'
 
     if not csv_path.exists():
         logger.error(f"CSVファイルが見つかりません: {csv_path}")

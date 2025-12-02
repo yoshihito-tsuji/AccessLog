@@ -74,7 +74,8 @@ function getTimelineData(days) {
   const appData = {
     'GaQ (Mac)': {},
     'GaQ (Windows)': {},
-    'PoPuP': {}
+    'PoPuP (Mac)': {},
+    'PoPuP (Windows)': {}
   };
 
   // 日付ごとに最新のタイムスタンプのレコードのみを保持
@@ -137,7 +138,28 @@ function getTimelineData(days) {
           appName = 'GaQ (Mac)'; // デフォルトはMac
         }
       } else if (repo === 'PoPuP') {
-        appName = 'PoPuP';
+        // Mac版とWindows版を分ける
+        // 判定優先度: tag/releaseName/assetName のいずれかに該当キーワードを含む
+        const lowerTag = tag.toLowerCase();
+        const lowerReleaseName = releaseName.toLowerCase();
+        const lowerAssetName = assetName.toLowerCase();
+
+        const isMac = lowerTag.includes('mac') || lowerTag.includes('darwin') || lowerTag.includes('macos') || lowerTag.includes('universal') ||
+                      lowerReleaseName.includes('mac') || lowerReleaseName.includes('darwin') || lowerReleaseName.includes('macos') || lowerReleaseName.includes('universal') ||
+                      lowerAssetName.includes('mac') || lowerAssetName.includes('darwin') || lowerAssetName.includes('macos') || lowerAssetName.includes('universal') || lowerAssetName.includes('.dmg');
+
+        const isWindows = lowerTag.includes('win') || lowerTag.includes('windows') ||
+                         lowerReleaseName.includes('win') || lowerReleaseName.includes('windows') ||
+                         lowerAssetName.includes('win') || lowerAssetName.includes('windows') || lowerAssetName.includes('.exe') || lowerAssetName.includes('.msi');
+
+        if (isMac) {
+          appName = 'PoPuP (Mac)';
+        } else if (isWindows) {
+          appName = 'PoPuP (Windows)';
+        } else {
+          // どちらでもなければ安全側でWindows
+          appName = 'PoPuP (Windows)';
+        }
       } else {
         return; // 不明なリポジトリは除外
       }
@@ -243,7 +265,11 @@ function createEmptyTimelineData(days) {
         versions: {},
         total: zeros
       },
-      'PoPuP': {
+      'PoPuP (Mac)': {
+        versions: {},
+        total: zeros
+      },
+      'PoPuP (Windows)': {
         versions: {},
         total: zeros
       }

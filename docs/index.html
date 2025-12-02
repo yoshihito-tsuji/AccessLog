@@ -226,60 +226,8 @@
         // 設定: 環境変更時はここを編集
         // ========================================
 
-        // パスワード設定（変更する場合はREADME参照）
-        const ACCESS_PASSWORD = 'AccessLog20251114';
-
         // Google Apps Script Web APIのURL
         const API_URL = 'https://script.google.com/macros/s/AKfycbxZx9xCYNYVepuxRsPpWwd4k4zpuq1yivyC6P3nWEEnbYHaIyelOdgVAGvHhi7-rzYeYw/exec';
-
-        // ========================================
-        // パスワード認証
-        // ========================================
-        (function checkPassword() {
-            const stored = sessionStorage.getItem('dashboard_auth');
-
-            if (stored !== ACCESS_PASSWORD) {
-                const input = prompt('パスワードを入力してください:');
-
-                if (input !== ACCESS_PASSWORD) {
-                    document.body.innerHTML = `
-                        <div style="
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            min-height: 100vh;
-                            background: var(--gray-bg);
-                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                        ">
-                            <div style="
-                                background: white;
-                                padding: 40px;
-                                border-radius: 12px;
-                                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                                text-align: center;
-                                max-width: 400px;
-                            ">
-                                <h1 style="color: #1a365d; margin-bottom: 20px;">アクセス拒否</h1>
-                                <p style="color: #718096;">正しいパスワードを入力してください。</p>
-                                <button onclick="location.reload()" style="
-                                    margin-top: 20px;
-                                    padding: 10px 24px;
-                                    background: #1a365d;
-                                    color: white;
-                                    border: none;
-                                    border-radius: 8px;
-                                    cursor: pointer;
-                                    font-size: 1em;
-                                ">再試行</button>
-                            </div>
-                        </div>
-                    `;
-                    throw new Error('Authentication failed');
-                }
-
-                sessionStorage.setItem('dashboard_auth', ACCESS_PASSWORD);
-            }
-        })();
 
         // ========================================
         // アプリごとの色パレット（濃紺をベースに視認性を確保）
@@ -299,12 +247,19 @@
                 { bg: 'rgba(159, 122, 234, 0.85)', border: 'rgba(159, 122, 234, 1)' }, // 紫
                 { bg: 'rgba(237, 137, 54, 0.85)', border: 'rgba(237, 137, 54, 1)' }   // オレンジ
             ],
-            'PoPuP': [
+            'PoPuP (Mac)': [
                 { bg: 'rgba(26, 54, 93, 0.85)', border: 'rgba(26, 54, 93, 1)' },      // 濃紺（メイン）
                 { bg: 'rgba(56, 178, 172, 0.85)', border: 'rgba(56, 178, 172, 1)' },  // ティール
                 { bg: 'rgba(99, 179, 237, 0.85)', border: 'rgba(99, 179, 237, 1)' },  // スカイブルー
                 { bg: 'rgba(144, 205, 244, 0.85)', border: 'rgba(144, 205, 244, 1)' }, // ライトブルー
                 { bg: 'rgba(246, 173, 85, 0.85)', border: 'rgba(246, 173, 85, 1)' }   // ゴールド
+            ],
+            'PoPuP (Windows)': [
+                { bg: 'rgba(26, 54, 93, 0.85)', border: 'rgba(26, 54, 93, 1)' },      // 濃紺（メイン）
+                { bg: 'rgba(129, 140, 248, 0.85)', border: 'rgba(129, 140, 248, 1)' },  // インディゴ
+                { bg: 'rgba(167, 139, 250, 0.85)', border: 'rgba(167, 139, 250, 1)' },  // バイオレット
+                { bg: 'rgba(251, 146, 60, 0.85)', border: 'rgba(251, 146, 60, 1)' },   // オレンジ
+                { bg: 'rgba(244, 114, 182, 0.85)', border: 'rgba(244, 114, 182, 1)' }  // ピンク
             ]
         };
 
@@ -353,7 +308,11 @@
                         versions: {},
                         total: zeros
                     },
-                    'PoPuP': {
+                    'PoPuP (Mac)': {
+                        versions: {},
+                        total: zeros
+                    },
+                    'PoPuP (Windows)': {
                         versions: {},
                         total: zeros
                     }
@@ -381,7 +340,7 @@
                 const card = document.createElement('div');
                 card.className = 'stat-card';
                 card.innerHTML = `
-                    <h3>${appName} ダウンロード数</h3>
+                    <h3>${appName}</h3>
                     <div class="number">${appTotals[appName].toLocaleString()}</div>
                 `;
                 statsGrid.appendChild(card);
@@ -391,7 +350,7 @@
             const totalCard = document.createElement('div');
             totalCard.className = 'stat-card';
             totalCard.innerHTML = `
-                <h3>合計ダウンロード数</h3>
+                <h3>合計</h3>
                 <div class="number">${totalDownloads.toLocaleString()}</div>
             `;
             statsGrid.appendChild(totalCard);
@@ -416,7 +375,7 @@
                 chartContainer.className = 'chart-container';
 
                 const chartTitle = document.createElement('h2');
-                chartTitle.textContent = `${appName} ダウンロード数推移`;
+                chartTitle.textContent = appName;
 
                 const chartWrapper = document.createElement('div');
                 chartWrapper.className = 'chart-wrapper';

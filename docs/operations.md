@@ -84,7 +84,7 @@ cat /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker.log
 cat /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker_error.log
 
 # 最新5件のCSVファイル
-ls -lt /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_*.csv | head -5
+ls -lt /Users/yoshihitotsuji/Claude_Code/AccessLog/data/daily/downloads_*.csv | head -5
 ```
 
 #### launchd状態確認
