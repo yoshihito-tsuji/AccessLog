@@ -498,3 +498,399 @@ docs/operations.md（87行目）:
 - ✅ 一覧性向上（余分な文字を削減）
 
 ---
+### 2025年12月14日 - ディレクトリ構造整理・Mac/Win版分離対応
+
+#### 背景と課題
+
+**1. ディレクトリ構造の問題**
+- ルートディレクトリにファイルが散在（実行スクリプト、設定、ドキュメント、HTML）
+- 新規参加者がプロジェクト構造を理解しづらい状態
+- 保守性・拡張性が低下
+
+**2. GaQ Mac/Win版の集計問題**
+- GitHub上でv1.2.10以降、GaQは1つのリリースにMac版とWin版の両方を含む運用に変更
+  - `GaQ_Transcriber_macOS.dmg` (Mac版)
+  - `GaQ_Transcriber_Windows.zip` (Win版)
+- 従来のスクリプトは「リポジトリ」単位で集計していたため、Mac/Winが合算されていた
+- ダッシュボードでMac版とWin版を個別に確認できない
+
+#### 実施内容
+
+**フェーズ1: ディレクトリ構造の整理（18:00-18:15）**
+
+1. **新規ディレクトリ作成**
+   ```bash
+   mkdir -p scripts config logs .ai docs/archive
+   ```
+
+2. **ファイル移動**
+   ```
+   ルート → scripts/
+   - track_downloads.sh
+   - upload_to_sheets.py
+
+   ルート → config/
+   - com.releases.download-tracker.plist
+   - google_apps_script.js
+
+   ルート → logs/
+   - tracker_error.log
+   - .gitkeep（新規作成）
+
+   ルート → .ai/
+   - @claude.md → claude.md
+   - @codex.md → codex.md
+
+   ルート → docs/archive/
+   - COLLABORATION.md
+   - NEXT_PHASE_OPTIONS.md
+   - dashboard.html → index-legacy.html
+   ```
+
+3. **パス参照の全面更新**
+   - `scripts/track_downloads.sh`: 相対パスで `logs/`、`data/` を参照
+   - `scripts/upload_to_sheets.py`: 相対パスで `logs/tracker_error.log` を参照
+   - `scripts/setup_launchd.sh`: `config/com.releases.download-tracker.plist` パスに対応
+   - `config/com.releases.download-tracker.plist`: `scripts/track_downloads.sh`、`logs/` パスに更新
+   - `README.md`: 全パス参照を新構造に更新
+   - `docs/*.md`: 各種ドキュメントのパス記述を修正
+
+4. **Git コミット**
+   ```bash
+   git add -A
+   git commit -m "Refactor: ディレクトリ構造の整理・Mac/Win版分離集計の実装"
+   git push
+   ```
+
+**フェーズ2: Mac/Win版分離集計の実装（18:15-18:30）**
+
+1. **`scripts/upload_to_sheets.py` の修正**
+
+   集計関数 `aggregate_by_version()` の改善:
+   ```python
+   # 変更前: GaQ全体で1つの辞書
+   gaq_versions = {}
+   popup_versions = {}
+
+   # 変更後: Mac/Win版で4つの辞書に分離
+   gaq_mac_versions = {}
+   gaq_win_versions = {}
+   popup_mac_versions = {}
+   popup_win_versions = {}
+   ```
+
+   判定ロジックの追加:
+   ```python
+   # アセット名からMac/Win版を判別
+   is_mac = 'mac' in asset_name.lower() or '.dmg' in asset_name.lower()
+   is_win = 'windows' in asset_name.lower() or '.zip' in asset_name.lower() or '.exe' in asset_name.lower()
+   ```
+
+   Google Sheetsシート構成変更:
+   ```
+   変更前:
+   - GaQ_Summary
+   - PoPuP_Summary
+
+   変更後:
+   - GaQ_Mac_Summary
+   - GaQ_Win_Summary
+   - PoPuP_Mac_Summary
+   - PoPuP_Win_Summary
+   ```
+
+2. **テスト実行**
+   ```bash
+   bash scripts/track_downloads.sh
+   ```
+
+   結果:
+   ```
+   📦 GaQ (Mac) バージョン別集計:
+      - v1.2.10: 6 DL
+      - v1.2.2: 8 DL
+      - v1.2.0: 12 DL
+      - v1.1.1-mac: 28 DL
+
+   📦 GaQ (Win) バージョン別集計:
+      - v1.2.10: 14 DL
+      - v1.2.2: 10 DL
+      - v1.2.0: 20 DL
+      - windows-v1.1.1: 20 DL
+
+   📦 PoPuP (Mac): 20 DL
+   📦 PoPuP (Win): 202 DL
+   ```
+
+   ✅ Mac/Win版が正しく分離されていることを確認
+
+**フェーズ3: ダッシュボード・Apps Script更新（18:30-18:50）**
+
+1. **`docs/index.html` の更新**
+
+   カラーパレット追加:
+   ```javascript
+   // 追加
+   'PoPuP (Mac)': [濃紺・ティール系の配色],
+   'PoPuP (Windows)': [濃紺・インディゴ・バイオレット系の配色]
+   ```
+
+   サンプルデータ構造更新:
+   ```javascript
+   apps: {
+       'GaQ (Mac)': {...},
+       'GaQ (Windows)': {...},
+       'PoPuP (Mac)': {...},      // 追加
+       'PoPuP (Windows)': {...}   // 追加
+   }
+   ```
+
+2. **`config/google_apps_script.js` の更新**
+
+   GaQ判定ロジック改善（アセット名ベース）:
+   ```javascript
+   // 変更前: タグやリリース名で判定（統合リリースに未対応）
+   if (tag.includes('mac') || releaseName.includes('macOS')) {
+     appName = 'GaQ (Mac)';
+   }
+
+   // 変更後: アセット名で判定（v1.2.10以降に対応）
+   const lowerAssetName = assetName.toLowerCase();
+   const isMac = lowerAssetName.includes('mac') || lowerAssetName.includes('.dmg');
+   const isWindows = lowerAssetName.includes('windows') || lowerAssetName.includes('.zip');
+
+   if (isMac) {
+     appName = 'GaQ (Mac)';
+   } else if (isWindows) {
+     appName = 'GaQ (Windows)';
+   } else {
+     return; // sha256など判定不能はスキップ
+   }
+   ```
+
+   PoPuP判定ロジック改善:
+   ```javascript
+   const isMac = lowerAssetName.includes('mac') ||
+                 lowerAssetName.includes('.dmg') ||
+                 lowerAssetName.includes('.app');
+   const isWindows = lowerAssetName.includes('windows') ||
+                     lowerAssetName.includes('.zip') ||
+                     lowerAssetName.includes('.exe') ||
+                     lowerAssetName.includes('portable');
+   ```
+
+3. **Google Apps Script デプロイ更新**
+   - Apps Scriptエディタで新コードを貼り付け
+   - 既存デプロイを更新（新バージョン作成）
+   - ウェブアプリURL変更なし
+
+4. **API動作確認**
+   ```bash
+   curl -L "https://script.google.com/macros/s/AKfycbx.../exec?type=timeline&days=7"
+   ```
+
+   レスポンス:
+   ```json
+   {
+     "status": "success",
+     "dates": ["2025-12-08", ..., "2025-12-14"],
+     "apps": {
+       "GaQ (Mac)": { "total": [19,1,0,1,0,8,4] },
+       "GaQ (Windows)": { "total": [15,0,4,1,1,9,5] },
+       "PoPuP (Mac)": { "total": [16,0,1,1,2,1,0] },
+       "PoPuP (Windows)": { "total": [83,0,1,2,1,1,0] }
+     }
+   }
+   ```
+
+   ✅ 4つのアプリが正しく分離されていることを確認
+
+5. **Git コミット**
+   ```bash
+   git add -A
+   git commit -m "Update: ダッシュボード・Apps ScriptをPoPuP Mac/Win分離対応"
+   git push
+   ```
+
+#### 最終ディレクトリ構造
+
+```
+AccessLog/
+├── README.md
+├── .gitignore
+├── scripts/                    # 実行スクリプト
+│   ├── track_downloads.sh
+│   ├── upload_to_sheets.py
+│   └── setup_launchd.sh
+├── config/                     # 設定ファイル
+│   ├── com.releases.download-tracker.plist
+│   └── google_apps_script.js
+├── data/                       # データファイル
+│   ├── daily/
+│   │   └── downloads_YYYY-MM-DD.csv
+│   └── downloads_all.csv
+├── logs/                       # ログファイル
+│   ├── .gitkeep
+│   └── tracker_error.log
+├── docs/                       # ドキュメント
+│   ├── index.html             # ダッシュボード
+│   ├── *.md                   # 各種ドキュメント
+│   └── archive/               # アーカイブ
+│       ├── COLLABORATION.md
+│       ├── NEXT_PHASE_OPTIONS.md
+│       └── index-legacy.html
+├── .ai/                        # AI用メタファイル
+│   ├── claude.md
+│   └── codex.md
+└── credentials.json            # 認証情報（未管理）
+```
+
+#### 実装の詳細
+
+**scripts/upload_to_sheets.py (主要変更箇所)**
+
+Line 65-100: `aggregate_by_version()` 関数
+```python
+def aggregate_by_version(data):
+    gaq_mac_versions = {}
+    gaq_win_versions = {}
+    popup_mac_versions = {}
+    popup_win_versions = {}
+
+    for row in data:
+        asset_name = row['アセット名']
+        # sha256ファイルは除外
+        if '.sha256' in asset_name:
+            continue
+
+        # アセット名からMac/Win版を判別
+        is_mac = 'mac' in asset_name.lower() or '.dmg' in asset_name.lower()
+        is_win = 'windows' in asset_name.lower() or '.zip' in asset_name.lower()
+
+        if repo == 'GaQ':
+            if is_mac:
+                gaq_mac_versions[key] = gaq_mac_versions.get(key, 0) + count
+            elif is_win:
+                gaq_win_versions[key] = gaq_win_versions.get(key, 0) + count
+
+    return gaq_mac_versions, gaq_win_versions, popup_mac_versions, popup_win_versions
+```
+
+Line 188-278: Google Sheetsシート別アップロード
+- `GaQ_Mac_Summary`: Mac版のバージョン別集計
+- `GaQ_Win_Summary`: Win版のバージョン別集計
+- `PoPuP_Mac_Summary`: Mac版のバージョン別集計
+- `PoPuP_Win_Summary`: Win版のバージョン別集計
+
+**config/google_apps_script.js (主要変更箇所)**
+
+Line 74-78: アプリデータ構造初期化
+```javascript
+const appData = {
+    'GaQ (Mac)': {},
+    'GaQ (Windows)': {},
+    'PoPuP (Mac)': {},
+    'PoPuP (Windows)': {}
+};
+```
+
+Line 129-161: アプリ名判定ロジック
+```javascript
+if (repo === 'GaQ') {
+    const lowerAssetName = assetName.toLowerCase();
+    const isMac = lowerAssetName.includes('mac') || lowerAssetName.includes('.dmg');
+    const isWindows = lowerAssetName.includes('windows') ||
+                      lowerAssetName.includes('.zip') ||
+                      lowerAssetName.includes('.exe');
+
+    if (isMac) {
+        appName = 'GaQ (Mac)';
+    } else if (isWindows) {
+        appName = 'GaQ (Windows)';
+    } else {
+        return; // sha256など判定不能なファイルはスキップ
+    }
+}
+```
+
+**docs/index.html (主要変更箇所)**
+
+Line 306-333: カラーパレット定義
+```javascript
+const APP_COLOR_PALETTES = {
+    'GaQ (Mac)': [濃紺・緑系],
+    'GaQ (Windows)': [濃紺・緑系],
+    'PoPuP (Mac)': [濃紺・ティール系],      // 追加
+    'PoPuP (Windows)': [濃紺・インディゴ系]  // 追加
+};
+```
+
+Line 440-458: サンプルデータ生成
+```javascript
+apps: {
+    'GaQ (Mac)': { versions: {}, total: zeros },
+    'GaQ (Windows)': { versions: {}, total: zeros },
+    'PoPuP (Mac)': { versions: {}, total: zeros },       // 追加
+    'PoPuP (Windows)': { versions: {}, total: zeros }    // 追加
+}
+```
+
+#### 成果と効果
+
+**1. ディレクトリ構造の改善**
+- ✅ ルートディレクトリがすっきりし、ファイルの役割が明確に
+- ✅ 新規参加者がプロジェクト構造を理解しやすい
+- ✅ 保守性・拡張性が向上
+- ✅ 各ディレクトリが単一責任の原則に従う
+
+**2. Mac/Win版分離集計**
+- ✅ GaQ、PoPuPともにMac版とWin版を個別に集計
+- ✅ v1.2.10以降の統合リリース形式に対応
+- ✅ ダッシュボードで4つのアプリを個別表示
+- ✅ プラットフォーム別のダウンロード傾向を把握可能
+
+**3. データの正確性向上**
+- ✅ アセット名ベースの判定で誤分類を防止
+- ✅ sha256ファイルを除外して純粋なバイナリのみ集計
+- ✅ 日次増分計算の精度向上
+
+**4. 可視化の改善**
+- ✅ ダッシュボードで4つのアプリを色分け表示
+- ✅ プラットフォーム別の推移を比較可能
+- ✅ 統計カードで各プラットフォームの合計を一目で確認
+
+#### Git コミット履歴
+
+```bash
+af6236c - Refactor: ディレクトリ構造の整理・Mac/Win版分離集計の実装
+7496aeb - Update: ダッシュボード・Apps ScriptをPoPuP Mac/Win分離対応
+```
+
+コミット内容:
+- 22ファイル変更、432行追加、337行削除（1stコミット）
+- 2ファイル変更、27行追加、20行削除（2ndコミット）
+
+#### 今後の運用
+
+**自動実行**
+- 毎日00:05に `scripts/track_downloads.sh` が実行
+- 自動的に4つのGoogle Sheetsシートにデータをアップロード
+- ダッシュボードは自動的に最新データを表示
+
+**手動確認**
+```bash
+# テスト実行
+bash scripts/track_downloads.sh
+
+# ダッシュボード確認
+open /Users/ytsuji/dev/AccessLog/docs/index.html
+
+# API確認
+curl -L "https://script.google.com/.../exec?type=timeline&days=7"
+```
+
+**メンテナンス**
+- 新しいアプリ追加時は `upload_to_sheets.py`、`google_apps_script.js`、`index.html` の3ファイルを更新
+- アセット命名規則が変わった場合は判定ロジックを調整
+
+---
