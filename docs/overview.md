@@ -54,7 +54,7 @@
 └─────────────────────────────────────────────────────────────┘
                             ↓
 ┌─────────────────────────────────────────────────────────────┐
-│  dashboard.html                                             │
+│  docs/index.html                                            │
 │  - Chart.jsで視覚的なグラフを表示                            │
 │  - 期間選択: 7日/30日/90日/180日/365日                       │
 │  - アプリ別・バージョン別の積層棒グラフ                        │
@@ -67,16 +67,31 @@
 
 ```
 AccessLog/
-├── track_downloads.sh          # ダウンロード数取得スクリプト（毎日00:05自動実行）
-├── upload_to_sheets.py         # Google Sheetsアップロードスクリプト
-├── dashboard.html              # Webダッシュボード（ブラウザで開く）
-├── google_apps_script.js       # Google Apps Script（Web API）
-├── credentials.json            # Google Cloud サービスアカウント認証情報
-├── downloads_YYYY-MM-DD.csv    # 日次ログ（日付別）
-├── downloads_all.csv           # 累積ログ（全データ）
-├── tracker.log                 # 自動実行の標準出力ログ
-├── tracker_error.log           # 自動実行のエラーログ
-└── README.md                   # このファイル
+├── README.md
+├── .ai/                        # AI向けメタ情報
+│   ├── claude.md
+│   └── codex.md
+├── config/                     # 設定
+│   ├── com.releases.download-tracker.plist
+│   └── google_apps_script.js
+├── data/                       # 収集データ
+│   ├── daily/downloads_YYYY-MM-DD.csv
+│   └── downloads_all.csv
+├── docs/                       # ドキュメントとダッシュボード
+│   ├── index.html              # Webダッシュボード（公開/ローカル共用）
+│   ├── *.md
+│   └── archive/                # 旧版ドキュメント保管
+│       ├── index-legacy.html
+│       ├── COLLABORATION.md
+│       └── NEXT_PHASE_OPTIONS.md
+├── logs/
+│   ├── tracker.log             # 自動実行の標準出力ログ（生成）
+│   └── tracker_error.log       # 自動実行のエラーログ
+├── scripts/                    # 実行スクリプト
+│   ├── track_downloads.sh
+│   ├── upload_to_sheets.py
+│   └── setup_launchd.sh
+└── credentials.json            # Google Cloud サービスアカウント認証情報（未管理）
 
 ~/Library/LaunchAgents/
 └── com.releases.download-tracker.plist  # launchd自動実行設定

@@ -13,7 +13,8 @@
 #   - yoshihito-tsuji/Pop_app (PoPuP)
 #
 # 出力先:
-#   /Users/yoshihitotsuji/Claude_Code/AccessLog/
+#   data/ （日次CSV・累積CSV）
+#   logs/ （tracker_error.log）
 #
 # CSV形式:
 #   日付,リポジトリ,リリース名,タグ,アセット名,ダウンロード数
@@ -37,15 +38,17 @@ BLUE='\033[0;34m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# 出力先ディレクトリ（スクリプトの絶対パスから取得）
-BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
-OUTPUT_DIR="${BASE_DIR}/data"
+# パス設定（リポジトリルートを基準にする）
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+OUTPUT_DIR="${ROOT_DIR}/data"
 DAILY_DIR="${OUTPUT_DIR}/daily"
+LOG_DIR="${ROOT_DIR}/logs"
 CURRENT_DATE=$(date "+%Y-%m-%d")
 CURRENT_DATETIME=$(date "+%Y-%m-%d %H:%M:%S")
 
-# エラーログファイル（ルートディレクトリに維持）
-ERROR_LOG="${BASE_DIR}/tracker_error.log"
+# エラーログファイル（logs/ に配置）
+ERROR_LOG="${LOG_DIR}/tracker_error.log"
 
 # エラーハンドリング関数
 log_error() {
@@ -115,8 +118,8 @@ CUMULATIVE_LOG="${OUTPUT_DIR}/downloads_all.csv"
 REPO_NAMES=("yoshihito-tsuji/GaQ_app" "yoshihito-tsuji/Pop_app")
 REPO_DISPLAY_NAMES=("GaQ" "PoPuP")
 
-# ディレクトリ作成（日次ディレクトリも含む）
-mkdir -p "${DAILY_DIR}"
+# ディレクトリ作成（日次ディレクトリとログディレクトリ）
+mkdir -p "${DAILY_DIR}" "${LOG_DIR}"
 
 echo -e "${BLUE}========================================"
 echo "GitHub Release ダウンロード数追跡"
@@ -173,7 +176,7 @@ for idx in "${!REPO_NAMES[@]}"; do
 
     # 全リリースデータを1回のAPI呼び出しで取得（リトライ付き）
     if ! releases_json=$(fetch_releases_with_retry "${repo}"); then
-        echo -e "${YELLOW}  API呼び出しに失敗しました（詳細はtracker_error.logを確認）${NC}"
+        echo -e "${YELLOW}  API呼び出しに失敗しました（詳細は ${ERROR_LOG} を確認）${NC}"
         echo ""
         continue
     fi
@@ -237,9 +240,11 @@ echo ""
 # Google Sheetsへのアップロード
 echo -e "${BLUE}Google Sheetsにアップロード中...${NC}"
 
+CREDENTIALS_PATH="${GOOGLE_SHEETS_CREDENTIALS:-${ROOT_DIR}/credentials.json}"
+
 SPREADSHEET_ID="1-n-CpA9U8kwqTRxhbKBhNOj0-lcZjLG1MJXLhxgdQPs" \
-GOOGLE_SHEETS_CREDENTIALS="${BASE_DIR}/credentials.json" \
-python3 "${BASE_DIR}/upload_to_sheets.py"
+GOOGLE_SHEETS_CREDENTIALS="${CREDENTIALS_PATH}" \
+python3 "${SCRIPT_DIR}/upload_to_sheets.py"
 
 upload_exit_code=$?
 
@@ -249,7 +254,7 @@ if [ $upload_exit_code -eq 0 ]; then
 else
     log_error "Google Sheetsへのアップロードに失敗しました（終了コード: ${upload_exit_code}）"
     echo -e "${RED}❌ Google Sheetsへのアップロードに失敗しました${NC}"
-    echo -e "${YELLOW}   詳細は tracker_error.log を確認してください${NC}"
+    echo -e "${YELLOW}   詳細は ${ERROR_LOG} を確認してください${NC}"
     echo ""
     exit 1
 fi

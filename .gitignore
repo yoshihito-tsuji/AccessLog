@@ -2,11 +2,12 @@
 credentials.json
 
 # CSVデータファイル
-downloads_*.csv
+data/daily/*.csv
+data/downloads_all.csv
 
 # ログファイル
-tracker.log
-tracker_error.log
+logs/*.log
+!logs/.gitkeep
 
 # Python環境
 __pycache__/

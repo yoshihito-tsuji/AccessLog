@@ -161,6 +161,79 @@
             margin: 20px 0;
         }
 
+        /* エラーバナー・警告バナー */
+        .alert-banner {
+            padding: 16px 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95em;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .alert-banner.warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .alert-banner.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        .alert-banner.info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .alert-banner .icon {
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .alert-banner .message {
+            flex: 1;
+        }
+
+        .alert-banner .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            color: inherit;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .alert-banner .close-btn:hover {
+            opacity: 1;
+        }
+
+        /* データステータス表示 */
+        .data-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 12px;
+        }
+
+        .data-status.real {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .data-status.sample {
+            background: #fed7aa;
+            color: #9a3412;
+        }
+
         footer {
             text-align: center;
             color: var(--text-secondary);
@@ -196,7 +269,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>ダウンロード統計</h1>
+            <h1>アプリダウンロード統計</h1>
+            <p>リリース別ダウンロード数の推移 <span id="data-status-badge"></span></p>
             <div class="period-selector">
                 <button class="period-btn" data-period="7">7日間</button>
                 <button class="period-btn active" data-period="30">30日間</button>
@@ -205,6 +279,9 @@
                 <button class="period-btn" data-period="365">365日間</button>
             </div>
         </header>
+
+        <!-- アラートバナー表示エリア -->
+        <div id="alert-container"></div>
 
         <div class="stats-grid" id="stats-grid">
             <!-- 統計カードは動的に生成 -->
@@ -221,16 +298,10 @@
     </div>
 
     <script>
-        // ========================================
-        // 設定: 環境変更時はここを編集
-        // ========================================
-
         // Google Apps Script Web APIのURL
         const API_URL = 'https://script.google.com/macros/s/AKfycbxZx9xCYNYVepuxRsPpWwd4k4zpuq1yivyC6P3nWEEnbYHaIyelOdgVAGvHhi7-rzYeYw/exec';
 
-        // ========================================
         // アプリごとの色パレット（濃紺をベースに視認性を確保）
-        // ========================================
         const APP_COLOR_PALETTES = {
             'GaQ (Mac)': [
                 { bg: 'rgba(26, 54, 93, 0.85)', border: 'rgba(26, 54, 93, 1)' },      // 濃紺（メイン）
@@ -246,36 +317,97 @@
                 { bg: 'rgba(159, 122, 234, 0.85)', border: 'rgba(159, 122, 234, 1)' }, // 紫
                 { bg: 'rgba(237, 137, 54, 0.85)', border: 'rgba(237, 137, 54, 1)' }   // オレンジ
             ],
-            'PoPuP (Mac)': [
+            'PoPuP': [
                 { bg: 'rgba(26, 54, 93, 0.85)', border: 'rgba(26, 54, 93, 1)' },      // 濃紺（メイン）
                 { bg: 'rgba(56, 178, 172, 0.85)', border: 'rgba(56, 178, 172, 1)' },  // ティール
                 { bg: 'rgba(99, 179, 237, 0.85)', border: 'rgba(99, 179, 237, 1)' },  // スカイブルー
                 { bg: 'rgba(144, 205, 244, 0.85)', border: 'rgba(144, 205, 244, 1)' }, // ライトブルー
                 { bg: 'rgba(246, 173, 85, 0.85)', border: 'rgba(246, 173, 85, 1)' }   // ゴールド
-            ],
-            'PoPuP (Windows)': [
-                { bg: 'rgba(26, 54, 93, 0.85)', border: 'rgba(26, 54, 93, 1)' },      // 濃紺（メイン）
-                { bg: 'rgba(129, 140, 248, 0.85)', border: 'rgba(129, 140, 248, 1)' },  // インディゴ
-                { bg: 'rgba(167, 139, 250, 0.85)', border: 'rgba(167, 139, 250, 1)' },  // バイオレット
-                { bg: 'rgba(251, 146, 60, 0.85)', border: 'rgba(251, 146, 60, 1)' },   // オレンジ
-                { bg: 'rgba(244, 114, 182, 0.85)', border: 'rgba(244, 114, 182, 1)' }  // ピンク
             ]
         };
 
         let currentCharts = {};
         let currentPeriod = 30;
+        let isUsingSampleData = false;
+
+        // アラートバナーを表示
+        function showAlert(type, message, closeable = true) {
+            const container = document.getElementById('alert-container');
+            const alertId = `alert-${Date.now()}`;
+
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert-banner ${type}`;
+            alertDiv.id = alertId;
+
+            const icon = type === 'error' ? '⚠️' : type === 'warning' ? '⚠️' : 'ℹ️';
+
+            alertDiv.innerHTML = `
+                <span class="icon">${icon}</span>
+                <div class="message">${message}</div>
+                ${closeable ? '<button class="close-btn" onclick="closeAlert(\'' + alertId + '\')">×</button>' : ''}
+            `;
+
+            container.appendChild(alertDiv);
+            return alertId;
+        }
+
+        // アラートバナーを閉じる
+        function closeAlert(alertId) {
+            const alert = document.getElementById(alertId);
+            if (alert) {
+                alert.remove();
+            }
+        }
+
+        // すべてのアラートをクリア
+        function clearAllAlerts() {
+            const container = document.getElementById('alert-container');
+            container.innerHTML = '';
+        }
+
+        // データステータスバッジを更新
+        function updateDataStatusBadge(isReal) {
+            const badge = document.getElementById('data-status-badge');
+            if (isReal) {
+                badge.innerHTML = '<span class="data-status real">✓ リアルデータ</span>';
+            } else {
+                badge.innerHTML = '<span class="data-status sample">⚠ サンプルデータ</span>';
+            }
+        }
 
         // 日別推移データを取得
         async function loadTimelineData(days) {
             try {
                 // Google Apps Script APIからデータを取得
                 const response = await fetch(`${API_URL}?type=timeline&days=${days}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTPエラー: ${response.status}`);
+                }
+
                 const data = await response.json();
+
+                if (data.status === 'error') {
+                    throw new Error(data.message || 'API エラー');
+                }
+
+                // リアルデータの取得成功
+                isUsingSampleData = false;
                 return data;
             } catch (error) {
                 console.error('データ読み込みエラー:', error);
-                // エラー時はサンプルデータを返す（開発用）
+
+                // エラー時はサンプルデータを返す
+                isUsingSampleData = true;
                 console.warn('サンプルデータを使用します');
+
+                // 警告バナーを表示
+                showAlert(
+                    'warning',
+                    `Google Sheets APIからデータを取得できませんでした。サンプルデータを表示しています。<br>エラー詳細: ${error.message}`,
+                    true
+                );
+
                 const data = generateSampleData(days);
                 return data;
             }
@@ -307,11 +439,7 @@
                         versions: {},
                         total: zeros
                     },
-                    'PoPuP (Mac)': {
-                        versions: {},
-                        total: zeros
-                    },
-                    'PoPuP (Windows)': {
+                    'PoPuP': {
                         versions: {},
                         total: zeros
                     }
@@ -339,7 +467,7 @@
                 const card = document.createElement('div');
                 card.className = 'stat-card';
                 card.innerHTML = `
-                    <h3>${appName}</h3>
+                    <h3>${appName} ダウンロード数</h3>
                     <div class="number">${appTotals[appName].toLocaleString()}</div>
                 `;
                 statsGrid.appendChild(card);
@@ -349,7 +477,7 @@
             const totalCard = document.createElement('div');
             totalCard.className = 'stat-card';
             totalCard.innerHTML = `
-                <h3>合計</h3>
+                <h3>合計ダウンロード数</h3>
                 <div class="number">${totalDownloads.toLocaleString()}</div>
             `;
             statsGrid.appendChild(totalCard);
@@ -374,7 +502,7 @@
                 chartContainer.className = 'chart-container';
 
                 const chartTitle = document.createElement('h2');
-                chartTitle.textContent = appName;
+                chartTitle.textContent = `${appName} ダウンロード数推移`;
 
                 const chartWrapper = document.createElement('div');
                 chartWrapper.className = 'chart-wrapper';
@@ -482,6 +610,9 @@
         // データを読み込んで表示
         async function loadAndRender(days) {
             try {
+                // アラートをクリア
+                clearAllAlerts();
+
                 const data = await loadTimelineData(days);
 
                 if (data.status === 'error') {
@@ -491,16 +622,27 @@
                 renderStatsCards(data);
                 renderCharts(data);
 
+                // データステータスバッジを更新
+                updateDataStatusBadge(!isUsingSampleData);
+
                 // 最終更新日時を設定
-                document.getElementById('last-update').textContent =
-                    new Date().toLocaleString('ja-JP');
+                if (isUsingSampleData) {
+                    // サンプルデータの場合は現在時刻を表示
+                    document.getElementById('last-update').textContent =
+                        `${new Date().toLocaleString('ja-JP')} (サンプルデータ)`;
+                } else {
+                    // リアルデータの場合はAPIから取得したタイムスタンプを表示
+                    if (data.lastUpdate) {
+                        document.getElementById('last-update').textContent =
+                            new Date(data.lastUpdate).toLocaleString('ja-JP');
+                    } else {
+                        document.getElementById('last-update').textContent =
+                            new Date().toLocaleString('ja-JP');
+                    }
+                }
             } catch (error) {
-                document.querySelector('.container').innerHTML = `
-                    <div class="error">
-                        <h2>エラー</h2>
-                        <p>データの読み込みに失敗しました: ${error.message}</p>
-                    </div>
-                `;
+                showAlert('error', `データの読み込みに失敗しました: ${error.message}`, true);
+                console.error('loadAndRender エラー:', error);
             }
         }
 

@@ -5,33 +5,33 @@ GaQ Transcriber（Mac/Windows）と PoPuP の GitHub Releases ダウンロード
 ## 目的 / ゴール
 - GitHub API から各アセットの累積ダウンロード数を取得し、日次差分として記録する
 - Google Sheets (`DailyData`) に最新データを反映し、Apps Script から JSON API を公開する
-- `dashboard.html` で主要アプリ・バージョン別の推移を 1 ページで確認できるようにする
+- `docs/index.html` で主要アプリ・バージョン別の推移を 1 ページで確認できるようにする
 
 ## 運用のキモ
 ### 自動実行（デフォルト）
-- `com.releases.download-tracker.plist` を `~/Library/LaunchAgents` に配置し、`launchctl load ~/Library/LaunchAgents/com.releases.download-tracker.plist` で登録
-- 毎日 00:05 に `track_downloads.sh` が実行され、**GitHub API取得 → CSV記録 → Google Sheets自動アップロード**まで完全自動化（2025-11-17改善）
-- 実行結果は `tracker.log` / `tracker_error.log` に追記される
+- `config/com.releases.download-tracker.plist` を `~/Library/LaunchAgents` に配置し、`launchctl load ~/Library/LaunchAgents/com.releases.download-tracker.plist` で登録
+- 毎日 00:05 に `scripts/track_downloads.sh` が実行され、**GitHub API取得 → CSV記録 → Google Sheets自動アップロード**まで完全自動化（2025-11-17改善）
+- 実行結果は `logs/tracker.log` / `logs/tracker_error.log` に追記される
 - 再登録したい場合は `bash scripts/setup_launchd.sh` で plist を再生成 → load するだけでOK
 
 ### 手動更新フロー（テストや即時反映用）
-1. `bash track_downloads.sh` を実行（データ取得からGoogle Sheetsアップロードまで一括実行）
-2. ダッシュボードは `open dashboard.html` またはホストしている URL を開いて確認
+1. `bash scripts/track_downloads.sh` を実行（データ取得からGoogle Sheetsアップロードまで一括実行）
+2. ダッシュボードは `open docs/index.html` またはホストしている URL を開いて確認
 
 **注意：** 2025-11-17以降、`track_downloads.sh`がGoogle Sheetsアップロードを自動実行するため、個別に`upload_to_sheets.py`を実行する必要はありません。
 
 ### すぐ確認したいときのコマンド
-- ログ: `tail -n 50 tracker.log` / `tail -n 50 tracker_error.log`
+- ログ: `tail -n 50 logs/tracker.log` / `tail -n 50 logs/tracker_error.log`
 - launchd 状態: `launchctl list | grep com.releases.download-tracker`
 - 直近の CSV: `ls -t data/daily/downloads_*.csv | head -n 5`
 - 統合CSV: `tail -n 20 data/downloads_all.csv`
 
 ## 主要ファイル
-- `track_downloads.sh` : GitHub API から日次 CSV を生成
-- `upload_to_sheets.py` : 認証情報 (`credentials.json`) と `SPREADSHEET_ID` で Sheets を更新
+- `scripts/track_downloads.sh` : GitHub API から日次 CSV を生成
+- `scripts/upload_to_sheets.py` : 認証情報 (`credentials.json`) と `SPREADSHEET_ID` で Sheets を更新
 - `docs/index.html` : Chart.js ベースのダッシュボード（GitHub Pages公開版）
-- `com.releases.download-tracker.plist` : launchd ジョブ定義
-- `tracker.log` / `tracker_error.log` : 自動実行ログ
+- `config/com.releases.download-tracker.plist` : launchd ジョブ定義
+- `logs/tracker.log` / `logs/tracker_error.log` : 自動実行ログ
 - `data/daily/downloads_YYYY-MM-DD.csv` : 日別ダウンロードデータ
 - `data/downloads_all.csv` : 全期間の累積データ（Apps Script やバックアップのソース）
 

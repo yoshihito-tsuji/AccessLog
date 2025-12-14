@@ -15,7 +15,7 @@
 1. **サービスアカウントの共有確認**
    ```bash
    # credentials.jsonから確認
-   cat /Users/yoshihitotsuji/Claude_Code/AccessLog/credentials.json | grep client_email
+   cat /Users/ytsuji/dev/AccessLog/credentials.json | grep client_email
    ```
    このメールアドレスがGoogle Sheetsに**編集者**として追加されているか確認
 
@@ -25,7 +25,7 @@
 
 3. **credentials.jsonパス確認**
    ```bash
-   ls -la /Users/yoshihitotsuji/Claude_Code/AccessLog/credentials.json
+   ls -la /Users/ytsuji/dev/AccessLog/credentials.json
    ```
 
 ### 2. gspreadライブラリが見つからない
@@ -48,8 +48,8 @@ pip install gspread oauth2client
 launchctl list | grep releases
 
 # ログファイル確認（次回実行予定後）
-cat /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker.log
-cat /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker_error.log
+cat /Users/ytsuji/dev/AccessLog/logs/tracker.log
+cat /Users/ytsuji/dev/AccessLog/logs/tracker_error.log
 ```
 
 #### 原因と解決策
@@ -66,7 +66,7 @@ cat /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker_error.log
 
 3. **スクリプトの実行権限**
    ```bash
-   chmod +x /Users/yoshihitotsuji/Claude_Code/AccessLog/track_downloads.sh
+   chmod +x /Users/ytsuji/dev/AccessLog/scripts/track_downloads.sh
    ```
 
 4. **launchd環境でHomebrewコマンドが見つからない**
@@ -105,17 +105,17 @@ cat /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker_error.log
    - **確認方法**:
      ```bash
      # tracker.logで最新実行を確認
-     tail -50 tracker.log
+     tail -50 logs/tracker.log
 
      # エラーログ確認
-     cat tracker_error.log
-     ```
+     cat logs/tracker_error.log
+    ```
 
 ### 5. ダッシュボードが表示されない
 
 #### 確認ポイント
 1. **API URLが正しいか**
-   - `dashboard.html`の226行目を確認
+   - `docs/index.html`の226行目を確認
    - Google Apps ScriptのデプロイURLと一致しているか
 
 2. **ブラウザコンソール確認**
@@ -134,15 +134,15 @@ cat /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker_error.log
 #### 解決策
 ```bash
 # 手動実行でテスト
-cd /Users/yoshihitotsuji/Claude_Code/AccessLog
-bash track_downloads.sh
+cd /Users/ytsuji/dev/AccessLog
+bash scripts/track_downloads.sh
 ```
 
 成功すると:
 ```
 ✅ ログファイルに記録しました
-  - 日次ログ: downloads_2025-11-13.csv
-  - 累積ログ: downloads_all.csv
+  - 日次ログ: data/daily/downloads_2025-11-13.csv
+  - 累積ログ: data/downloads_all.csv
 
 ✅ Google Sheetsにアップロードしました
 ```

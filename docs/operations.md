@@ -32,7 +32,7 @@ URL: https://yoshihito-tsuji.github.io/AccessLog/
 **方法2: ローカルファイル（従来方式）**
 
 ```bash
-open /Users/yoshihitotsuji/Claude_Code/AccessLog/dashboard.html
+open /Users/ytsuji/dev/AccessLog/docs/index.html
 ```
 
 - **自動更新**: ページを開くたびに最新のGoogle Sheetsデータを取得
@@ -62,8 +62,8 @@ open /Users/yoshihitotsuji/Claude_Code/AccessLog/dashboard.html
 **推奨：** 以下のコマンドで全処理を実行
 
 ```bash
-cd /Users/yoshihitotsuji/Claude_Code/AccessLog
-bash track_downloads.sh
+cd /Users/ytsuji/dev/AccessLog
+bash scripts/track_downloads.sh
 ```
 
 このコマンドは以下を自動的に実行します：
@@ -78,13 +78,13 @@ bash track_downloads.sh
 #### 自動実行ログ確認
 ```bash
 # 標準出力ログ
-cat /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker.log
+cat /Users/ytsuji/dev/AccessLog/logs/tracker.log
 
 # エラーログ
-cat /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker_error.log
+cat /Users/ytsuji/dev/AccessLog/logs/tracker_error.log
 
 # 最新5件のCSVファイル
-ls -lt /Users/yoshihitotsuji/Claude_Code/AccessLog/data/daily/downloads_*.csv | head -5
+ls -lt /Users/ytsuji/dev/AccessLog/data/daily/downloads_*.csv | head -5
 ```
 
 #### launchd状態確認
@@ -100,7 +100,7 @@ cat ~/Library/LaunchAgents/com.releases.download-tracker.plist
 ```bash
 # Python経由で確認
 SPREADSHEET_ID="1-n-CpA9U8kwqTRxhbKBhNOj0-lcZjLG1MJXLhxgdQPs" \
-GOOGLE_SHEETS_CREDENTIALS="/Users/yoshihitotsuji/Claude_Code/AccessLog/credentials.json" \
+GOOGLE_SHEETS_CREDENTIALS="/Users/ytsuji/dev/AccessLog/credentials.json" \
 python3 -c "
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials

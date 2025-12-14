@@ -6,7 +6,7 @@
 
 ### ダッシュボードの色変更
 
-`dashboard.html`の9-18行目（CSS変数）:
+`docs/index.html`の9-18行目（CSS変数）:
 
 ```css
 :root {
@@ -22,7 +22,7 @@
 
 ### グラフの色変更
 
-`dashboard.html`の229-250行目:
+`docs/index.html`の229-250行目:
 
 ```javascript
 const APP_COLOR_PALETTES = {
@@ -36,7 +36,7 @@ const APP_COLOR_PALETTES = {
 
 ### グラフの種類変更
 
-`dashboard.html`の391行目:
+`docs/index.html`の391行目:
 
 ```javascript
 type: 'bar',  // 'line', 'pie', 'doughnut'なども可能

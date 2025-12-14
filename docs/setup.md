@@ -25,7 +25,7 @@ Google Sheets や GCP 設定から launchd まで、初期セットアップに�
    - 次のユーザーとして実行: **自分**
    - アクセスできるユーザー: **全員**
 6. `デプロイ`をクリック
-7. 表示されたURLをメモ（dashboard.htmlで使用）
+7. 表示されたURLをメモ（`docs/index.html`で使用）
 
 **重要**: デプロイ後に`google_apps_script.js`を更新した場合：
 - `デプロイ` > `デプロイを管理`
@@ -57,7 +57,7 @@ Google Sheets や GCP 設定から launchd まで、初期セットアップに�
 3. JSON形式を選択
 4. ダウンロードされたJSONファイルを以下に配置:
    ```
-   /Users/yoshihitotsuji/Claude_Code/AccessLog/credentials.json
+   /Users/ytsuji/dev/AccessLog/credentials.json
    ```
 
 #### 2.5 シート共有
@@ -80,7 +80,7 @@ pip install gspread oauth2client
 
 ```bash
 export SPREADSHEET_ID="1-n-CpA9U8kwqTRxhbKBhNOj0-lcZjLG1MJXLhxgdQPs"
-export GOOGLE_SHEETS_CREDENTIALS="/Users/yoshihitotsuji/Claude_Code/AccessLog/credentials.json"
+export GOOGLE_SHEETS_CREDENTIALS="/Users/ytsuji/dev/AccessLog/credentials.json"
 ```
 
 設定後:
@@ -105,13 +105,13 @@ bash scripts/setup_launchd.sh
 4. 即座にkickstart（動作確認）
 5. 登録状態の確認
 
-**注意**: plistファイルはリポジトリ直下の`com.releases.download-tracker.plist`がソースオブトゥルース（信頼できる唯一の情報源）です。`~/Library/LaunchAgents/`配下のファイルは、このファイルをコピーして使用します。
+**注意**: plistファイルはリポジトリ直下の`config/com.releases.download-tracker.plist`がソースオブトゥルース（信頼できる唯一の情報源）です。`~/Library/LaunchAgents/`配下のファイルは、このファイルをコピーして使用します。
 
 #### 4.2 手動セットアップ（詳細な制御が必要な場合）
 
 **plistファイルのコピー**:
 ```bash
-cp com.releases.download-tracker.plist ~/Library/LaunchAgents/
+cp config/com.releases.download-tracker.plist ~/Library/LaunchAgents/
 ```
 
 **launchd登録**:
@@ -194,7 +194,7 @@ Git管理下のファイル: `com.releases.download-tracker.plist`
 GitHub Pagesへのpush前にローカルでテスト:
 
 ```bash
-cd /Users/yoshihitotsuji/Claude_Code/AccessLog/docs
+cd /Users/ytsuji/dev/AccessLog/docs
 python3 -m http.server 8080
 # ブラウザで http://localhost:8080/ を開く
 ```
@@ -215,10 +215,10 @@ GitHub Pagesを使わず、ローカルでHTMLファイルを開く場合:
 
 ```bash
 # ファイルを直接開く
-open /Users/yoshihitotsuji/Claude_Code/AccessLog/dashboard.html
+open /Users/ytsuji/dev/AccessLog/docs/index.html
 
 # またはブラウザでブックマーク
-file:///Users/yoshihitotsuji/Claude_Code/AccessLog/dashboard.html
+file:///Users/ytsuji/dev/AccessLog/docs/index.html
 ```
 
 ---

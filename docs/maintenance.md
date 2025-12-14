@@ -13,14 +13,14 @@ REPO_NAMES=("yoshihito-tsuji/GaQ_app" "yoshihito-tsuji/Pop_app" "yoshihito-tsuji
 REPO_DISPLAY_NAMES=("GaQ" "PoPuP" "NewApp")
 ```
 
-**注意**: dashboard.htmlとgoogle_apps_script.jsも対応する修正が必要
+**注意**: `docs/index.html` と `config/google_apps_script.js` も対応する修正が必要
 
 ### データのバックアップ
 
 ```bash
 # すべてのCSVをバックアップ
-cd /Users/yoshihitotsuji/Claude_Code/AccessLog
-tar -czf backup_$(date +%Y%m%d).tar.gz downloads_*.csv
+cd /Users/ytsuji/dev/AccessLog
+tar -czf backup_$(date +%Y%m%d).tar.gz data/daily/downloads_*.csv data/downloads_all.csv
 
 # Google Sheetsは自動的にバックアップされる（Googleドライブのバージョン履歴）
 ```
@@ -34,7 +34,7 @@ tar -czf backup_$(date +%Y%m%d).tar.gz downloads_*.csv
 5. `バージョン` > `新バージョン`
 6. `デプロイ`
 
-**重要**: URLは変わらないため、dashboard.htmlの変更は不要
+**重要**: URLは変わらないため、`docs/index.html`の変更は不要
 
 ### 実行時刻の変更
 

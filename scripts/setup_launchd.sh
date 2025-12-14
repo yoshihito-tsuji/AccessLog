@@ -23,7 +23,7 @@ NC='\033[0m' # No Color
 # パス設定
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-PLIST_SOURCE="${REPO_ROOT}/com.releases.download-tracker.plist"
+PLIST_SOURCE="${REPO_ROOT}/config/com.releases.download-tracker.plist"
 PLIST_DEST="${HOME}/Library/LaunchAgents/com.releases.download-tracker.plist"
 LABEL="com.releases.download-tracker"
 
@@ -99,8 +99,8 @@ if launchctl list | grep -q "${LABEL}"; then
     echo -e "${BLUE}次回実行予定: 毎日 00:05${NC}"
     echo ""
     echo "ログファイル:"
-    echo "  - 標準出力: ${REPO_ROOT}/tracker.log"
-    echo "  - エラー出力: ${REPO_ROOT}/tracker_error.log"
+    echo "  - 標準出力: ${REPO_ROOT}/logs/tracker.log"
+    echo "  - エラー出力: ${REPO_ROOT}/logs/tracker_error.log"
 else
     echo -e "${RED}❌ エラー: launchdへの登録に失敗しました${NC}"
     exit 1

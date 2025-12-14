@@ -8,10 +8,10 @@
 
 ```bash
 # 標準出力ログ
-cat /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker.log
+cat /Users/ytsuji/dev/AccessLog/logs/tracker.log
 
 # エラーログ
-cat /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker_error.log
+cat /Users/ytsuji/dev/AccessLog/logs/tracker_error.log
 ```
 
 ### launchd状態確認

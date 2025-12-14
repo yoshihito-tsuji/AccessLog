@@ -352,7 +352,7 @@ launchd設定セットアップ
 ========================================
 
 [1/4] plistファイルの確認
-✅ plistファイルを確認: /Users/yoshihitotsuji/Claude_Code/AccessLog/com.releases.download-tracker.plist
+✅ plistファイルを確認: /Users/ytsuji/dev/AccessLog/config/com.releases.download-tracker.plist
 
 [2/4] plistを~/Library/LaunchAgentsにコピー
 ✅ コピー成功: /Users/yoshihitotsuji/Library/LaunchAgents/com.releases.download-tracker.plist
@@ -377,8 +377,8 @@ launchd設定セットアップ
 次回実行予定: 毎日 00:05
 
 ログファイル:
-  - 標準出力: /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker.log
-  - エラー出力: /Users/yoshihitotsuji/Claude_Code/AccessLog/tracker_error.log
+  - 標準出力: /Users/ytsuji/dev/AccessLog/logs/tracker.log
+  - エラー出力: /Users/ytsuji/dev/AccessLog/logs/tracker_error.log
 
 ========================================
 セットアップ完了
