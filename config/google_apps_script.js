@@ -129,36 +129,32 @@ function getTimelineData(days) {
       // アプリ名を判定
       let appName;
       if (repo === 'GaQ') {
-        // Mac版とWindows版を分ける
-        if (tag.includes('mac') || releaseName.includes('macOS')) {
+        // Mac版とWindows版をアセット名で判定（v1.2.10以降の統合リリース対応）
+        const lowerAssetName = assetName.toLowerCase();
+        const isMac = lowerAssetName.includes('mac') || lowerAssetName.includes('.dmg');
+        const isWindows = lowerAssetName.includes('windows') || lowerAssetName.includes('.zip') || lowerAssetName.includes('.exe');
+
+        if (isMac) {
           appName = 'GaQ (Mac)';
-        } else if (tag.includes('windows') || releaseName.includes('Windows')) {
+        } else if (isWindows) {
           appName = 'GaQ (Windows)';
         } else {
-          appName = 'GaQ (Mac)'; // デフォルトはMac
+          // sha256など判定不能なファイルはスキップ
+          return;
         }
       } else if (repo === 'PoPuP') {
-        // Mac版とWindows版を分ける
-        // 判定優先度: tag/releaseName/assetName のいずれかに該当キーワードを含む
-        const lowerTag = tag.toLowerCase();
-        const lowerReleaseName = releaseName.toLowerCase();
+        // Mac版とWindows版をアセット名で判定
         const lowerAssetName = assetName.toLowerCase();
-
-        const isMac = lowerTag.includes('mac') || lowerTag.includes('darwin') || lowerTag.includes('macos') || lowerTag.includes('universal') ||
-                      lowerReleaseName.includes('mac') || lowerReleaseName.includes('darwin') || lowerReleaseName.includes('macos') || lowerReleaseName.includes('universal') ||
-                      lowerAssetName.includes('mac') || lowerAssetName.includes('darwin') || lowerAssetName.includes('macos') || lowerAssetName.includes('universal') || lowerAssetName.includes('.dmg');
-
-        const isWindows = lowerTag.includes('win') || lowerTag.includes('windows') ||
-                         lowerReleaseName.includes('win') || lowerReleaseName.includes('windows') ||
-                         lowerAssetName.includes('win') || lowerAssetName.includes('windows') || lowerAssetName.includes('.exe') || lowerAssetName.includes('.msi');
+        const isMac = lowerAssetName.includes('mac') || lowerAssetName.includes('.dmg') || lowerAssetName.includes('.app');
+        const isWindows = lowerAssetName.includes('windows') || lowerAssetName.includes('.zip') || lowerAssetName.includes('.exe') || lowerAssetName.includes('portable');
 
         if (isMac) {
           appName = 'PoPuP (Mac)';
         } else if (isWindows) {
           appName = 'PoPuP (Windows)';
         } else {
-          // どちらでもなければ安全側でWindows
-          appName = 'PoPuP (Windows)';
+          // sha256など判定不能なファイルはスキップ
+          return;
         }
       } else {
         return; // 不明なリポジトリは除外
