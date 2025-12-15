@@ -8,6 +8,8 @@ data/downloads_all.csv
 # ログファイル
 logs/*.log
 !logs/.gitkeep
+tracker.log
+tracker_error.log
 
 # Python環境
 __pycache__/
