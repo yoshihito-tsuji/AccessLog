@@ -894,3 +894,175 @@ curl -L "https://script.google.com/.../exec?type=timeline&days=7"
 - アセット命名規則が変わった場合は判定ロジックを調整
 
 ---
+
+### 2025年12月18日 - launchdパス設定不整合の修正
+
+#### 問題の発見
+
+**症状**
+- ダッシュボード（https://yoshihito-tsuji.github.io/AccessLog/）で12月17日のダウンロード数がゼロと表示
+- PDFスクリーンショットの確認により異常を検知
+
+**調査結果**
+1. **CSVファイル確認**: 最新ファイルが `downloads_2025-12-15.csv` で停止
+   ```
+   data/daily/
+   ├── downloads_2025-12-15.csv  ← 最新（12/15 00:05作成）
+   └── downloads_2025-12-16.csv  ← 存在しない
+   └── downloads_2025-12-17.csv  ← 存在しない
+   └── downloads_2025-12-18.csv  ← 存在しない
+   ```
+
+2. **エラーログ確認** (`tracker_error.log`):
+   ```
+   /bin/bash: /Users/yoshihitotsuji/Claude_Code/AccessLog/track_downloads.sh: No such file or directory
+   ```
+   - スクリプトファイルが見つからないエラーが記録されていた
+
+3. **plistファイル確認** (`~/Library/LaunchAgents/com.releases.download-tracker.plist`):
+   ```xml
+   <!-- 問題箇所: 古いパスを参照 -->
+   <string>/Users/ytsuji/dev/AccessLog/scripts/track_downloads.sh</string>
+   <string>/Users/ytsuji/dev/AccessLog</string>
+   <string>/Users/ytsuji/dev/AccessLog/logs/tracker.log</string>
+   <string>/Users/ytsuji/dev/AccessLog/logs/tracker_error.log</string>
+   ```
+   - 実際のパス: `/Users/yoshihitotsuji/Claude_Code/AccessLog/`
+   - plistが参照するパス: `/Users/ytsuji/dev/AccessLog/`（存在しない旧パス）
+
+#### 原因
+
+**launchd plistのパス設定が環境移行後に更新されていなかった**
+
+- `~/Library/LaunchAgents/com.releases.download-tracker.plist` は手動でコピーするファイル
+- Git管理下の `config/com.releases.download-tracker.plist` は正しいパスに更新されていたが、LaunchAgentsディレクトリのファイルは古いまま放置されていた
+- 結果として、12月16日以降の自動実行が全て失敗
+
+#### 影響範囲
+
+| 日付 | 状態 | 詳細 |
+|------|------|------|
+| 〜12/15 | ✅ 正常 | 過去データは問題なし |
+| 12/16 | ❌ 欠落 | 自動収集失敗、データなし |
+| 12/17 | ❌ 欠落 | 自動収集失敗、データなし（ダッシュボードで0表示の原因） |
+| 12/18 | ✅ 復旧 | 手動実行で最新データ取得済み |
+
+**補足**: GitHub Releases APIが返すダウンロード数は**累積値**のため、合計ダウンロード数は正確。日別の増分データのみ12/16〜17分が欠落。
+
+#### 修正内容
+
+**1. `~/Library/LaunchAgents/com.releases.download-tracker.plist` の修正**
+
+```xml
+<!-- 修正前 -->
+<string>/Users/ytsuji/dev/AccessLog/scripts/track_downloads.sh</string>
+<string>/Users/ytsuji/dev/AccessLog</string>
+<string>/Users/ytsuji/dev/AccessLog/logs/tracker.log</string>
+<string>/Users/ytsuji/dev/AccessLog/logs/tracker_error.log</string>
+
+<!-- 修正後 -->
+<string>/Users/yoshihitotsuji/Claude_Code/AccessLog/scripts/track_downloads.sh</string>
+<string>/Users/yoshihitotsuji/Claude_Code/AccessLog</string>
+<string>/Users/yoshihitotsuji/Claude_Code/AccessLog/logs/tracker.log</string>
+<string>/Users/yoshihitotsuji/Claude_Code/AccessLog/logs/tracker_error.log</string>
+```
+
+**2. launchdへの反映**
+
+```bash
+# アンロード
+launchctl unload ~/Library/LaunchAgents/com.releases.download-tracker.plist
+
+# 再ロード
+launchctl load ~/Library/LaunchAgents/com.releases.download-tracker.plist
+
+# 登録確認
+launchctl list | grep download-tracker
+# 出力: -	0	com.releases.download-tracker
+```
+
+**3. 手動実行によるデータ復旧**
+
+```bash
+PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin bash scripts/track_downloads.sh
+```
+
+実行結果:
+```
+✅ ログファイルに記録しました
+  - 日次ログ: data/daily/downloads_2025-12-18.csv
+  - 累積ログ: data/downloads_all.csv
+
+✅ Google Sheetsにアップロードしました
+
+📦 GaQ (Mac) バージョン別集計:
+   - v1.2.10: 3 DL
+   - v1.2.2: 4 DL
+   - v1.2.1: 1 DL
+   - v1.2.0: 6 DL
+   - v1.1.1-mac: 14 DL
+
+📦 GaQ (Win) バージョン別集計:
+   - v1.2.10: 11 DL
+   - v1.2.2: 5 DL
+   - v1.2.1: 1 DL
+   - v1.2.0: 10 DL
+   - windows-v1.1.1: 10 DL
+
+📦 PoPuP (Mac) バージョン別集計:
+   - v1.3.1: 3 DL
+   - v1.3.0: 5 DL
+   - v0.0.10-test: 2 DL
+
+📦 PoPuP (Win) バージョン別集計:
+   - v1.3.1: 19 DL
+   - v1.3.0: 9 DL
+   - v0.0.10-test: 3 DL
+   - v1.2.0: 69 DL
+   - v1.1.0: 2 DL
+   - v1.0.0: 1 DL
+```
+
+**4. Git管理下のplistも同期**
+
+```bash
+# LaunchAgentsの修正済みplistをリポジトリにコピー
+cp ~/Library/LaunchAgents/com.releases.download-tracker.plist config/
+
+# コミット＆プッシュ
+git add config/com.releases.download-tracker.plist
+git commit -m "Fix: launchdのパス設定を現環境に修正"
+git push
+```
+
+#### 検証結果
+
+- ✅ **CSVファイル生成**: `data/daily/downloads_2025-12-18.csv` が正常に作成
+- ✅ **Google Sheetsアップロード**: 47件のレコードが正常にアップロード
+- ✅ **launchd登録**: `launchctl list` で正常登録を確認
+- ✅ **Gitリポジトリ同期**: `config/com.releases.download-tracker.plist` を最新状態に更新
+
+#### 今後の自動実行
+
+- **次回実行予定**: 本日 23:59
+- **確認方法**: 明日以降、`data/daily/downloads_2025-12-19.csv` の存在を確認
+
+#### 再発防止
+
+**問題の本質**: Git管理下のplistと実際に使用するLaunchAgents配下のplistが別ファイルであり、同期が漏れた
+
+**対策**:
+1. plist変更時は必ず `scripts/setup_launchd.sh` を実行（Git管理下のファイルをLaunchAgentsにコピーする自動化スクリプト）
+2. 環境移行時のチェックリストに「launchd plistのパス確認」を追加
+3. 定期的なログ確認（tracker_error.logにエラーが出ていないか）
+
+#### Gitコミット
+
+```
+bd2aaad Fix: launchdのパス設定を現環境に修正
+```
+
+変更ファイル:
+- `config/com.releases.download-tracker.plist`: 4行変更（パス修正）
+
+---
