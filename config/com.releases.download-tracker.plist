@@ -10,20 +10,20 @@
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>/Users/ytsuji/dev/AccessLog/scripts/track_downloads.sh</string>
+        <string>/Users/yoshihitotsuji/Claude_Code/AccessLog/scripts/track_downloads.sh</string>
     </array>
 
     <!-- 作業ディレクトリ -->
     <key>WorkingDirectory</key>
-    <string>/Users/ytsuji/dev/AccessLog</string>
+    <string>/Users/yoshihitotsuji/Claude_Code/AccessLog</string>
 
     <!-- 標準出力ログ -->
     <key>StandardOutPath</key>
-    <string>/Users/ytsuji/dev/AccessLog/logs/tracker.log</string>
+    <string>/Users/yoshihitotsuji/Claude_Code/AccessLog/logs/tracker.log</string>
 
     <!-- エラー出力ログ -->
     <key>StandardErrorPath</key>
-    <string>/Users/ytsuji/dev/AccessLog/logs/tracker_error.log</string>
+    <string>/Users/yoshihitotsuji/Claude_Code/AccessLog/logs/tracker_error.log</string>
 
     <!-- スケジュール設定: 毎日23:59に実行 -->
     <key>StartCalendarInterval</key>
