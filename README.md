@@ -20,6 +20,15 @@ GaQ Transcriber（Mac/Windows）と PoPuP の GitHub Releases ダウンロード
 
 **注意：** 2025-11-17以降、`track_downloads.sh`がGoogle Sheetsアップロードを自動実行するため、個別に`upload_to_sheets.py`を実行する必要はありません。
 
+### アセット命名規則（ダウンロード集計の判定基準）
+Apps Script 側の判定はアセット名のヒントに依存します。将来の誤判定を防ぐため、以下の命名規則を推奨します（`config/google_apps_script.js` 参照）。
+
+- Windows 版 ZIP/EXE は `windows` または `win32` / `win64` / `portable` を含める
+- Mac 版は `mac` / `macos` を含めるか `.dmg` とする
+- 署名・チェックサムは拡張子で除外されるため、上記のヒントを含めない
+
+**レガシー例外:** `PoPuP` の `popup-v1.0.0.zip` は過去の命名で OS ヒントがないため、Windows として集計する例外を入れています。
+
 ### すぐ確認したいときのコマンド
 - ログ: `tail -n 50 logs/tracker.log` / `tail -n 50 logs/tracker_error.log`
 - launchd 状態: `launchctl list | grep com.releases.download-tracker`

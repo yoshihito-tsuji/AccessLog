@@ -116,6 +116,30 @@ function getTimelineData(days) {
   });
 
   // 最新レコードのみを処理
+  const excludedAssetSuffixes = [
+    '.sha256',
+    '.sha256.txt',
+    '.sha256sum',
+    '.sha512',
+    '.sha512.txt',
+    '.sha512sum',
+    '.md5',
+    '.md5sum',
+    '.sha1',
+    '.sha1.txt',
+    '.sha1sum',
+    '.checksum',
+    '.checksum.txt',
+    '.sig',
+    '.asc'
+  ];
+  const isExcludedAssetName = lowerAssetName =>
+    excludedAssetSuffixes.some(suffix => lowerAssetName.endsWith(suffix));
+  const hasWindowsHint = lowerAssetName =>
+    lowerAssetName.includes('windows') ||
+    lowerAssetName.includes('portable') ||
+    /(^|[^a-z0-9])win(32|64)?([^a-z0-9]|$)/.test(lowerAssetName);
+
   Object.keys(latestRecordsByDate).forEach(dateStr => {
     const latestData = latestRecordsByDate[dateStr];
 
@@ -131,29 +155,36 @@ function getTimelineData(days) {
       if (repo === 'GaQ') {
         // Mac版とWindows版をアセット名で判定（v1.2.10以降の統合リリース対応）
         const lowerAssetName = assetName.toLowerCase();
-        const isMac = lowerAssetName.includes('mac') || lowerAssetName.includes('.dmg');
-        const isWindows = lowerAssetName.includes('windows') || lowerAssetName.includes('.zip') || lowerAssetName.includes('.exe');
+        // チェックサム/署名ファイルなど判定不能なファイルはスキップ
+        if (isExcludedAssetName(lowerAssetName)) {
+          return;
+        }
+        const isMac = lowerAssetName.includes('mac') || lowerAssetName.endsWith('.dmg');
+        const isWindows = hasWindowsHint(lowerAssetName) || lowerAssetName.endsWith('.exe');
 
         if (isMac) {
           appName = 'GaQ (Mac)';
         } else if (isWindows) {
           appName = 'GaQ (Windows)';
         } else {
-          // sha256など判定不能なファイルはスキップ
           return;
         }
       } else if (repo === 'PoPuP') {
         // Mac版とWindows版をアセット名で判定
         const lowerAssetName = assetName.toLowerCase();
-        const isMac = lowerAssetName.includes('mac') || lowerAssetName.includes('.dmg') || lowerAssetName.includes('.app');
-        const isWindows = lowerAssetName.includes('windows') || lowerAssetName.includes('.zip') || lowerAssetName.includes('.exe') || lowerAssetName.includes('portable');
+        // チェックサム/署名ファイルなど判定不能なファイルはスキップ
+        if (isExcludedAssetName(lowerAssetName)) {
+          return;
+        }
+        const isMac = lowerAssetName.includes('mac') || lowerAssetName.endsWith('.dmg') || lowerAssetName.includes('.app');
+        const isLegacyWindowsZip = lowerAssetName === 'popup-v1.0.0.zip';
+        const isWindows = hasWindowsHint(lowerAssetName) || lowerAssetName.endsWith('.exe') || isLegacyWindowsZip;
 
         if (isMac) {
           appName = 'PoPuP (Mac)';
         } else if (isWindows) {
           appName = 'PoPuP (Windows)';
         } else {
-          // sha256など判定不能なファイルはスキップ
           return;
         }
       } else {
