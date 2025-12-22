@@ -226,16 +226,21 @@ def _update_sheet_with_rows(sheet, rows):
     sheet.update(range_notation, rows, value_input_option='RAW')
 
     # 既存データがrowsより多い場合、余分な行を空にする
-    # シートの現在の行数を取得して、超過分をクリア
+    # シートの現在の行数を取得して、超過分をクリア（上限なし・分割更新）
     try:
         current_row_count = sheet.row_count
         if current_row_count > num_rows:
-            # 超過行を空行で上書き（最大100行まで）
-            rows_to_clear = min(current_row_count - num_rows, 100)
+            rows_to_clear = current_row_count - num_rows
             if rows_to_clear > 0:
-                empty_rows = [[''] * num_cols for _ in range(rows_to_clear)]
-                clear_range = f'A{num_rows + 1}:{end_col}{num_rows + rows_to_clear}'
-                sheet.update(clear_range, empty_rows, value_input_option='RAW')
+                chunk_size = 500
+                start_row = num_rows + 1
+                while rows_to_clear > 0:
+                    clear_rows = min(rows_to_clear, chunk_size)
+                    empty_rows = [[''] * num_cols for _ in range(clear_rows)]
+                    clear_range = f'A{start_row}:{end_col}{start_row + clear_rows - 1}'
+                    sheet.update(clear_range, empty_rows, value_input_option='RAW')
+                    start_row += clear_rows
+                    rows_to_clear -= clear_rows
     except Exception:
         # 超過行のクリアに失敗しても、メインの更新は成功しているので続行
         pass
