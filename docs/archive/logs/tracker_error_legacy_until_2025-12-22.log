@@ -1,0 +1,133 @@
+[2025-11-16 16:32:04] INFO: gspread/oauth2clientライブラリを正常にインポート
+[2025-11-16 16:32:04] INFO: upload_to_sheets.py 実行開始
+[2025-11-16 16:32:04] INFO: CSVファイル読み込み開始: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-16.csv
+[2025-11-16 16:32:04] INFO: CSVファイル読み込み完了: 21件
+[2025-11-16 16:32:04] ERROR: 認証ファイルが見つかりません: /Users/yoshihitotsuji/Claude_Code/AccessLog/credentials.json
+[2025-11-16 16:44:38] INFO: gspread/oauth2clientライブラリを正常にインポート
+[2025-11-16 16:44:38] INFO: upload_to_sheets.py 実行開始
+[2025-11-16 16:44:38] INFO: CSVファイル読み込み開始: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-16.csv
+[2025-11-16 16:44:38] INFO: CSVファイル読み込み完了: 28件
+[2025-11-16 16:44:38] INFO: Google Sheets認証開始: ./credentials.json
+[2025-11-16 16:44:38] INFO: Google Sheets認証成功
+[2025-11-16 16:44:38] INFO: スプレッドシート接続: 1-n-CpA9U8kwqTRxhbKBhNOj0-lcZjLG1MJXLhxgdQPs
+[2025-11-16 16:44:39] INFO: スプレッドシート 'AppDownload' を開きました
+[2025-11-16 16:44:40] INFO: DailyDataシートを取得
+[2025-11-16 16:44:40] INFO: 当日データの重複チェック: 2025-11-16
+[2025-11-16 16:44:40] INFO: DailyDataシートにデータ追加開始: 28件
+[2025-11-16 16:44:48] INFO: DailyDataシートにデータ追加完了: 28件
+[2025-11-16 16:44:51] INFO: Google Sheetsへのアップロードが完了しました
+[2025-11-16 16:44:54] INFO: gspread/oauth2clientライブラリを正常にインポート
+[2025-11-16 16:44:54] INFO: upload_to_sheets.py 実行開始
+[2025-11-16 16:44:54] INFO: CSVファイル読み込み開始: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-16.csv
+[2025-11-16 16:44:54] INFO: CSVファイル読み込み完了: 28件
+[2025-11-16 16:44:54] INFO: Google Sheets認証開始: /Users/yoshihitotsuji/Claude_Code/AccessLog/credentials.json
+[2025-11-16 16:44:54] INFO: Google Sheets認証成功
+[2025-11-16 16:44:54] INFO: スプレッドシート接続: 1-n-CpA9U8kwqTRxhbKBhNOj0-lcZjLG1MJXLhxgdQPs
+[2025-11-16 16:44:55] INFO: スプレッドシート 'AppDownload' を開きました
+[2025-11-16 16:44:55] INFO: DailyDataシートを取得
+[2025-11-16 16:44:55] INFO: 当日データの重複チェック: 2025-11-16
+[2025-11-16 16:45:04] INFO: 削除した既存レコード数: 28件
+[2025-11-16 16:45:04] INFO: DailyDataシートにデータ追加開始: 28件
+[2025-11-16 16:45:07] ERROR: Google Sheetsへのアップロードに失敗しました: APIError: [429]: Quota exceeded for quota metric 'Write requests' and limit 'Write requests per minute per user' of service 'sheets.googleapis.com' for consumer 'project_number:913943447893'.
+Traceback (most recent call last):
+  File "/Users/yoshihitotsuji/Claude_Code/AccessLog/upload_to_sheets.py", line 159, in upload_to_google_sheets
+    daily_sheet.append_row([
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/gspread/worksheet.py", line 1812, in append_row
+    return self.append_rows(
+           ^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/gspread/worksheet.py", line 1862, in append_rows
+    res = self.client.values_append(self.spreadsheet_id, range_label, params, body)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/gspread/http_client.py", line 191, in values_append
+    r = self.request("post", url, params=params, json=body)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/gspread/http_client.py", line 128, in request
+    raise APIError(response)
+gspread.exceptions.APIError: APIError: [429]: Quota exceeded for quota metric 'Write requests' and limit 'Write requests per minute per user' of service 'sheets.googleapis.com' for consumer 'project_number:913943447893'.
+[2025-11-16 16:46:52] INFO: gspread/oauth2clientライブラリを正常にインポート
+[2025-11-16 16:46:52] INFO: upload_to_sheets.py 実行開始
+[2025-11-16 16:46:52] INFO: CSVファイル読み込み開始: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-16.csv
+[2025-11-16 16:46:52] INFO: CSVファイル読み込み完了: 28件
+[2025-11-16 16:46:52] INFO: Google Sheets認証開始: /Users/yoshihitotsuji/Claude_Code/AccessLog/credentials.json
+[2025-11-16 16:46:52] INFO: Google Sheets認証成功
+[2025-11-16 16:46:52] INFO: スプレッドシート接続: 1-n-CpA9U8kwqTRxhbKBhNOj0-lcZjLG1MJXLhxgdQPs
+[2025-11-16 16:46:53] INFO: スプレッドシート 'AppDownload' を開きました
+[2025-11-16 16:46:53] INFO: DailyDataシートを取得
+[2025-11-16 16:46:53] INFO: 当日データの重複チェック: 2025-11-16
+[2025-11-16 16:46:56] INFO: 削除した既存レコード数: 9件
+[2025-11-16 16:46:56] INFO: DailyDataシートにデータ追加開始: 28件
+[2025-11-16 16:46:56] INFO: DailyDataシートにデータ追加完了: 28件（1回のAPI呼び出し）
+[2025-11-16 16:46:58] INFO: GaQ_Summaryシートにデータ追加完了: 2件（1回のAPI呼び出し）
+[2025-11-16 16:47:00] INFO: PoPuP_Summaryシートにデータ追加完了: 3件（1回のAPI呼び出し）
+[2025-11-16 16:47:00] INFO: Google Sheetsへのアップロードが完了しました
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+[0;34m  API呼び出し試行 1/3...[0m
+/bin/bash: /Users/yoshihitotsuji/Claude_Code/AccessLog/track_downloads.sh: No such file or directory

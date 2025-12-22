@@ -46,7 +46,7 @@ open /Users/ytsuji/dev/AccessLog/docs/index.html
 
 ### 自動実行の仕組み
 
-**毎日00:05に自動実行**され、以下の処理が完全自動で行われます：
+**毎日23:59に自動実行**され、以下の処理が完全自動で行われます（2025-12-17に23:59へ変更）：
 
 1. ✅ GitHub APIからダウンロード数取得
 2. ✅ CSVファイルに記録（日次・累積）
@@ -95,6 +95,29 @@ launchctl list | grep releases
 # plist内容確認
 cat ~/Library/LaunchAgents/com.releases.download-tracker.plist
 ```
+
+#### launchd設定の再登録・更新
+
+**重要**: plistファイルは `config/com.releases.download-tracker.plist` が正。変更後は必ず以下を実行してLaunchAgents側に反映すること。
+
+```bash
+# plist設定を最新化（Git管理下のplistをLaunchAgentsに反映）
+bash scripts/setup_launchd.sh
+```
+
+このスクリプトは以下を自動実行します：
+
+1. `config/com.releases.download-tracker.plist` を `~/Library/LaunchAgents/` にコピー
+2. 既存のlaunchd登録をアンロード
+3. 新しい設定でロード
+4. 即座にkickstart（動作確認）
+
+**再発防止**:
+
+- plistの実行時刻やパスを変更した場合、必ず `setup_launchd.sh` を実行する
+- Git管理下の `config/` が正、`~/Library/LaunchAgents/` は派生ファイルとして扱う
+
+**旧ログの保管場所**: 2025-12-22以前のルート直下のログは `docs/archive/logs/` に移動済み
 
 #### Google Sheetsデータ確認
 ```bash

@@ -10,9 +10,11 @@ GaQ Transcriber（Mac/Windows）と PoPuP の GitHub Releases ダウンロード
 ## 運用のキモ
 ### 自動実行（デフォルト）
 - `config/com.releases.download-tracker.plist` を `~/Library/LaunchAgents` に配置し、`launchctl load ~/Library/LaunchAgents/com.releases.download-tracker.plist` で登録
-- 毎日 00:05 に `scripts/track_downloads.sh` が実行され、**GitHub API取得 → CSV記録 → Google Sheets自動アップロード**まで完全自動化（2025-11-17改善）
+- 毎日 23:59 に `scripts/track_downloads.sh` が実行され、**GitHub API取得 → CSV記録 → Google Sheets自動アップロード**まで完全自動化（2025-11-17改善、2025-12-17に23:59へ変更）
+  - **変更理由**: GitHub APIの累積値を「その日の最終データ」として正確に記録するため、翌日00:05ではなく当日23:59に取得
 - 実行結果は `logs/tracker.log` / `logs/tracker_error.log` に追記される
 - 再登録したい場合は `bash scripts/setup_launchd.sh` で plist を再生成 → load するだけでOK
+  - **重要**: plistファイルは `config/` が正。変更後は必ず `setup_launchd.sh` を実行してLaunchAgents側に反映すること
 
 ### 手動更新フロー（テストや即時反映用）
 1. `bash scripts/track_downloads.sh` を実行（データ取得からGoogle Sheetsアップロードまで一括実行）

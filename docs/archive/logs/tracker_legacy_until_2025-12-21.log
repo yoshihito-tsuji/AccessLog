@@ -1,0 +1,2416 @@
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-11-16 16:18:45
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 4 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 41 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-16.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-11-17 00:06:29
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 4 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 41 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-17.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-11-18 00:05:04
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 7 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 4 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 44 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-18.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-11-19 00:07:48
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 9 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 6 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 46 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-19.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-11-20 00:07:54
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 10 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 7 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 47 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-20.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-11-21 00:12:23
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 13 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 9 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 50 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-21.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-11-22 00:09:59
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 13 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 9 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 52 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-22.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-11-23 00:05:04
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 13 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 9 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 52 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-23.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-11-24 00:08:57
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 13 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 9 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 52 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-24.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-11-25 00:05:02
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 13 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 9 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 54 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-25.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-11-26 00:11:20
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 13 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 9 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 57 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-26.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-11-27 00:05:02
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 13 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 9 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 57 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-27.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-11-28 00:05:05
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 13 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 9 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 57 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-28.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-11-29 00:05:02
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 13 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 9 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 58 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-29.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-11-30 00:05:02
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 13 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 9 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 60 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-11-30.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-01 00:05:04
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 13 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 9 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 60 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-01.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-02 00:05:05
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 13 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 9 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 60 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 6
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-02.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-03 00:05:03
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 4 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 4 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 63 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 8
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-03.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-04 00:05:02
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 4 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 4 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 65 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 8
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-04.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-05 00:05:03
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 2 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 2 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 4 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 4 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 65 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 10
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-05.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-06 00:05:04
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg: 4 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip: 3 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 4 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 4 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 65 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 11
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-06.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-07 00:05:05
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg: 4 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip: 4 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 4 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 4 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 65 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 11
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-07.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-08 00:05:03
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg: 4 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip: 4 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 4 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 4 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 65 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 11
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-08.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-09 00:05:04
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg: 5 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip: 4 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 4 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 4 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 65 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 11
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-09.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-10 00:05:05
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg: 5 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip: 8 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 4 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 4 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 65 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 11
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-10.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-11 00:05:05
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg: 6 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip: 9 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 4 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 2 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 4 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 5 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 65 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 11
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-11.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-12 00:05:03
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg: 6 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip: 10 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 4 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 4 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 2 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 5 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 5 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 65 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 11
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-12.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-13 00:05:02
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg: 3 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip: 4 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg: 6 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip: 10 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 2 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 5 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 5 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 65 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 13
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-13.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-14 00:05:03
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_macOS.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_v1.2.10_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_v1.2.10_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows.zip: 2 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows_v1.2.10_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows_v1.2.10_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg: 3 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip: 4 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg: 6 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip: 10 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 2 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 5 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 5 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 65 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 14
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-14.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-15 00:05:02
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_macOS.dmg: 2 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_v1.2.10_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_v1.2.10_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows.zip: 6 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows_v1.2.10_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows_v1.2.10_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg: 3 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip: 4 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg: 6 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip: 10 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 2 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 5 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 5 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 67 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 14
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-15.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-16 00:05:03
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_macOS.dmg: 2 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_v1.2.10_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_v1.2.10_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows.zip: 10 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows_v1.2.10_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows_v1.2.10_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg: 3 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip: 4 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg: 6 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip: 10 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 2 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 5 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 5 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 67 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 14
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-16.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-17 00:05:05
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_macOS.dmg: 2 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_v1.2.10_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_v1.2.10_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows.zip: 10 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows_v1.2.10_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows_v1.2.10_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg: 3 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip: 4 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg: 6 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip: 10 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 2 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 5 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 5 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 67 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 14
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-17.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-18 00:05:03
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_macOS.dmg: 2 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_v1.2.10_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_v1.2.10_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows.zip: 10 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows_v1.2.10_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows_v1.2.10_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg: 3 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip: 4 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg: 6 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip: 10 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 2 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 5 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 5 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 69 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 14
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-18.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-19 00:05:05
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_macOS.dmg: 2 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_v1.2.10_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_v1.2.10_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows.zip: 10 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows_v1.2.10_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows_v1.2.10_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg: 3 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip: 4 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg: 6 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip: 10 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 2 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 5 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 5 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 69 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 14
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-19.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-20 00:05:03
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_macOS.dmg: 2 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_v1.2.10_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_v1.2.10_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows.zip: 10 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows_v1.2.10_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows_v1.2.10_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg: 3 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip: 4 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg: 6 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip: 10 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 2 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 5 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 5 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 69 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 14
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-20.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+
+[0;34m========================================
+GitHub Release ダウンロード数追跡
+========================================\033[0m
+
+実行日時: 2025-12-21 00:05:05
+出力先: /Users/yoshihitotsuji/Claude_Code/AccessLog
+
+[0;34mダウンロード数を取得中...[0m
+
+[0;34m--- GaQ (yoshihito-tsuji/GaQ_app) ---[0m
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_macOS.dmg: 2 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_v1.2.10_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_v1.2.10_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows.zip: 10 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows_v1.2.10_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.10 (v1.2.10)
+    └─ GaQ_Transcriber_Windows_v1.2.10_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg: 3 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_macOS.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_v1.2.2_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip: 4 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.2 (v1.2.2)
+    └─ GaQ_Transcriber_Windows_v1.2.2_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_v1.2.1_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.1 (v1.2.1)
+    └─ GaQ_Transcriber_Windows_v1.2.1_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg: 6 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_v1.2.0_mac.dmg.sha256: 1 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip: 10 DL
+  [0;32m✓[0m GaQ Offline Transcriber v1.2.0 (v1.2.0)
+    └─ GaQ_Transcriber_Windows_v1.2.0_Portable.zip.sha256: 1 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg: 14 DL
+  [0;32m✓[0m GaQ Transcriber v1.1.1 (macOS) (v1.1.1-mac)
+    └─ GaQ_Transcriber_v1.1.1_mac.dmg.sha256: 0 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Portable.zip: 10 DL
+  [0;32m✓[0m Windows v1.1.1 (windows-v1.1.1)
+    └─ GaQ_Transcriber_Windows_v1.1.1_Setup.exe: 0 DL
+
+[0;34m--- PoPuP (yoshihito-tsuji/Pop_app) ---[0m
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 3 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_mac.dmg: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 1 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.app.zip: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP.exe: 5 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_mac.dmg: 2 DL
+  [0;32m✓[0m v1.3.1 (v1.3.1)
+    └─ PoPuP_v1.3.1_windows_portable.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.app.zip: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP.exe: 2 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_mac.dmg: 5 DL
+  [0;32m✓[0m v1.3.0 (v1.3.0)
+    └─ PoPuP_v1.3.0_windows_portable.zip: 5 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.app.zip: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP.exe: 1 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_mac.dmg: 2 DL
+  [0;32m✓[0m v0.0.10-test (v0.0.10-test)
+    └─ PoPuP_v1.2.2_windows_portable.zip: 1 DL
+  [0;32m✓[0m PoPuP v1.2.0 (v1.2.0)
+    └─ PoPuP_Portable_v1.2.0.zip: 69 DL
+  [0;32m✓[0m PoPuP v1.1.0 (v1.1.0)
+    └─ PoPuP_v1.1.0_windows.zip: 2 DL
+  [0;32m✓[0m PoPuP v1.0.0 - 初回正式リリース (v1.0.0)
+    └─ popup-v1.0.0.zip: 1 DL
+
+[0;34m========================================
+集計結果
+========================================\033[0m
+対象リポジトリ: 2 個
+総リリース数: 14
+総ダウンロード数: [0;32m0[0m
+
+[0;32m✅ ログファイルに記録しました[0m
+  - 日次ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_2025-12-21.csv
+  - 累積ログ: /Users/yoshihitotsuji/Claude_Code/AccessLog/downloads_all.csv
+

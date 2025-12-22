@@ -165,6 +165,9 @@ def aggregate_by_version(data):
         # Apps Scriptと同一の判定ロジックを使用
         platform = detect_platform(repo, asset_name)
         if platform is None:
+            # 判定不能なアセット（チェックサム以外）をログに記録
+            if not is_excluded_asset_name(asset_name):
+                logger.warning(f"判定不能なアセット: {repo}/{tag}/{asset_name}")
             continue
 
         key = f"{release_name} ({tag})"

@@ -20,7 +20,8 @@
 #   日付,リポジトリ,リリース名,タグ,アセット名,ダウンロード数
 #
 
-set -e
+set -e  # エラーで即座に終了
+set -o pipefail  # パイプライン内のエラーも検知
 
 # Homebrew PATHを安全に追加（既に含まれている場合はスキップ）
 # launchd環境ではplist側で設定済み、手動実行時にも対応
@@ -57,15 +58,15 @@ log_error() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: ${message}" >> "${ERROR_LOG}"
 }
 
-# GitHub API呼び出し関数（エラー詳細を記録）
+# GitHub API呼び出し関数（エラー詳細を記録、ページネーション対応）
 fetch_releases() {
     local repo="$1"
     local temp_file=$(mktemp)
     local http_code
     local api_output
 
-    # GitHub API呼び出し（エラー出力を一時ファイルに保存）
-    if api_output=$(gh api "repos/${repo}/releases?per_page=100" 2>"${temp_file}"); then
+    # GitHub API呼び出し（--paginateで全リリースを取得）
+    if api_output=$(gh api --paginate "repos/${repo}/releases" 2>"${temp_file}"); then
         echo "$api_output"
         rm -f "${temp_file}"
         return 0
@@ -131,6 +132,7 @@ echo ""
 
 # GitHub CLI が利用可能かチェック
 if ! command -v gh &> /dev/null; then
+    log_error "GitHub CLI (gh) がインストールされていません"
     echo -e "${YELLOW}⚠ GitHub CLI (gh) がインストールされていません${NC}"
     echo "インストール方法: brew install gh"
     exit 1
@@ -138,6 +140,7 @@ fi
 
 # jq が利用可能かチェック
 if ! command -v jq &> /dev/null; then
+    log_error "jq がインストールされていません"
     echo -e "${YELLOW}⚠ jq がインストールされていません${NC}"
     echo "インストール方法: brew install jq"
     exit 1
@@ -145,6 +148,7 @@ fi
 
 # GitHub認証チェック
 if ! gh auth status &> /dev/null; then
+    log_error "GitHub CLI が認証されていません"
     echo -e "${YELLOW}⚠ GitHub CLI が認証されていません${NC}"
     echo "認証方法: gh auth login"
     exit 1
@@ -167,6 +171,9 @@ echo ""
 total_downloads=0
 total_release_count=0
 
+# リポジトリ取得失敗フラグ（部分成功の抑止用）
+any_repo_failed=false
+
 # 各リポジトリを処理
 for idx in "${!REPO_NAMES[@]}"; do
     repo="${REPO_NAMES[$idx]}"
@@ -178,6 +185,7 @@ for idx in "${!REPO_NAMES[@]}"; do
     if ! releases_json=$(fetch_releases_with_retry "${repo}"); then
         echo -e "${YELLOW}  API呼び出しに失敗しました（詳細は ${ERROR_LOG} を確認）${NC}"
         echo ""
+        any_repo_failed=true
         continue
     fi
 
@@ -236,6 +244,15 @@ echo -e "${GREEN}✅ ログファイルに記録しました${NC}"
 echo "  - 日次ログ: ${DAILY_LOG}"
 echo "  - 累積ログ: ${CUMULATIVE_LOG}"
 echo ""
+
+# リポジトリ取得の成功確認（部分成功の抑止）
+if [ "$any_repo_failed" = true ]; then
+    log_error "いずれかのリポジトリ取得に失敗したため、Google Sheetsアップロードをスキップします"
+    echo -e "${RED}❌ いずれかのリポジトリ取得に失敗したため、Google Sheetsアップロードをスキップします${NC}"
+    echo -e "${YELLOW}   詳細は ${ERROR_LOG} を確認してください${NC}"
+    echo ""
+    exit 1
+fi
 
 # Google Sheetsへのアップロード
 echo -e "${BLUE}Google Sheetsにアップロード中...${NC}"

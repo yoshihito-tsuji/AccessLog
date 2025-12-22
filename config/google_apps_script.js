@@ -167,6 +167,8 @@ function getTimelineData(days) {
         } else if (isWindows) {
           appName = 'GaQ (Windows)';
         } else {
+          // 判定不能なアセットをログに記録
+          console.log('判定不能なアセット: ' + repo + '/' + tag + '/' + assetName);
           return;
         }
       } else if (repo === 'PoPuP') {
@@ -185,6 +187,8 @@ function getTimelineData(days) {
         } else if (isWindows) {
           appName = 'PoPuP (Windows)';
         } else {
+          // 判定不能なアセットをログに記録
+          console.log('判定不能なアセット: ' + repo + '/' + tag + '/' + assetName);
           return;
         }
       } else {
