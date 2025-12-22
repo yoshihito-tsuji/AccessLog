@@ -23,6 +23,8 @@ import sys
 import csv
 import json
 import logging
+import time
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -58,6 +60,84 @@ except ImportError:
     print("   インストール: pip install gspread oauth2client")
 
 
+# Apps Scriptと同一の除外リスト（15パターン）
+EXCLUDED_ASSET_SUFFIXES = [
+    '.sha256',
+    '.sha256.txt',
+    '.sha256sum',
+    '.sha512',
+    '.sha512.txt',
+    '.sha512sum',
+    '.md5',
+    '.md5sum',
+    '.sha1',
+    '.sha1.txt',
+    '.sha1sum',
+    '.checksum',
+    '.checksum.txt',
+    '.sig',
+    '.asc'
+]
+
+
+def is_excluded_asset_name(asset_name):
+    """チェックサム/署名ファイルかどうか判定（Apps Scriptと同一ロジック）"""
+    lower_name = asset_name.lower()
+    return any(lower_name.endswith(suffix) for suffix in EXCLUDED_ASSET_SUFFIXES)
+
+
+def has_windows_hint(asset_name):
+    """Windowsを示すヒントがあるか判定（Apps Scriptと同一ロジック）"""
+    lower_name = asset_name.lower()
+    if 'windows' in lower_name:
+        return True
+    if 'portable' in lower_name:
+        return True
+    # win, win32, win64 を単語境界で検出
+    if re.search(r'(^|[^a-z0-9])win(32|64)?([^a-z0-9]|$)', lower_name):
+        return True
+    return False
+
+
+def detect_platform(repo, asset_name):
+    """
+    リポジトリとアセット名からプラットフォームを判定（Apps Scriptと同一ロジック）
+
+    Returns:
+        'mac', 'windows', または None（判定不能/除外対象）
+    """
+    lower_name = asset_name.lower()
+
+    # チェックサム/署名ファイルは除外
+    if is_excluded_asset_name(asset_name):
+        return None
+
+    if repo == 'GaQ':
+        is_mac = 'mac' in lower_name or lower_name.endswith('.dmg')
+        is_windows = has_windows_hint(lower_name) or lower_name.endswith('.exe')
+
+        if is_mac:
+            return 'mac'
+        elif is_windows:
+            return 'windows'
+        else:
+            return None
+
+    elif repo == 'PoPuP':
+        is_mac = 'mac' in lower_name or lower_name.endswith('.dmg') or '.app' in lower_name
+        is_legacy_windows_zip = lower_name == 'popup-v1.0.0.zip'
+        is_windows = has_windows_hint(lower_name) or lower_name.endswith('.exe') or is_legacy_windows_zip
+
+        if is_mac:
+            return 'mac'
+        elif is_windows:
+            return 'windows'
+        else:
+            return None
+
+    return None
+
+
 def read_daily_csv(csv_path):
     """日次CSVファイルを読み込み"""
     data = []
@@ -69,7 +149,7 @@ def read_daily_csv(csv_path):
 
 
 def aggregate_by_version(data):
-    """バージョン別にダウンロード数を集計"""
+    """バージョン別にダウンロード数を集計（Apps Scriptと同一ロジック）"""
     gaq_mac_versions = {}
     gaq_win_versions = {}
     popup_mac_versions = {}
@@ -82,31 +162,86 @@ def aggregate_by_version(data):
         asset_name = row['アセット名']
         download_count = int(row['ダウンロード数'])
 
-        # sha256ファイルは除外
-        if '.sha256' in asset_name:
+        # Apps Scriptと同一の判定ロジックを使用
+        platform = detect_platform(repo, asset_name)
+        if platform is None:
             continue
 
-        # アセット名からMac/Win版を判別
-        is_mac = 'mac' in asset_name.lower() or '.dmg' in asset_name.lower()
-        is_win = 'windows' in asset_name.lower() or '.zip' in asset_name.lower() or '.exe' in asset_name.lower()
+        key = f"{release_name} ({tag})"
 
         if repo == 'GaQ':
-            key = f"{release_name} ({tag})"
-            if is_mac:
+            if platform == 'mac':
                 gaq_mac_versions[key] = gaq_mac_versions.get(key, 0) + download_count
-            elif is_win:
+            elif platform == 'windows':
                 gaq_win_versions[key] = gaq_win_versions.get(key, 0) + download_count
         elif repo == 'PoPuP':
-            key = f"{release_name} ({tag})"
-            if is_mac:
+            if platform == 'mac':
                 popup_mac_versions[key] = popup_mac_versions.get(key, 0) + download_count
-            elif is_win:
+            elif platform == 'windows':
                 popup_win_versions[key] = popup_win_versions.get(key, 0) + download_count
 
     return gaq_mac_versions, gaq_win_versions, popup_mac_versions, popup_win_versions
 
 
-def upload_to_google_sheets(data, gaq_mac_versions, gaq_win_versions, popup_mac_versions, popup_win_versions):
+def _filter_rows_by_date(rows, target_date, match_prefix):
+    if not rows:
+        return rows
+    header = rows[0]
+    filtered = [header]
+    for row in rows[1:]:
+        if not row:
+            continue
+        cell = row[0]
+        if match_prefix:
+            if not cell.startswith(target_date):
+                filtered.append(row)
+        else:
+            if cell != target_date:
+                filtered.append(row)
+    return filtered
+
+
+def _update_sheet_with_rows(sheet, rows):
+    """
+    シートをrowsの内容で更新する（sheet.clear()を使わない安全な方式）
+
+    既存データを消さずに、必要な範囲のみを更新する。
+    rowsが空の場合は何もしない。
+    """
+    if not rows:
+        return
+
+    # 更新する範囲を計算
+    num_rows = len(rows)
+    num_cols = max(len(row) for row in rows) if rows else 0
+
+    if num_rows == 0 or num_cols == 0:
+        return
+
+    # A1:最終列最終行 の範囲を指定して更新
+    end_col = chr(ord('A') + num_cols - 1)  # A, B, C, ... 列名
+    range_notation = f'A1:{end_col}{num_rows}'
+
+    # 一括更新（clear()を使わない）
+    sheet.update(range_notation, rows, value_input_option='RAW')
+
+    # 既存データがrowsより多い場合、余分な行を空にする
+    # シートの現在の行数を取得して、超過分をクリア
+    try:
+        current_row_count = sheet.row_count
+        if current_row_count > num_rows:
+            # 超過行を空行で上書き（最大100行まで）
+            rows_to_clear = min(current_row_count - num_rows, 100)
+            if rows_to_clear > 0:
+                empty_rows = [[''] * num_cols for _ in range(rows_to_clear)]
+                clear_range = f'A{num_rows + 1}:{end_col}{num_rows + rows_to_clear}'
+                sheet.update(clear_range, empty_rows, value_input_option='RAW')
+    except Exception:
+        # 超過行のクリアに失敗しても、メインの更新は成功しているので続行
+        pass
+
+
+def upload_to_google_sheets(data, gaq_mac_versions, gaq_win_versions, popup_mac_versions, popup_win_versions, target_date):
     """Google Sheetsにデータをアップロード"""
     if not GSPREAD_AVAILABLE:
         logger.error("Google Sheets連携がスキップされました（gspreadが未インストール）")
@@ -154,26 +289,21 @@ def upload_to_google_sheets(data, gaq_mac_versions, gaq_win_versions, popup_mac_
             daily_sheet.append_row(['記録日時', 'リポジトリ', 'リリース名', 'タグ', 'アセット名', 'ダウンロード数'])
             logger.info("DailyDataシートを作成しました")
 
-        # 当日のデータを削除（冪等性を確保）
-        today = datetime.now().strftime('%Y-%m-%d')
-        logger.info(f"当日データの重複チェック: {today}")
+        # 当日のデータを差し替え（冪等性を確保）
+        logger.info(f"当日データの重複チェック: {target_date}")
         all_values = daily_sheet.get_all_values()
+        if not all_values:
+            all_values = [['記録日時', 'リポジトリ', 'リリース名', 'タグ', 'アセット名', 'ダウンロード数']]
 
-        # 削除する行のインデックスを収集（降順にソートして後ろから削除）
-        rows_to_delete = []
-        for idx, row in enumerate(all_values[1:], start=2):  # ヘッダーをスキップ
-            if row and row[0].startswith(today):
-                rows_to_delete.append(idx)
+        filtered_values = _filter_rows_by_date(all_values, target_date, match_prefix=True)
+        before_count = max(len(all_values) - 1, 0)
+        after_count = max(len(filtered_values) - 1, 0)
+        removed = before_count - after_count
+        if removed:
+            logger.info(f"削除した既存レコード数: {removed}件")
+            print(f"   削除した既存レコード数: {removed}件")
 
-        # 後ろから削除（インデックスのずれを防ぐ）
-        for row_idx in reversed(rows_to_delete):
-            daily_sheet.delete_rows(row_idx)
-
-        if rows_to_delete:
-            logger.info(f"削除した既存レコード数: {len(rows_to_delete)}件")
-            print(f"   削除した既存レコード数: {len(rows_to_delete)}件")
-
-        # データを追加（バッチ処理でAPI呼び出し回数を削減）
+        # データを追加（1回の更新にまとめる）
         logger.info(f"DailyDataシートにデータ追加開始: {len(data)}件")
         rows_to_add = [
             [
@@ -186,11 +316,9 @@ def upload_to_google_sheets(data, gaq_mac_versions, gaq_win_versions, popup_mac_
             ]
             for row in data
         ]
-        if rows_to_add:
-            daily_sheet.append_rows(rows_to_add, value_input_option='RAW')
-            logger.info(f"DailyDataシートにデータ追加完了: {len(data)}件（1回のAPI呼び出し）")
-        else:
-            logger.info("追加するデータがありません")
+        merged_values = filtered_values + rows_to_add
+        _update_sheet_with_rows(daily_sheet, merged_values)
+        logger.info(f"DailyDataシートにデータ追加完了: {len(rows_to_add)}件（1回のAPI呼び出し）")
 
         # バージョン別集計シート（GaQ Mac版）
         try:
@@ -199,20 +327,13 @@ def upload_to_google_sheets(data, gaq_mac_versions, gaq_win_versions, popup_mac_
             gaq_mac_sheet = spreadsheet.add_worksheet(title='GaQ_Mac_Summary', rows=100, cols=10)
             gaq_mac_sheet.append_row(['日付', 'バージョン', 'ダウンロード数'])
 
-        # 当日のデータを削除（冪等性を確保）
         gaq_mac_all_values = gaq_mac_sheet.get_all_values()
-        gaq_mac_rows_to_delete = []
-        for idx, row in enumerate(gaq_mac_all_values[1:], start=2):
-            if row and row[0] == today:
-                gaq_mac_rows_to_delete.append(idx)
-
-        for row_idx in reversed(gaq_mac_rows_to_delete):
-            gaq_mac_sheet.delete_rows(row_idx)
-
-        # データを追加（バッチ処理でAPI呼び出し回数を削減）
-        gaq_mac_rows_to_add = [[today, version, count] for version, count in gaq_mac_versions.items()]
+        if not gaq_mac_all_values:
+            gaq_mac_all_values = [['日付', 'バージョン', 'ダウンロード数']]
+        gaq_mac_filtered = _filter_rows_by_date(gaq_mac_all_values, target_date, match_prefix=False)
+        gaq_mac_rows_to_add = [[target_date, version, count] for version, count in gaq_mac_versions.items()]
+        _update_sheet_with_rows(gaq_mac_sheet, gaq_mac_filtered + gaq_mac_rows_to_add)
         if gaq_mac_rows_to_add:
-            gaq_mac_sheet.append_rows(gaq_mac_rows_to_add, value_input_option='RAW')
             logger.info(f"GaQ_Mac_Summaryシートにデータ追加完了: {len(gaq_mac_rows_to_add)}件（1回のAPI呼び出し）")
 
         # バージョン別集計シート（GaQ Win版）
@@ -222,20 +343,13 @@ def upload_to_google_sheets(data, gaq_mac_versions, gaq_win_versions, popup_mac_
             gaq_win_sheet = spreadsheet.add_worksheet(title='GaQ_Win_Summary', rows=100, cols=10)
             gaq_win_sheet.append_row(['日付', 'バージョン', 'ダウンロード数'])
 
-        # 当日のデータを削除（冪等性を確保）
         gaq_win_all_values = gaq_win_sheet.get_all_values()
-        gaq_win_rows_to_delete = []
-        for idx, row in enumerate(gaq_win_all_values[1:], start=2):
-            if row and row[0] == today:
-                gaq_win_rows_to_delete.append(idx)
-
-        for row_idx in reversed(gaq_win_rows_to_delete):
-            gaq_win_sheet.delete_rows(row_idx)
-
-        # データを追加（バッチ処理でAPI呼び出し回数を削減）
-        gaq_win_rows_to_add = [[today, version, count] for version, count in gaq_win_versions.items()]
+        if not gaq_win_all_values:
+            gaq_win_all_values = [['日付', 'バージョン', 'ダウンロード数']]
+        gaq_win_filtered = _filter_rows_by_date(gaq_win_all_values, target_date, match_prefix=False)
+        gaq_win_rows_to_add = [[target_date, version, count] for version, count in gaq_win_versions.items()]
+        _update_sheet_with_rows(gaq_win_sheet, gaq_win_filtered + gaq_win_rows_to_add)
         if gaq_win_rows_to_add:
-            gaq_win_sheet.append_rows(gaq_win_rows_to_add, value_input_option='RAW')
             logger.info(f"GaQ_Win_Summaryシートにデータ追加完了: {len(gaq_win_rows_to_add)}件（1回のAPI呼び出し）")
 
         # バージョン別集計シート（PoPuP Mac版）
@@ -245,20 +359,13 @@ def upload_to_google_sheets(data, gaq_mac_versions, gaq_win_versions, popup_mac_
             popup_mac_sheet = spreadsheet.add_worksheet(title='PoPuP_Mac_Summary', rows=100, cols=10)
             popup_mac_sheet.append_row(['日付', 'バージョン', 'ダウンロード数'])
 
-        # 当日のデータを削除（冪等性を確保）
         popup_mac_all_values = popup_mac_sheet.get_all_values()
-        popup_mac_rows_to_delete = []
-        for idx, row in enumerate(popup_mac_all_values[1:], start=2):
-            if row and row[0] == today:
-                popup_mac_rows_to_delete.append(idx)
-
-        for row_idx in reversed(popup_mac_rows_to_delete):
-            popup_mac_sheet.delete_rows(row_idx)
-
-        # データを追加（バッチ処理でAPI呼び出し回数を削減）
-        popup_mac_rows_to_add = [[today, version, count] for version, count in popup_mac_versions.items()]
+        if not popup_mac_all_values:
+            popup_mac_all_values = [['日付', 'バージョン', 'ダウンロード数']]
+        popup_mac_filtered = _filter_rows_by_date(popup_mac_all_values, target_date, match_prefix=False)
+        popup_mac_rows_to_add = [[target_date, version, count] for version, count in popup_mac_versions.items()]
+        _update_sheet_with_rows(popup_mac_sheet, popup_mac_filtered + popup_mac_rows_to_add)
         if popup_mac_rows_to_add:
-            popup_mac_sheet.append_rows(popup_mac_rows_to_add, value_input_option='RAW')
             logger.info(f"PoPuP_Mac_Summaryシートにデータ追加完了: {len(popup_mac_rows_to_add)}件（1回のAPI呼び出し）")
 
         # バージョン別集計シート（PoPuP Win版）
@@ -268,20 +375,13 @@ def upload_to_google_sheets(data, gaq_mac_versions, gaq_win_versions, popup_mac_
             popup_win_sheet = spreadsheet.add_worksheet(title='PoPuP_Win_Summary', rows=100, cols=10)
             popup_win_sheet.append_row(['日付', 'バージョン', 'ダウンロード数'])
 
-        # 当日のデータを削除（冪等性を確保）
         popup_win_all_values = popup_win_sheet.get_all_values()
-        popup_win_rows_to_delete = []
-        for idx, row in enumerate(popup_win_all_values[1:], start=2):
-            if row and row[0] == today:
-                popup_win_rows_to_delete.append(idx)
-
-        for row_idx in reversed(popup_win_rows_to_delete):
-            popup_win_sheet.delete_rows(row_idx)
-
-        # データを追加（バッチ処理でAPI呼び出し回数を削減）
-        popup_win_rows_to_add = [[today, version, count] for version, count in popup_win_versions.items()]
+        if not popup_win_all_values:
+            popup_win_all_values = [['日付', 'バージョン', 'ダウンロード数']]
+        popup_win_filtered = _filter_rows_by_date(popup_win_all_values, target_date, match_prefix=False)
+        popup_win_rows_to_add = [[target_date, version, count] for version, count in popup_win_versions.items()]
+        _update_sheet_with_rows(popup_win_sheet, popup_win_filtered + popup_win_rows_to_add)
         if popup_win_rows_to_add:
-            popup_win_sheet.append_rows(popup_win_rows_to_add, value_input_option='RAW')
             logger.info(f"PoPuP_Win_Summaryシートにデータ追加完了: {len(popup_win_rows_to_add)}件（1回のAPI呼び出し）")
 
         logger.info("Google Sheetsへのアップロードが完了しました")
@@ -298,9 +398,15 @@ def main():
     """メイン処理"""
     logger.info("upload_to_sheets.py 実行開始")
 
-    # 当日のCSVファイルを読み込み
-    today = datetime.now().strftime('%Y-%m-%d')
-    csv_path = DATA_DIR / "daily" / f'downloads_{today}.csv'
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Upload daily CSV to Google Sheets.")
+    parser.add_argument("--date", help="対象日付 (YYYY-MM-DD)。省略時は当日。")
+    args = parser.parse_args()
+
+    # 対象日のCSVファイルを読み込み
+    target_date = args.date or datetime.now().strftime('%Y-%m-%d')
+    csv_path = DATA_DIR / "daily" / f'downloads_{target_date}.csv'
 
     if not csv_path.exists():
         logger.error(f"CSVファイルが見つかりません: {csv_path}")
@@ -338,12 +444,33 @@ def main():
     print()
 
     # Google Sheetsにアップロード
-    upload_to_google_sheets(data, gaq_mac_versions, gaq_win_versions, popup_mac_versions, popup_win_versions)
+    max_attempts = 5
+    base_delay = 5
+    for attempt in range(1, max_attempts + 1):
+        success = upload_to_google_sheets(
+            data,
+            gaq_mac_versions,
+            gaq_win_versions,
+            popup_mac_versions,
+            popup_win_versions,
+            target_date
+        )
+        if success:
+            return 0
+
+        if attempt < max_attempts:
+            delay = base_delay * (2 ** (attempt - 1))
+            logger.warning(f"アップロード失敗。{delay}秒後に再試行します（{attempt}/{max_attempts}）")
+            time.sleep(delay)
+        else:
+            logger.error("アップロードの再試行上限に達しました")
+            return 1
 
 
 if __name__ == '__main__':
     try:
-        main()
+        exit_code = main()
+        sys.exit(exit_code)
     except KeyboardInterrupt:
         print("\n\n中断されました", file=sys.stderr)
         sys.exit(1)
