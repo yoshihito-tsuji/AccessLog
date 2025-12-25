@@ -46,6 +46,47 @@ Apps Script 側の判定はアセット名のヒントに依存します。将�
 - `data/daily/downloads_YYYY-MM-DD.csv` : 日別ダウンロードデータ
 - `data/downloads_all.csv` : 全期間の累積データ（Apps Script やバックアップのソース）
 
+## Google Apps Script の日付処理改善（2025-12-25）
+
+### 背景
+
+launchd実行時刻を00:05→23:59に変更後、日次集計がWebダッシュボードで正しく反映されない問題が発生しました。原因は Apps Script 側で "YYYY-MM-DD HH:MM:SS" 形式の文字列を `new Date()` で解釈する際のタイムゾーン処理が不安定だったためです。
+
+### 実装した修正
+
+`config/google_apps_script.js` に以下の改善を実施:
+
+1. **parseTimestamp() 関数の追加**
+   - "YYYY-MM-DD HH:MM:SS" 形式を正規表現でパースし、手動で `new Date(year, month-1, day, hour, min, sec)` を生成
+   - すでに Date 型の値はそのまま返す
+   - JST（Asia/Tokyo）タイムゾーンを前提とした堅牢な解析
+
+2. **既存ロジックの置き換え**
+   - 84-95行目の分岐処理を `parseTimestamp()` に統一
+   - `formatDate()` にも統一的に Date オブジェクトを渡すよう修正
+
+3. **normalizeDailyDataTimestamps() 関数の追加**
+   - 既存の DailyData シートで文字列として保存されている記録日時を Date 型に一括変換
+   - 手動で1回だけ実行するワンショット関数
+   - 実行後は全データが DateTime 型で統一される
+   - **一括更新で高速化済み**: setValues() を使ったバッチ処理で大量データでも高速に動作
+   - **Invalid Date はスキップ**: 無効な日付はログに記録され、元の値を維持
+
+### 実行手順
+
+1. Google Apps Script エディタを開く
+2. `config/google_apps_script.js` の内容を全てコピー
+3. Apps Script プロジェクトに貼り付けて保存
+4. `normalizeDailyDataTimestamps` 関数を選択して「実行」ボタンをクリック
+5. 初回は権限承認が必要（承認後に再実行）
+6. ログで変換件数を確認（例: "✅ 変換完了: 1234件を変換しました"）
+
+### 期待される効果
+
+- 23:59実行後も日次データが正しくグラフに反映される
+- タイムゾーンのずれによる日付誤認識が解消される
+- 将来的なデータの一貫性が保たれる
+
 ## ドキュメントガイド
 詳細チュートリアルや作業ログは `docs/` に移動しました。必要なトピックだけ参照できます。
 

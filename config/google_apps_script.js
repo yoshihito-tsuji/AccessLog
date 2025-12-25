@@ -83,16 +83,16 @@ function getTimelineData(days) {
 
   records.forEach(row => {
     const timestamp = row[0];
-    let dateStr;
-    let timestampDate;
 
-    if (timestamp instanceof Date) {
-      dateStr = formatDate(timestamp);
-      timestampDate = timestamp;
-    } else {
-      dateStr = timestamp.toString().split(' ')[0];
-      timestampDate = new Date(timestamp);
+    // parseTimestamp()で統一的にDate変換
+    const timestampDate = parseTimestamp(timestamp);
+
+    // Invalid Dateの場合はスキップ
+    if (timestampDate === null) {
+      return;
     }
+
+    const dateStr = formatDate(timestampDate);
 
     // 対象期間外は除外
     if (!dateList.includes(dateStr)) {
@@ -309,6 +309,61 @@ function createEmptyTimelineData(days) {
 }
 
 /**
+ * タイムスタンプを安全にDateオブジェクトに変換
+ *
+ * Apps Scriptでは "YYYY-MM-DD HH:MM:SS" 形式の文字列をnew Date()で解釈すると
+ * タイムゾーンの扱いが不安定になる可能性があるため、手動でパースする。
+ *
+ * @param {Date|string} value - Dateオブジェクトまたは "YYYY-MM-DD HH:MM:SS" 形式の文字列
+ * @returns {Date|null} - JSTタイムゾーンでのDateオブジェクト、または無効な場合はnull
+ */
+function parseTimestamp(value) {
+  // すでにDateオブジェクトの場合はそのまま返す
+  if (value instanceof Date) {
+    // Invalid Dateチェック
+    if (isNaN(value.getTime())) {
+      return null;
+    }
+    return value;
+  }
+
+  // 文字列の場合は "YYYY-MM-DD HH:MM:SS" 形式を手動でパース
+  const str = value.toString().trim();
+
+  // 正規表現で年月日時分秒を抽出
+  const match = str.match(/^(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})$/);
+
+  if (match) {
+    // 手動でDate生成（月は0始まりなので-1が必要）
+    const year = parseInt(match[1], 10);
+    const month = parseInt(match[2], 10) - 1;
+    const day = parseInt(match[3], 10);
+    const hour = parseInt(match[4], 10);
+    const minute = parseInt(match[5], 10);
+    const second = parseInt(match[6], 10);
+
+    const date = new Date(year, month, day, hour, minute, second);
+
+    // Invalid Dateチェック
+    if (isNaN(date.getTime())) {
+      return null;
+    }
+
+    return date;
+  }
+
+  // フォールバック: 標準的なDate解析
+  const fallbackDate = new Date(value);
+
+  // Invalid Dateチェック
+  if (isNaN(fallbackDate.getTime())) {
+    return null;
+  }
+
+  return fallbackDate;
+}
+
+/**
  * 日付をYYYY-MM-DD形式でフォーマット
  */
 function formatDate(date) {
@@ -325,4 +380,95 @@ function createJsonResponse(data) {
   return ContentService
     .createTextOutput(JSON.stringify(data))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * DailyDataシートの記録日時列をDateTime型に統一（ワンショット実行用）
+ *
+ * 既存データで文字列 "YYYY-MM-DD HH:MM:SS" として保存されている記録日時を、
+ * Date型に変換して書き戻す。すでにDate型のセルはスキップする。
+ *
+ * 【実行方法】
+ * 1. Apps Script エディタでこの関数を選択
+ * 2. 「実行」ボタンをクリック
+ * 3. 初回は権限承認が必要
+ * 4. 処理完了後、ログで変換件数を確認
+ *
+ * 【注意】
+ * - この処理は一度だけ実行すれば良い
+ * - 大量データがある場合は時間がかかる可能性あり
+ * - タイムゾーンはJST（Asia/Tokyo）前提
+ */
+function normalizeDailyDataTimestamps() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_NAME);
+
+  if (!sheet) {
+    throw new Error('シート "' + SHEET_NAME + '" が見つかりません');
+  }
+
+  // 全データを取得
+  const dataRange = sheet.getDataRange();
+  const values = dataRange.getValues();
+
+  if (values.length <= 1) {
+    Logger.log('データがありません（ヘッダーのみ）');
+    return;
+  }
+
+  let convertedCount = 0;
+  let skippedCount = 0;
+  let invalidCount = 0;
+
+  // A列の値を更新用配列として準備（ヘッダー行を除く）
+  const timestampColumn = [];
+
+  // ヘッダー行をスキップして2行目から処理
+  for (let i = 1; i < values.length; i++) {
+    const timestamp = values[i][0]; // A列（記録日時）
+
+    // すでにDate型の場合はそのまま維持
+    if (timestamp instanceof Date) {
+      timestampColumn.push([timestamp]);
+      skippedCount++;
+      continue;
+    }
+
+    // 文字列の場合はDate型に変換
+    if (typeof timestamp === 'string' && timestamp.trim() !== '') {
+      const dateObj = parseTimestamp(timestamp);
+
+      if (dateObj === null) {
+        // Invalid Dateの場合は元の値を維持
+        timestampColumn.push([timestamp]);
+        invalidCount++;
+      } else {
+        timestampColumn.push([dateObj]);
+        convertedCount++;
+      }
+    } else {
+      // 空文字列や他の型はそのまま維持
+      timestampColumn.push([timestamp]);
+    }
+  }
+
+  // 一括更新（バッチ処理で高速化）
+  if (convertedCount > 0) {
+    Logger.log('変換開始: ' + convertedCount + '件');
+
+    // A列の2行目以降を一括更新
+    const range = sheet.getRange(2, 1, timestampColumn.length, 1);
+    range.setValues(timestampColumn);
+    range.setNumberFormat('yyyy-mm-dd hh:mm:ss'); // 表示形式を一括設定
+
+    Logger.log('✅ 変換完了: ' + convertedCount + '件を変換しました');
+  } else {
+    Logger.log('変換対象のデータがありませんでした');
+  }
+
+  if (invalidCount > 0) {
+    Logger.log('⚠️  無効な日付: ' + invalidCount + '件（変換スキップ）');
+  }
+  Logger.log('スキップ: ' + skippedCount + '件（すでにDate型）');
+  Logger.log('合計処理: ' + (convertedCount + skippedCount + invalidCount) + '件');
 }
