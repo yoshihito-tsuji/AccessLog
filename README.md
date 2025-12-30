@@ -2,6 +2,34 @@
 
 GaQ Transcriber（Mac/Windows）と PoPuP の GitHub Releases ダウンロード数を毎日収集し、Google Sheets と Web ダッシュボードで可視化するための最小構成をまとめています。詳細仕様や長文ガイドは `docs/` に分割しました。
 
+---
+
+## 🚨 重要：AI担当者への最優先指示
+
+**このREADME.mdを最初から最後まで必ず精読してください。**
+
+このプロジェクトは [Dev-Rules](https://github.com/yoshihito-tsuji/Dev-Rules) の三者協働開発方法論に基づいて開発されています。
+**開発方法論の詳細については Dev-Rulesリポジトリを必ず参照**してください。
+
+### 📋 AI起動時の必須手順（5ステップ）
+
+1. **README.md精読** → プロジェクト全体像を把握
+2. **docs/collaboration.md確認** → 三者協働ルールとコミュニケーション形式を確認
+3. **docs/history.md確認** → 作業履歴を確認
+4. **LOG確認** → 最新の作業状況を確認（存在する場合）
+5. **From/To形式で応答開始** → 必ず「From: [あなたの名前] / To: [受信者名]」形式で開始
+
+### ⚠️ 禁止事項
+
+- README.mdを読まずに作業を開始すること
+- 三者協働ルールを無視して単独で判断すること
+- From/To形式を使わずに応答すること
+- **日本語以外の言語（英語等）で応答・ドキュメント・コメントを記述すること**
+
+詳細は [Dev-Rules README](https://github.com/yoshihito-tsuji/Dev-Rules/blob/main/README.md) を参照。
+
+---
+
 ## 目的 / ゴール
 - GitHub API から各アセットの累積ダウンロード数を取得し、日次差分として記録する
 - Google Sheets (`DailyData`) に最新データを反映し、Apps Script から JSON API を公開する
@@ -90,8 +118,9 @@ launchd実行時刻を00:05→23:59に変更後、日次集計がWebダッシュ
 ## ドキュメントガイド
 詳細チュートリアルや作業ログは `docs/` に移動しました。必要なトピックだけ参照できます。
 
+- **[Dev-Rules](https://github.com/yoshihito-tsuji/Dev-Rules)** — 三者協働開発方法論アーカイブ（全プロジェクト共通）
 - `docs/overview.md` — 背景、システム構成、ファイル一覧、実装機能
-- `docs/collaboration.md` — 三者協働開発ルールとコミュニケーション原則
+- `docs/collaboration.md` — 三者協働開発ルールとコミュニケーション原則（プロジェクト固有）
 - `docs/setup.md` — Google Sheets/GCP/launchd までのセットアップ手順
 - `docs/operations.md` — 日常運用・手動実行・確認方法の詳細
 - `docs/data-structure.md` — CSV/Google Sheets/Apps Script API のデータレイアウト
