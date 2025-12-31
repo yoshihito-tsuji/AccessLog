@@ -8,15 +8,28 @@ GaQ Transcriber（Mac/Windows）と PoPuP の GitHub Releases ダウンロード
 
 **このREADME.mdを最初から最後まで必ず精読してください。**
 
-このプロジェクトは [Dev-Rules](https://github.com/yoshihito-tsuji/Dev-Rules) の三者協働開発方法論に基づいて開発されています。
-**開発方法論の詳細については Dev-Rulesリポジトリを必ず参照**してください。
+### 🤖 AI起動時の自動読み込み指示
 
-### 📋 AI起動時の必須手順（5ステップ）
+**あなた（AI）がこのREADME.mdを読んだら、必ず以下を実行してください：**
+
+#### Claude Code（実装担当）の場合
+
+1. 次に `docs/team_ops/claude_code_role.md` を読んでください
+2. その後、そのファイルに記載された起動手順に従ってください
+
+#### Codex（設計担当）の場合
+
+1. 次に `docs/team_ops/codex_role.md` を読んでください
+2. その後、そのファイルに記載された起動手順に従ってください
+
+**重要**: 役割定義ファイルを読んだ後、そこに記載された手順（DECISIONS.md、LOGの確認等）を必ず実行してください。
+
+### 📋 AI起動時の必須手順（概要）
 
 1. **README.md精読** → プロジェクト全体像を把握
-2. **docs/collaboration.md確認** → 三者協働ルールとコミュニケーション形式を確認
-3. **docs/history.md確認** → 作業履歴を確認
-4. **LOG確認** → 最新の作業状況を確認（存在する場合）
+2. **役割定義確認** → `docs/team_ops/codex_role.md` または `claude_code_role.md` を確認
+3. **LOG確認** → `LOG/YYYY-MM-DD.md` で当日の作業状況を確認
+4. **DECISIONS確認** → `DECISIONS.md` で重要な決定事項を確認
 5. **From/To形式で応答開始** → 必ず「From: [あなたの名前] / To: [受信者名]」形式で開始
 
 ### ⚠️ 禁止事項
@@ -24,9 +37,10 @@ GaQ Transcriber（Mac/Windows）と PoPuP の GitHub Releases ダウンロード
 - README.mdを読まずに作業を開始すること
 - 三者協働ルールを無視して単独で判断すること
 - From/To形式を使わずに応答すること
+- ログや決定事項を記録せずに作業を進めること
 - **日本語以外の言語（英語等）で応答・ドキュメント・コメントを記述すること**
 
-詳細は [Dev-Rules README](https://github.com/yoshihito-tsuji/Dev-Rules/blob/main/README.md) を参照。
+**開発方法論の詳細**: [Dev-Rules](https://github.com/yoshihito-tsuji/Dev-Rules) を参照してください。
 
 ---
 
