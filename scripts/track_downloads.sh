@@ -154,13 +154,18 @@ if ! gh auth status &> /dev/null; then
     exit 1
 fi
 
-# CSVヘッダー (ファイルが存在しない場合のみ)
-if [ ! -f "${DAILY_LOG}" ]; then
-    echo "記録日時,リポジトリ,リリース名,タグ,アセット名,ダウンロード数" > "${DAILY_LOG}"
-fi
+# CSVヘッダー（日次CSVは毎回作り直す）
+echo "記録日時,リポジトリ,リリース名,タグ,アセット名,ダウンロード数" > "${DAILY_LOG}"
 
 if [ ! -f "${CUMULATIVE_LOG}" ]; then
     echo "記録日時,リポジトリ,リリース名,タグ,アセット名,ダウンロード数" > "${CUMULATIVE_LOG}"
+else
+    # 同日複数回実行時の重複防止: 当日分を削除してから追記
+    # 一時ファイルに当日以外のデータを保存し、置き換える
+    TEMP_CUMULATIVE=$(mktemp)
+    head -1 "${CUMULATIVE_LOG}" > "${TEMP_CUMULATIVE}"  # ヘッダー保持
+    tail -n +2 "${CUMULATIVE_LOG}" | grep -v "^\"${CURRENT_DATE}" >> "${TEMP_CUMULATIVE}" 2>/dev/null || true
+    mv "${TEMP_CUMULATIVE}" "${CUMULATIVE_LOG}"
 fi
 
 # GitHub Release 情報を取得
@@ -206,18 +211,7 @@ for idx in "${!REPO_NAMES[@]}"; do
     total_release_count=$((total_release_count + release_count))
 
     # jqを使用してデータを処理
-    echo "$releases_json" | jq -r '
-        .[] |
-        .name as $release_name |
-        .tag_name as $tag |
-        .assets[] |
-        [
-            $release_name,
-            $tag,
-            .name,
-            .download_count
-        ] | @tsv
-    ' | while IFS=$'\t' read -r release_name tag asset_name download_count; do
+    while IFS=$'\t' read -r release_name tag asset_name download_count; do
         # CSVに記録（カンマを含む場合はクォートで囲む）
         echo "\"${CURRENT_DATETIME}\",\"${repo_display_name}\",\"${release_name}\",\"${tag}\",\"${asset_name}\",${download_count}" >> "${DAILY_LOG}"
         echo "\"${CURRENT_DATETIME}\",\"${repo_display_name}\",\"${release_name}\",\"${tag}\",\"${asset_name}\",${download_count}" >> "${CUMULATIVE_LOG}"
@@ -228,7 +222,19 @@ for idx in "${!REPO_NAMES[@]}"; do
         # 結果表示
         echo -e "  ${GREEN}✓${NC} ${release_name} (${tag})"
         echo "    └─ ${asset_name}: ${download_count} DL"
-    done
+    done < <(echo "$releases_json" | jq -r '
+        .[] |
+        select(.draft == false and .prerelease == false) |
+        .name as $release_name |
+        .tag_name as $tag |
+        .assets[] |
+        [
+            $release_name,
+            $tag,
+            .name,
+            .download_count
+        ] | @tsv
+    ')
 
     echo ""
 done
