@@ -1,10 +1,8 @@
 # Google Cloud認証情報（絶対にコミットしない）
 credentials.json
 
-# CSVデータファイル
-data/daily/*.csv
-data/daily/archive/
-data/downloads_all.csv
+# CSVデータファイル（dataディレクトリ全体を除外）
+data/
 
 # ログファイル
 logs/*.log
