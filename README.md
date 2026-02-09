@@ -40,7 +40,12 @@ GaQ Transcriber（Mac/Windows）と PoPuP の GitHub Releases ダウンロード
 - ログや決定事項を記録せずに作業を進めること
 - **日本語以外の言語（英語等）で応答・ドキュメント・コメントを記述すること**
 
-**開発方法論の詳細**: [Dev-Rules](https://github.com/yoshihito-tsuji/Dev-Rules) を参照してください。
+### 📚 開発方法論の詳細
+
+- **GitHub版**: [Dev-Rules](https://github.com/yoshihito-tsuji/Dev-Rules)
+- **ローカル版**: [../Dev-Rules/README.md](../Dev-Rules/README.md)
+- **Codex向けガイド**: [../Dev-Rules/CODEX_ONBOARDING.md](../Dev-Rules/CODEX_ONBOARDING.md)
+- **Claude Code Best Practice**: [../Dev-Rules/claude-code/README.md](../Dev-Rules/claude-code/README.md)
 
 ---
 
