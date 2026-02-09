@@ -14,13 +14,19 @@ GaQ Transcriber（Mac/Windows）と PoPuP の GitHub Releases ダウンロード
 
 #### Claude Code（実装担当）の場合
 
-1. 次に `docs/team_ops/claude_code_role.md` を読んでください
-2. その後、そのファイルに記載された起動手順に従ってください
+1. `docs/team_ops/claude_code_role.md` を読んでください
+2. `../Dev-Rules/claude-code/README.md` を読んでください（Best Practice）
+3. その後、役割定義ファイルに記載された起動手順に従ってください
 
 #### Codex（設計担当）の場合
 
-1. 次に `docs/team_ops/codex_role.md` を読んでください
-2. その後、そのファイルに記載された起動手順に従ってください
+1. `docs/team_ops/codex_role.md` を読んでください
+2. `../Dev-Rules/claude-code/README.md` を読んでください（Best Practice）
+3. その後、役割定義ファイルに記載された起動手順に従ってください
+
+#### UI/UX実装時（共通）
+
+- `../Dev-Rules/setup/ux-design-principles.md` を参照してください
 
 **重要**: 役割定義ファイルを読んだ後、そこに記載された手順（DECISIONS.md、LOGの確認等）を必ず実行してください。
 
