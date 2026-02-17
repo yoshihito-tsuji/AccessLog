@@ -1,11 +1,87 @@
 /**
  * Google Apps Script Web API
  * GitHub Releases ダウンロード統計を提供
+ *
+ * @version 1.1.0 (2026-02-17)
+ * @changelog
+ *   - 1.1.0: ベースライン考慮による初日スパイク修正、classifyAsset()関数化
+ *   - 1.0.0: 初回リリース（parseTimestamp追加、タイムゾーン処理堅牢化）
  */
 
 // スプレッドシートIDを設定
 const SPREADSHEET_ID = '1-n-CpA9U8kwqTRxhbKBhNOj0-lcZjLG1MJXLhxgdQPs';
 const SHEET_NAME = 'DailyData';
+
+// チェックサム/署名ファイルの除外パターン
+const EXCLUDED_ASSET_SUFFIXES = [
+  '.sha256', '.sha256.txt', '.sha256sum',
+  '.sha512', '.sha512.txt', '.sha512sum',
+  '.md5', '.md5sum',
+  '.sha1', '.sha1.txt', '.sha1sum',
+  '.checksum', '.checksum.txt',
+  '.sig', '.asc'
+];
+
+/**
+ * アセット名が除外対象かどうかを判定
+ */
+function isExcludedAsset(assetName) {
+  const lower = assetName.toLowerCase();
+  return EXCLUDED_ASSET_SUFFIXES.some(suffix => lower.endsWith(suffix));
+}
+
+/**
+ * アセット名にWindowsを示すヒントが含まれるか判定
+ */
+function hasWindowsHint(lowerAssetName) {
+  return lowerAssetName.includes('windows') ||
+    lowerAssetName.includes('portable') ||
+    /(^|[^a-z0-9])win(32|64)?([^a-z0-9]|$)/.test(lowerAssetName);
+}
+
+/**
+ * リポジトリ名とアセット名からアプリ名（プラットフォーム込み）を判定
+ *
+ * @param {string} repo - リポジトリ表示名（'GaQ' or 'PoPuP'）
+ * @param {string} assetName - アセットファイル名
+ * @param {boolean} logUnknown - 判定不能時にconsole.logを出力するか
+ * @param {string} tag - タグ名（ログ出力用、省略可）
+ * @returns {string|null} 'GaQ (Mac)' / 'GaQ (Windows)' / 'PoPuP (Mac)' / 'PoPuP (Windows)' / null
+ */
+function classifyAsset(repo, assetName, logUnknown, tag) {
+  const lowerAssetName = assetName.toLowerCase();
+
+  if (isExcludedAsset(assetName)) {
+    return null;
+  }
+
+  if (repo === 'GaQ') {
+    const isMac = lowerAssetName.includes('mac') || lowerAssetName.endsWith('.dmg');
+    const isWindows = hasWindowsHint(lowerAssetName) || lowerAssetName.endsWith('.exe');
+
+    if (isMac) return 'GaQ (Mac)';
+    if (isWindows) return 'GaQ (Windows)';
+    if (logUnknown) {
+      console.log('判定不能なアセット: ' + repo + '/' + (tag || '') + '/' + assetName);
+    }
+    return null;
+  }
+
+  if (repo === 'PoPuP') {
+    const isMac = lowerAssetName.includes('mac') || lowerAssetName.endsWith('.dmg') || lowerAssetName.includes('.app');
+    const isLegacyWindowsZip = lowerAssetName === 'popup-v1.0.0.zip';
+    const isWindows = hasWindowsHint(lowerAssetName) || lowerAssetName.endsWith('.exe') || isLegacyWindowsZip;
+
+    if (isMac) return 'PoPuP (Mac)';
+    if (isWindows) return 'PoPuP (Windows)';
+    if (logUnknown) {
+      console.log('判定不能なアセット: ' + repo + '/' + (tag || '') + '/' + assetName);
+    }
+    return null;
+  }
+
+  return null;
+}
 
 /**
  * GETリクエストを処理
@@ -81,6 +157,11 @@ function getTimelineData(days) {
   // 日付ごとに最新のタイムスタンプのレコードのみを保持
   const latestRecordsByDate = {};
 
+  // ベースライン用: 期間開始日より前の最新日・最新タイムスタンプのデータのみ保持
+  let preperiodLatestDate = null;
+  let preperiodLatestTimestamp = null;
+  let preperiodLatestRows = [];
+
   records.forEach(row => {
     const timestamp = row[0];
 
@@ -94,115 +175,60 @@ function getTimelineData(days) {
 
     const dateStr = formatDate(timestampDate);
 
-    // 対象期間外は除外
-    if (!dateList.includes(dateStr)) {
-      return;
-    }
+    if (dateList.includes(dateStr)) {
+      // 対象期間内: 既存ロジックと同様に処理
+      if (!latestRecordsByDate[dateStr]) {
+        latestRecordsByDate[dateStr] = { timestamp: timestampDate, rows: [] };
+      }
 
-    // この日付の最新レコードを保持
-    if (!latestRecordsByDate[dateStr]) {
-      latestRecordsByDate[dateStr] = { timestamp: timestampDate, rows: [] };
-    }
+      const current = latestRecordsByDate[dateStr];
 
-    const current = latestRecordsByDate[dateStr];
-
-    if (current.timestamp < timestampDate) {
-      // より新しいタイムスタンプが見つかったら置き換え
-      latestRecordsByDate[dateStr] = { timestamp: timestampDate, rows: [row] };
-    } else if (current.timestamp.getTime() === timestampDate.getTime()) {
-      // 同じタイムスタンプなら追加
-      current.rows.push(row);
+      if (current.timestamp.getTime() < timestampDate.getTime()) {
+        latestRecordsByDate[dateStr] = { timestamp: timestampDate, rows: [row] };
+      } else if (current.timestamp.getTime() === timestampDate.getTime()) {
+        current.rows.push(row);
+      }
+    } else if (timestampDate < startDate) {
+      // 期間開始日より前: 最新日・最新タイムスタンプのみ保持（ベースライン用）
+      // 期間内と同じ「最新タイムスタンプ選別」ロジックを適用
+      if (preperiodLatestDate === null || dateStr > preperiodLatestDate) {
+        // より新しい日付が見つかった → 全置換
+        preperiodLatestDate = dateStr;
+        preperiodLatestTimestamp = timestampDate;
+        preperiodLatestRows = [row];
+      } else if (dateStr === preperiodLatestDate) {
+        // 同日内: タイムスタンプで最新のみを保持
+        if (preperiodLatestTimestamp.getTime() < timestampDate.getTime()) {
+          // より新しいタイムスタンプ → 行を置換
+          preperiodLatestTimestamp = timestampDate;
+          preperiodLatestRows = [row];
+        } else if (preperiodLatestTimestamp.getTime() === timestampDate.getTime()) {
+          // 同一タイムスタンプ → 行を追加
+          preperiodLatestRows.push(row);
+        }
+        // 古いタイムスタンプは無視
+      }
     }
   });
 
-  // 最新レコードのみを処理
-  const excludedAssetSuffixes = [
-    '.sha256',
-    '.sha256.txt',
-    '.sha256sum',
-    '.sha512',
-    '.sha512.txt',
-    '.sha512sum',
-    '.md5',
-    '.md5sum',
-    '.sha1',
-    '.sha1.txt',
-    '.sha1sum',
-    '.checksum',
-    '.checksum.txt',
-    '.sig',
-    '.asc'
-  ];
-  const isExcludedAssetName = lowerAssetName =>
-    excludedAssetSuffixes.some(suffix => lowerAssetName.endsWith(suffix));
-  const hasWindowsHint = lowerAssetName =>
-    lowerAssetName.includes('windows') ||
-    lowerAssetName.includes('portable') ||
-    /(^|[^a-z0-9])win(32|64)?([^a-z0-9]|$)/.test(lowerAssetName);
-
+  // 最新レコードのみを処理（classifyAsset()でアプリ判定を統一）
   Object.keys(latestRecordsByDate).forEach(dateStr => {
     const latestData = latestRecordsByDate[dateStr];
 
     latestData.rows.forEach(row => {
-      const repo = row[1];      // リポジトリ
-      const releaseName = row[2]; // リリース名
-      const tag = row[3];       // タグ
-      const assetName = row[4]; // アセット名
-      const count = parseInt(row[5]) || 0; // ダウンロード数
+      const repo = row[1];
+      const tag = row[3];
+      const assetName = row[4];
+      const count = parseInt(row[5]) || 0;
 
-      // アプリ名を判定
-      let appName;
-      if (repo === 'GaQ') {
-        // Mac版とWindows版をアセット名で判定（v1.2.10以降の統合リリース対応）
-        const lowerAssetName = assetName.toLowerCase();
-        // チェックサム/署名ファイルなど判定不能なファイルはスキップ
-        if (isExcludedAssetName(lowerAssetName)) {
-          return;
-        }
-        const isMac = lowerAssetName.includes('mac') || lowerAssetName.endsWith('.dmg');
-        const isWindows = hasWindowsHint(lowerAssetName) || lowerAssetName.endsWith('.exe');
+      const appName = classifyAsset(repo, assetName, true, tag);
+      if (!appName) return;
 
-        if (isMac) {
-          appName = 'GaQ (Mac)';
-        } else if (isWindows) {
-          appName = 'GaQ (Windows)';
-        } else {
-          // 判定不能なアセットをログに記録
-          console.log('判定不能なアセット: ' + repo + '/' + tag + '/' + assetName);
-          return;
-        }
-      } else if (repo === 'PoPuP') {
-        // Mac版とWindows版をアセット名で判定
-        const lowerAssetName = assetName.toLowerCase();
-        // チェックサム/署名ファイルなど判定不能なファイルはスキップ
-        if (isExcludedAssetName(lowerAssetName)) {
-          return;
-        }
-        const isMac = lowerAssetName.includes('mac') || lowerAssetName.endsWith('.dmg') || lowerAssetName.includes('.app');
-        const isLegacyWindowsZip = lowerAssetName === 'popup-v1.0.0.zip';
-        const isWindows = hasWindowsHint(lowerAssetName) || lowerAssetName.endsWith('.exe') || isLegacyWindowsZip;
-
-        if (isMac) {
-          appName = 'PoPuP (Mac)';
-        } else if (isWindows) {
-          appName = 'PoPuP (Windows)';
-        } else {
-          // 判定不能なアセットをログに記録
-          console.log('判定不能なアセット: ' + repo + '/' + tag + '/' + assetName);
-          return;
-        }
-      } else {
-        return; // 不明なリポジトリは除外
-      }
-
-      // バージョン名（タグを使用）
       const versionName = tag;
 
-      // データ構造を初期化
       if (!appData[appName][dateStr]) {
         appData[appName][dateStr] = {};
       }
-
       if (!appData[appName][dateStr][versionName]) {
         appData[appName][dateStr][versionName] = 0;
       }
@@ -212,7 +238,33 @@ function getTimelineData(days) {
     });
   });
 
-  // 累積ダウンロード数から日次増分を計算
+  // ベースライン集計: 期間開始日より前の最新日データから、アプリ×バージョンの累積値を取得
+  const baselineData = {
+    'GaQ (Mac)': {},
+    'GaQ (Windows)': {},
+    'PoPuP (Mac)': {},
+    'PoPuP (Windows)': {}
+  };
+
+  if (preperiodLatestRows.length > 0) {
+    preperiodLatestRows.forEach(row => {
+      const repo = row[1];
+      const tag = row[3];
+      const assetName = row[4];
+      const count = parseInt(row[5]) || 0;
+
+      const appName = classifyAsset(repo, assetName, false, tag);
+      if (!appName) return;
+
+      const versionName = tag;
+      if (!baselineData[appName][versionName]) {
+        baselineData[appName][versionName] = 0;
+      }
+      baselineData[appName][versionName] += count;
+    });
+  }
+
+  // 累積ダウンロード数から日次増分を計算（ベースライン考慮）
   const result = {
     status: 'success',
     dates: dateList,
@@ -232,14 +284,15 @@ function getTimelineData(days) {
       }
     });
 
-    // バージョンごとに日次増分を計算
+    // バージョンごとに日次増分を計算（ベースライン考慮）
     versionNames.forEach(versionName => {
       const dailyData = [];
-      let prevCount = 0;
+      // 期間前のベースライン値で初期化（存在しない場合は0 = 新規バージョン）
+      let prevCount = (baselineData[appName] && baselineData[appName][versionName]) || 0;
 
       dateList.forEach(date => {
         // データが存在する日付のみ累積値を取得
-        if (appData[appName][date]?.[versionName] !== undefined) {
+        if (appData[appName][date] && appData[appName][date][versionName] !== undefined) {
           const currentCount = appData[appName][date][versionName];
           const increment = Math.max(0, currentCount - prevCount);
           dailyData.push(increment);
@@ -471,4 +524,259 @@ function normalizeDailyDataTimestamps() {
   }
   Logger.log('スキップ: ' + skippedCount + '件（すでにDate型）');
   Logger.log('合計処理: ' + (convertedCount + skippedCount + invalidCount) + '件');
+}
+
+/**
+ * セルフテスト: ベースライン考慮の日次増分計算が正しいことを検証
+ *
+ * 【実行方法】
+ * 1. Apps Script エディタでこの関数を選択
+ * 2. 「実行」ボタンをクリック
+ * 3. ログで pass/fail を確認
+ *
+ * テストケース:
+ * A: 期間前ベースラインあり（50→55）で初日増分が5になる
+ * B: ベースラインなし（新規バージョン）で初日増分が累積値になる
+ * C: 期間内でデータ欠損日がある場合、復帰日の増分が正しい
+ * E: 同日複数タイムスタンプのベースライン選別（最新タイムスタンプのみ採用）
+ */
+function testIncrementBaseline() {
+  let passed = 0;
+  let failed = 0;
+
+  function assertEqual(testName, actual, expected) {
+    if (JSON.stringify(actual) === JSON.stringify(expected)) {
+      Logger.log('✅ PASS: ' + testName);
+      passed++;
+    } else {
+      Logger.log('❌ FAIL: ' + testName);
+      Logger.log('  期待値: ' + JSON.stringify(expected));
+      Logger.log('  実際値: ' + JSON.stringify(actual));
+      failed++;
+    }
+  }
+
+  // テスト用の増分計算関数（本体ロジックと同一）
+  function calcIncrements(cumulativeByDate, dateList, baseline) {
+    const dailyData = [];
+    let prevCount = baseline;
+
+    dateList.forEach(date => {
+      if (cumulativeByDate[date] !== undefined) {
+        const currentCount = cumulativeByDate[date];
+        const increment = Math.max(0, currentCount - prevCount);
+        dailyData.push(increment);
+        prevCount = currentCount;
+      } else {
+        dailyData.push(0);
+      }
+    });
+
+    return dailyData;
+  }
+
+  // --- ケースA: 期間前ベースラインあり ---
+  // ベースライン=50, 期間内で50→55→55→58
+  {
+    const dateList = ['2026-01-01', '2026-01-02', '2026-01-03', '2026-01-04'];
+    const cumulative = {
+      '2026-01-01': 50,
+      '2026-01-02': 55,
+      '2026-01-03': 55,
+      '2026-01-04': 58
+    };
+    const baseline = 50;
+    const result = calcIncrements(cumulative, dateList, baseline);
+    assertEqual('ケースA: ベースライン50, 初日50→増分0', result, [0, 5, 0, 3]);
+  }
+
+  // --- ケースA-2: ベースラインと初日の間に増加あり ---
+  // ベースライン=50, 初日累積=55
+  {
+    const dateList = ['2026-01-01', '2026-01-02'];
+    const cumulative = {
+      '2026-01-01': 55,
+      '2026-01-02': 58
+    };
+    const baseline = 50;
+    const result = calcIncrements(cumulative, dateList, baseline);
+    assertEqual('ケースA-2: ベースライン50→初日55で増分5', result, [5, 3]);
+  }
+
+  // --- ケースB: ベースラインなし（新規バージョン） ---
+  // ベースライン=0, 期間内で初出=10→12
+  {
+    const dateList = ['2026-01-01', '2026-01-02', '2026-01-03'];
+    const cumulative = {
+      '2026-01-02': 10,
+      '2026-01-03': 12
+    };
+    const baseline = 0;
+    const result = calcIncrements(cumulative, dateList, baseline);
+    assertEqual('ケースB: 新規バージョン, 初出10で増分10', result, [0, 10, 2]);
+  }
+
+  // --- ケースC: データ欠損日がある ---
+  // ベースライン=30, 1日目=32, 2日目=欠損, 3日目=35
+  {
+    const dateList = ['2026-01-01', '2026-01-02', '2026-01-03'];
+    const cumulative = {
+      '2026-01-01': 32,
+      '2026-01-03': 35
+    };
+    const baseline = 30;
+    const result = calcIncrements(cumulative, dateList, baseline);
+    assertEqual('ケースC: 欠損日あり, 復帰日の増分が正しい', result, [2, 0, 3]);
+  }
+
+  // --- ケースD: 旧バグ再現テスト ---
+  // ベースラインなし(0), 初日累積=78 → 旧ロジックでは78がスパイク表示されていた
+  {
+    const dateList = ['2026-01-01', '2026-01-02', '2026-01-03'];
+    const cumulative = {
+      '2026-01-01': 78,
+      '2026-01-02': 78,
+      '2026-01-03': 79
+    };
+    // ベースラインがある場合（78）: スパイクは出ない
+    const resultWithBaseline = calcIncrements(cumulative, dateList, 78);
+    assertEqual('ケースD: ベースライン78でスパイクなし', resultWithBaseline, [0, 0, 1]);
+    // ベースラインなし（新規）: 初日にそのまま出る（これは正しい動作）
+    const resultNoBaseline = calcIncrements(cumulative, dateList, 0);
+    assertEqual('ケースD-2: 新規(baseline=0)は初日78が増分', resultNoBaseline, [78, 0, 1]);
+  }
+
+  // --- ケースE: 同日複数タイムスタンプのベースライン選別 ---
+  // 期間前の同一日に2回実行（10:00と23:59）があった場合、
+  // 最新タイムスタンプ（23:59）のデータのみがベースラインに採用されること
+  {
+    // ベースライン選別ロジックの再現（getTimelineData内と同一アルゴリズム）
+    function collectBaseline(rows, startDate) {
+      var latestDate = null;
+      var latestTimestamp = null;
+      var latestRows = [];
+
+      rows.forEach(function(row) {
+        var ts = row[0];
+        var dateStr = formatDate(ts);
+
+        if (ts < startDate) {
+          if (latestDate === null || dateStr > latestDate) {
+            latestDate = dateStr;
+            latestTimestamp = ts;
+            latestRows = [row];
+          } else if (dateStr === latestDate) {
+            if (latestTimestamp.getTime() < ts.getTime()) {
+              latestTimestamp = ts;
+              latestRows = [row];
+            } else if (latestTimestamp.getTime() === ts.getTime()) {
+              latestRows.push(row);
+            }
+          }
+        }
+      });
+
+      // 集計
+      var baseline = {};
+      latestRows.forEach(function(row) {
+        var version = row[3];
+        var count = parseInt(row[5]) || 0;
+        if (!baseline[version]) baseline[version] = 0;
+        baseline[version] += count;
+      });
+      return baseline;
+    }
+
+    // 期間開始日: 2026-01-15
+    var startDate = new Date(2026, 0, 15, 0, 0, 0);
+
+    // 2026-01-14 に 10:00 と 23:59 の2回実行
+    var ts10 = new Date(2026, 0, 14, 10, 0, 0);
+    var ts23 = new Date(2026, 0, 14, 23, 59, 0);
+
+    // row format: [timestamp, repo, ?, tag, assetName, count]
+    var rows = [
+      // 10:00実行分（古いタイムスタンプ → ベースラインに含めるべきでない）
+      [ts10, 'GaQ', '', 'v1.0.0', 'GaQ_mac.dmg', '50'],
+      [ts10, 'GaQ', '', 'v1.0.0', 'GaQ_windows.exe', '30'],
+      // 23:59実行分（最新タイムスタンプ → こちらのみベースラインに採用）
+      [ts23, 'GaQ', '', 'v1.0.0', 'GaQ_mac.dmg', '55'],
+      [ts23, 'GaQ', '', 'v1.0.0', 'GaQ_windows.exe', '35']
+    ];
+
+    var baseline = collectBaseline(rows, startDate);
+
+    // 23:59のデータのみが採用: v1.0.0 = 55 + 35 = 90
+    assertEqual('ケースE: 同日複数タイムスタンプ - 最新(23:59)のみ採用', baseline['v1.0.0'], 90);
+
+    // もし旧バグ（タイムスタンプ未考慮）なら 50+30+55+35=170 になってしまう
+    // 正しくは 55+35=90
+  }
+
+  // --- ケースE-2: 期間前に複数日あり、最新日の最新タイムスタンプのみ採用 ---
+  {
+    function collectBaseline2(rows, startDate) {
+      var latestDate = null;
+      var latestTimestamp = null;
+      var latestRows = [];
+
+      rows.forEach(function(row) {
+        var ts = row[0];
+        var dateStr = formatDate(ts);
+
+        if (ts < startDate) {
+          if (latestDate === null || dateStr > latestDate) {
+            latestDate = dateStr;
+            latestTimestamp = ts;
+            latestRows = [row];
+          } else if (dateStr === latestDate) {
+            if (latestTimestamp.getTime() < ts.getTime()) {
+              latestTimestamp = ts;
+              latestRows = [row];
+            } else if (latestTimestamp.getTime() === ts.getTime()) {
+              latestRows.push(row);
+            }
+          }
+        }
+      });
+
+      var baseline = {};
+      latestRows.forEach(function(row) {
+        var version = row[3];
+        var count = parseInt(row[5]) || 0;
+        if (!baseline[version]) baseline[version] = 0;
+        baseline[version] += count;
+      });
+      return baseline;
+    }
+
+    var startDate = new Date(2026, 0, 15, 0, 0, 0);
+
+    var ts13 = new Date(2026, 0, 13, 23, 59, 0);
+    var ts14_10 = new Date(2026, 0, 14, 10, 0, 0);
+    var ts14_23 = new Date(2026, 0, 14, 23, 59, 0);
+
+    var rows = [
+      // 1/13のデータ（古い日付 → 採用しない）
+      [ts13, 'GaQ', '', 'v1.0.0', 'GaQ_mac.dmg', '40'],
+      // 1/14 10:00（同日だが古いタイムスタンプ → 採用しない）
+      [ts14_10, 'GaQ', '', 'v1.0.0', 'GaQ_mac.dmg', '50'],
+      // 1/14 23:59（最新日の最新タイムスタンプ → これのみ採用）
+      [ts14_23, 'GaQ', '', 'v1.0.0', 'GaQ_mac.dmg', '55']
+    ];
+
+    var baseline = collectBaseline2(rows, startDate);
+    assertEqual('ケースE-2: 複数日+同日複数TS - 最新日(1/14)最新TS(23:59)のみ', baseline['v1.0.0'], 55);
+  }
+
+  Logger.log('');
+  Logger.log('========================================');
+  Logger.log('テスト結果: ' + passed + ' passed, ' + failed + ' failed');
+  Logger.log('========================================');
+
+  if (failed > 0) {
+    Logger.log('⚠️ テスト失敗があります。修正を確認してください。');
+  } else {
+    Logger.log('✅ すべてのテストが通過しました。');
+  }
 }

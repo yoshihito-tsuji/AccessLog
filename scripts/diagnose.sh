@@ -76,7 +76,7 @@ echo ""
 # ============================================================
 # ステップ1: GitHub API
 # ============================================================
-echo -e "${BLUE}[1/5] GitHub API チェック${NC}"
+echo -e "${BLUE}[1/6] GitHub API チェック${NC}"
 
 # GaQ_app
 GAQ_JSON=$(gh api repos/yoshihito-tsuji/GaQ_app/releases --paginate 2>/dev/null | tr -d '\000-\037')
@@ -119,7 +119,7 @@ echo ""
 # ============================================================
 # ステップ2: ローカルCSV
 # ============================================================
-echo -e "${BLUE}[2/5] ローカルCSV チェック${NC}"
+echo -e "${BLUE}[2/6] ローカルCSV チェック${NC}"
 
 CURRENT_DATE=$(date "+%Y-%m-%d")
 LATEST_CSV=$(ls -t "${DAILY_DIR}"/downloads_*.csv 2>/dev/null | head -1)
@@ -168,7 +168,7 @@ echo ""
 # ============================================================
 # ステップ3: Google Sheets 実測（DailyData直接取得）
 # ============================================================
-echo -e "${BLUE}[3/5] Google Sheets 実測${NC}"
+echo -e "${BLUE}[3/6] Google Sheets 実測${NC}"
 
 SHEETS_RESULT=$(python3 -c "
 import os
@@ -456,7 +456,7 @@ fi
 # ============================================================
 # ステップ4: Apps Script API
 # ============================================================
-echo -e "${BLUE}[4/5] Apps Script API チェック${NC}"
+echo -e "${BLUE}[4/6] Apps Script API チェック${NC}"
 
 API_RESPONSE=$(curl -sL "${APPS_SCRIPT_API}?type=timeline&days=365" 2>/dev/null)
 
@@ -555,9 +555,88 @@ fi
 echo ""
 
 # ============================================================
-# ステップ5: 整合性チェック
+# ステップ5: 初日スパイク検出
 # ============================================================
-echo -e "${BLUE}[5/5] 整合性チェック${NC}"
+echo -e "${BLUE}[5/6] 初日スパイク検出チェック${NC}"
+
+# Apps Script APIのレスポンスが取得できている場合のみ実行
+if [ "${API_STATUS}" = "success" ] && [ -n "$API_RESPONSE" ]; then
+    SPIKE_RESULT=$(echo "${API_RESPONSE}" | python3 -c "
+import sys, json
+
+data = json.load(sys.stdin)
+dates = data.get('dates', [])
+apps = data.get('apps', {})
+
+warnings = []
+for app_name in ['GaQ (Mac)', 'GaQ (Windows)', 'PoPuP (Mac)', 'PoPuP (Windows)']:
+    app_info = apps.get(app_name, {})
+    versions = app_info.get('versions', {})
+
+    for version, daily_data in versions.items():
+        if not daily_data:
+            continue
+
+        # 期間内の合計
+        total = sum(daily_data)
+        if total == 0:
+            continue
+
+        # 最初の非ゼロ日を検出
+        first_nonzero_idx = None
+        first_nonzero_val = 0
+        for i, val in enumerate(daily_data):
+            if val > 0:
+                first_nonzero_idx = i
+                first_nonzero_val = val
+                break
+
+        if first_nonzero_idx is None:
+            continue
+
+        # 残りの日の平均増分を計算
+        remaining = [v for v in daily_data[first_nonzero_idx+1:] if v > 0]
+        if len(remaining) > 0:
+            avg_remaining = sum(remaining) / len(remaining)
+        else:
+            avg_remaining = 0
+
+        # 初日の値が残り日平均の10倍以上、かつ初日が合計の50%超の場合スパイク警告
+        is_spike = (
+            first_nonzero_val > 5 and
+            (avg_remaining == 0 or first_nonzero_val > avg_remaining * 10) and
+            first_nonzero_val > total * 0.5
+        )
+
+        if is_spike:
+            date_str = dates[first_nonzero_idx] if first_nonzero_idx < len(dates) else '?'
+            warnings.append(f'{app_name} / {version}: 初日({date_str})に{first_nonzero_val}DL（合計{total}の{first_nonzero_val*100//total}%）')
+
+if warnings:
+    print('SPIKE:' + '|'.join(warnings))
+else:
+    print('OK')
+" 2>/dev/null)
+
+    SPIKE_STATUS=$(echo "${SPIKE_RESULT}" | cut -d: -f1)
+    if [ "${SPIKE_STATUS}" = "SPIKE" ]; then
+        echo -e "  ${YELLOW}⚠ 初日スパイクの疑い:${NC}"
+        echo "${SPIKE_RESULT}" | sed 's/^SPIKE://' | tr '|' '\n' | while read -r line; do
+            echo -e "    ${YELLOW}→ ${line}${NC}"
+        done
+        echo -e "  ${YELLOW}  ベースライン未考慮で累積値が初日に計上されている可能性${NC}"
+    else
+        echo -e "  ${GREEN}✓${NC} 初日スパイクは検出されませんでした"
+    fi
+else
+    echo -e "  ${YELLOW}△${NC} Apps Script APIデータ未取得のためスキップ"
+fi
+echo ""
+
+# ============================================================
+# ステップ6: 整合性チェック
+# ============================================================
+echo -e "${BLUE}[6/6] 整合性チェック${NC}"
 echo ""
 
 # GitHub API vs ローカルCSV
