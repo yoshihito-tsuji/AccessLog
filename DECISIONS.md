@@ -106,6 +106,21 @@
 - **影響範囲**: なし（仕様として確認のみ）
 - **備考**: ユーザーへの説明が必要な場合は、ダッシュボードに注釈追加を検討
 
+### 2026-02-28: Google Drive フォルダ整理（AppDownload → AccessLog フォルダ）
+
+- **決定者**: Yoshihitoさん（Codex設計承認: 案A → 実施時に案B に変更）
+- **背景**: Google Drive トップディレクトリの「AppDownload」スプレッドシートをフォルダ整理したい
+- **決定内容**:
+  1. Google Drive に「AccessLog」フォルダを手動作成（ID: `1GiCy6rRnnjTiruLiQevkLj4en574nnqu`）
+  2. 「AppDownload」スプレッドシートを Google Drive UI で AccessLog フォルダに移動（2026-02-28 完了）
+  3. サービスアカウントを AccessLog フォルダの編集者として共有
+- **技術的根拠**: ファイル移動後も `SPREADSHEET_ID`（= `fileId`）は変わらないため、既存の `track_downloads.sh` / `upload_to_sheets.py` への影響なし
+- **API での移動が不可だった理由**: サービスアカウントはファイルの「共有された編集者」に過ぎず、ユーザーの My Drive ルートフォルダへのアクセス権がないため `cannotAddParent (403)` エラー
+- **影響範囲**: Google Drive のファイル配置のみ（コードの変更なし）
+- **現在の状態**:
+  - AppDownload の場所: `AccessLog` フォルダ内（親 ID: `1GiCy6rRnnjTiruLiQevkLj4en574nnqu`）
+  - SPREADSHEET_ID: `1-n-CpA9U8kwqTRxhbKBhNOj0-lcZjLG1MJXLhxgdQPs`（変化なし）
+
 ### 2026-02-17: Apps Script 日次増分計算のベースライン初期化バグ修正
 
 - **決定者**: Codex
