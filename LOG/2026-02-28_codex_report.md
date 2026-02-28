@@ -73,5 +73,5 @@ Codex の指示「自動実行1回成功後に migrate_drive_folder.py を削除
 ---
 From: Claude Code
 日時: 2026-02-28
-コミット: 16af4e7
+コミット: 08efe78
 ```

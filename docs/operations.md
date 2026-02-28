@@ -143,3 +143,30 @@ for i, row in enumerate(data, 1):
 ```
 
 ---
+
+## Google Drive ファイル操作の注意事項（2026-02-28 追記）
+
+### My Drive ルート配下のファイル移動はサービスアカウント API では不可
+
+サービスアカウントは「共有された編集者」として個別ファイルにアクセスしているため、
+ユーザーの My Drive ルートフォルダへの権限を持ちません。
+このため、Drive API v3 でルート配下のファイルを別フォルダに移動しようとすると
+`cannotAddParent (403)` エラーが発生します。
+
+#### 標準手順: Google Drive UI で操作する
+
+1. [drive.google.com](https://drive.google.com) を開く
+2. 対象ファイルを右クリック → 「移動」
+3. 移動先フォルダを選択して「移動」
+
+#### 影響範囲について
+
+Google Drive でファイルをフォルダに移動しても `fileId`（= `SPREADSHEET_ID`）は変わりません。
+既存の `track_downloads.sh` / `upload_to_sheets.py` はすべて `SPREADSHEET_ID` でファイルを参照しているため、
+フォルダ移動後も一切の変更なしに正常動作します。
+
+#### サービスアカウントとの共有について
+
+フォルダを作成した場合は、そのフォルダをサービスアカウントと共有してください（編集者権限）。
+サービスアカウントのメールアドレス:
+`releases-tracker@uplifted-kit-478107-f6.iam.gserviceaccount.com`
