@@ -189,3 +189,29 @@
   3. `cleanupDuplicateSpikeDates()` を実行して 2/24・2/27 の行を削除
   4. ダッシュボード 30 日間表示で +234 スパイクが解消されたことを確認
 - **残リスク**: prevCount リセットの根本原因（DailyData のデータ構造の詳細）は未解明。直接 Sheets アクセスがある環境での実査を推奨
+
+### 2026-03-02: upload_to_sheets.py 二重実行防止・フィルタ修正（Round 3）
+
+- **決定者**: Claude Code（Codex Round 3 指示プロンプトに基づく）
+- **背景**:
+  - `inspectDailyDataSnapshots()` により 2/16・2/28・3/1 の DailyData 行数が 86 = 43 × 2 と確認
+  - 根本原因: `upload_to_sheets.py` の二重実行（launchd `StartCalendarInterval` がスリープ/ウェイク時に同一ジョブを二重発火）
+  - 二次原因: `_filter_rows_by_date` が gspread の Date 型セル `'YYYY/M/D H:MM:SS'` に対して `cell.startswith('YYYY-MM-DD')` でマッチ失敗 → 削除されずに 43 行が二重 append
+  - ログ二重記録: `logging.FileHandler`（直接書き込み）+ `logging.StreamHandler`（stderr → launchd `StandardErrorPath` が同一ファイルに書き込み）の競合
+- **決定内容**:
+  1. `scripts/track_downloads.sh` に PID ロックファイル排他制御を追加（`logs/.track_downloads.lock`）
+     - 実行中プロセスが存在する場合は即終了 + エラーログ出力
+     - `trap` で EXIT/INT/TERM 時にロックファイルを自動削除
+  2. `scripts/upload_to_sheets.py` の `logging.basicConfig` から `FileHandler` を除去（`StreamHandler` のみに変更）
+  3. `scripts/upload_to_sheets.py` の `_filter_rows_by_date` を `'YYYY/M/D H:MM:SS'` 形式にも対応
+     - `datetime.strptime` で `target_date` を slash 形式（`'YYYY/M/D'`）に変換してプレフィックス比較
+  4. `scripts/upload_to_sheets.py` の `main()` に `run_id`（uuid8桁）と `pid` のログ出力を追加
+  5. `scripts/upload_to_sheets.py` に DailyData 書き込み後の行数検証を追加（期待値不一致でエラー）
+- **理由**:
+  - PID ロック: macOS で `flock` が非対応のため PID ファイル方式を採用。第2プロセスが起動時点で検出・終了
+  - `StreamHandler` のみ: launchd の `StandardErrorPath` が stderr をキャプチャするため FileHandler は不要
+  - `_filter_rows_by_date` 修正: 両フォーマット対応により Sheets のセル型変換に依存しなくなる
+  - 行数検証: 書き込み後に実際の行数を確認することで、将来の二重 append を検出可能
+- **影響範囲**: `scripts/track_downloads.sh`、`scripts/upload_to_sheets.py`
+- **反映手順**: 次回 23:59 の launchd 実行から自動的に有効（plist 変更・再登録不要）
+- **残リスク**: launchd が二重発火する根本トリガー（スリープ/ウェイクのタイミング）は OS レベルのため未解決。PID ロックにより実害は防止される

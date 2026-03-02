@@ -51,6 +51,22 @@ CURRENT_DATETIME=$(date "+%Y-%m-%d %H:%M:%S")
 # エラーログファイル（logs/ に配置）
 ERROR_LOG="${LOG_DIR}/tracker_error.log"
 
+# 排他制御（二重起動防止）: flock が macOS 非対応のため PID ロックファイル方式
+LOCK_FILE="${LOG_DIR}/.track_downloads.lock"
+if [ -f "${LOCK_FILE}" ]; then
+    EXISTING_PID=$(cat "${LOCK_FILE}" 2>/dev/null)
+    if [ -n "${EXISTING_PID}" ] && kill -0 "${EXISTING_PID}" 2>/dev/null; then
+        mkdir -p "${LOG_DIR}"
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: 二重起動をスキップします: 別インスタンスが実行中 (PID: ${EXISTING_PID}, lock: ${LOCK_FILE})" >> "${ERROR_LOG}"
+        echo -e "${YELLOW}⚠ 別のインスタンスが実行中のためスキップします (PID: ${EXISTING_PID})${NC}"
+        exit 0
+    fi
+    # プロセスが終了しているなら古いロックを除去
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] WARNING: 古いロックファイルを除去します (stale PID: ${EXISTING_PID})" >> "${ERROR_LOG}"
+fi
+echo $$ > "${LOCK_FILE}"
+trap "rm -f '${LOCK_FILE}'" EXIT INT TERM
+
 # エラーハンドリング関数
 log_error() {
     local message="$1"

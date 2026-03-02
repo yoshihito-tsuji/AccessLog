@@ -25,6 +25,7 @@ import json
 import logging
 import time
 import re
+import uuid
 from datetime import datetime
 from pathlib import Path
 
@@ -41,8 +42,10 @@ logging.basicConfig(
     format='[%(asctime)s] %(levelname)s: %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
     handlers=[
-        logging.FileHandler(str(LOG_FILE), mode='a'),  # 追記モード
-        logging.StreamHandler()  # 標準出力にも表示
+        # StreamHandler のみ: launchd の StandardErrorPath が stderr を
+        # tracker_error.log に書き込む。FileHandler を併用すると同一ファイルに
+        # 二重記録されるため除去。手動実行時は stderr（端末）に表示される。
+        logging.StreamHandler()
     ]
 )
 logger = logging.getLogger(__name__)
@@ -191,12 +194,25 @@ def _filter_rows_by_date(rows, target_date, match_prefix):
         return rows
     header = rows[0]
     filtered = [header]
+
+    # gspread が日付セルを 'YYYY/M/D H:MM:SS'（ゼロ埋めなし）で返す場合に対応
+    # 例: '2026-02-28' → '2026/2/28' に変換してプレフィックス比較に使用
+    try:
+        dt = datetime.strptime(target_date, '%Y-%m-%d')
+        target_slash = f"{dt.year}/{dt.month}/{dt.day}"  # e.g., '2026/2/28'
+    except ValueError:
+        target_slash = None
+
     for row in rows[1:]:
         if not row:
             continue
-        cell = row[0]
+        cell = str(row[0]) if row[0] is not None else ''
         if match_prefix:
-            if not cell.startswith(target_date):
+            # 'YYYY-MM-DD HH:MM:SS' 形式または 'YYYY/M/D H:MM:SS' 形式（gspread Date型）
+            matches = cell.startswith(target_date) or (
+                target_slash is not None and cell.startswith(target_slash)
+            )
+            if not matches:
                 filtered.append(row)
         else:
             if cell != target_date:
@@ -328,6 +344,15 @@ def upload_to_google_sheets(data, gaq_mac_versions, gaq_win_versions, popup_mac_
         _update_sheet_with_rows(daily_sheet, merged_values)
         logger.info(f"DailyDataシートにデータ追加完了: {len(rows_to_add)}件（1回のAPI呼び出し）")
 
+        # 行数検証: 書き込み後に実際の行数を確認し、想定と一致しない場合はエラー
+        expected_rows = len(merged_values)
+        verified_values = daily_sheet.get_all_values()
+        actual_rows = len(verified_values)
+        if actual_rows != expected_rows:
+            logger.error(f"DailyData行数検証エラー: 期待={expected_rows}行, 実際={actual_rows}行")
+            raise ValueError(f"DailyData行数不一致: expected={expected_rows}, actual={actual_rows}")
+        logger.info(f"DailyData行数検証OK: {actual_rows}行（ヘッダー含む）")
+
         # バージョン別集計シート（GaQ Mac版）
         try:
             gaq_mac_sheet = spreadsheet.worksheet('GaQ_Mac_Summary')
@@ -404,7 +429,9 @@ def upload_to_google_sheets(data, gaq_mac_versions, gaq_win_versions, popup_mac_
 
 def main():
     """メイン処理"""
-    logger.info("upload_to_sheets.py 実行開始")
+    run_id = str(uuid.uuid4())[:8]
+    pid = os.getpid()
+    logger.info(f"upload_to_sheets.py 実行開始 [run_id={run_id}, pid={pid}]")
 
     import argparse
 
