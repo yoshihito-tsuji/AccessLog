@@ -7,35 +7,52 @@
 ```
 From: Claude Code / To: Codex
 
-# Apps Script v1.3.0 実装完了報告（Round 2）
+# Apps Script v1.3.0 実装・検証完了報告（Round 2）
 
 ## 1. 原因確定（仮説A/B 採否）
 
-### 現時点の判定（デプロイ前）
+### 採否結果
 
 | 仮説 | 内容 | 採否 |
 |------|------|------|
-| 仮説A | タグキーの全角/半角差異による重複計上 | 保留（inspectDailyDataSnapshots で確認要） |
-| 仮説B | 中間スナップショット（不完全）が最終値として採用される | **有力**（ロジックの構造的欠陥として確認済み） |
+| 仮説A | タグキーの全角/半角差異による重複計上 | **否定** |
+| 仮説B | 中間スナップショット（不完全）が最終値として採用される | **否定** |
+| **真因** | `upload_to_sheets.py` の **二重実行** | **確定** |
 
-仮説Bの根拠:
-- v1.2.0 の `getTimelineData()` は各日付の「最新タイムスタンプ1件」の行のみを採用していた
-- 23:59 の自動実行が正常完了した場合、最新TSは完全スナップになるはずだが、
-  何らかの事情（ネットワーク遅延、launchd 遅延等）で中間の不完全スナップが
-  「最新」として採用された可能性がある
-- `inspectDailyDataSnapshots()` の実行で実際のタイムスタンプ分布を確認すれば採否確定できる
+### inspectDailyDataSnapshots() による証拠
+
+問題日（2/16・2/28・3/1）の DailyData 構造:
+
+| 日付 | タイムスタンプ数 | 行数 | 正常日比 |
+|------|----------------|------|---------|
+| 2/14〜2/22（通常） | 1 | 43 | 基準 |
+| **2/16** | 1 | **86** | 2倍 ⚠️ |
+| **2/28** | 1 | **86** | 2倍 ⚠️ |
+| **3/1** | 1 | **86** | 2倍 ⚠️ |
+
+全 app×version の行数が正確に2倍になっている（タグ差異なし）。
+→ 同一タイムスタンプで upload_to_sheets.py が **2回実行** され、
+　 同一43行が重複 append された。冪等性チェックをすり抜けていた。
+
+仮説Aの否定根拠: タグ正規化差異（tagRaw ≠ tagNormalized）の報告が0件。
+仮説Bの否定根拠: 中間スナップではなく、1タイムスタンプで86行（完全スナップが2重）。
+
+### v1.3.0 による修正の有効性
+
+- `allRowsByDate` + MAX 選択: 重複行（値82が2行）→ MAX = 82 ✅
+- 二重実行でも正しい累積値が取得される
 
 ## 2. 実装変更点
 
-### 変更ファイル: config/google_apps_script.js
+### 変更ファイル: config/google_apps_script.js（v1.2.0 → v1.3.0）
 
 | 変更内容 | 対象関数 | 目的 |
 |----------|----------|------|
 | normalizeKey() 追加 | 新規関数 | タグキーの NFKC 正規化 + trim（仮説A対応） |
-| getTimelineData() リライト | 既存関数 | allRowsByDate + MAX 選択方式（仮説B対応） |
+| getTimelineData() リライト | 既存関数 | allRowsByDate + MAX 選択方式（真因・仮説B 両対応） |
 | ベースライン計算を MAX 方式に統一 | getTimelineData() 内 | 一貫性確保 |
 | ?type=meta ハンドラ追加 | doGet() | デプロイバージョン確認用 |
-| inspectDailyDataSnapshots() 追加 | 新規関数 | フォレンジック診断（仮説A/B 採否確定用） |
+| inspectDailyDataSnapshots() 追加 | 新規関数 | フォレンジック診断（今回の根本原因特定に活用） |
 | ケースG・H 追加 | testIncrementBaseline() | MAX 選択 + normalizeKey のテスト |
 | バージョン更新 | @version | 1.2.0 → 1.3.0 |
 
@@ -44,27 +61,17 @@ From: Claude Code / To: Codex
 変更前（v1.2.0）:
 ```javascript
 // 各日付の最新タイムスタンプ1件の行のみ採用
+// → 重複行が全て同一TSを持つ場合、全行が "latest" として収集される
+//    その後の集計で同一バージョンの値が合算 → 二重計上
 const latestRecordsByDate = {};
-rows.forEach(row => {
-  const dateStr = formatDate(timestampDate);
-  if (!latestRecordsByDate[dateStr] || timestampDate > latestRecordsByDate[dateStr].ts) {
-    latestRecordsByDate[dateStr] = { ts: timestampDate, rows: [row] };
-  }
-});
 ```
 
 変更後（v1.3.0）:
 ```javascript
-// 全タイムスタンプの全行を収集
+// 全タイムスタンプの全行を収集し、各 app×version の MAX を選択
+// → 重複行（82, 82）→ MAX = 82（正しい値）
 const allRowsByDate = {};
-rows.forEach(row => {
-  const dateStr = formatDate(timestampDate);
-  const tsMsKey = String(timestampDate.getTime());
-  if (!allRowsByDate[dateStr]) allRowsByDate[dateStr] = {};
-  if (!allRowsByDate[dateStr][tsMsKey]) allRowsByDate[dateStr][tsMsKey] = [];
-  allRowsByDate[dateStr][tsMsKey].push(row);
-});
-// 各アプリ×バージョンの累積値 = 全タイムスタンプのうち MAX を選択
+// ...
 appData[appName][dateStr][versionName] = Math.max(
   appData[appName][dateStr][versionName] || 0, count
 );
@@ -72,58 +79,70 @@ appData[appName][dateStr][versionName] = Math.max(
 
 ## 3. 検証結果（数値）
 
-### テストケース（ユニットテスト）
+### ユニットテスト: testIncrementBaseline()
 
-| ケース | 内容 | 期待値 | 実装状況 |
-|--------|------|--------|----------|
-| G | 2/28 に TS1=82・TS2=78 の2スナップ → MAX=82、前日MAX=78 | +4 | ✅ 追加済み |
-| H | 全角スペース入りタグ・半角同等タグ → NFKC 正規化で統合 | 合算値 | ✅ 追加済み |
+実行結果: **14テスト全通過（0 failed）**
 
-全12テスト（A〜H）が `testIncrementBaseline()` でカバー済み。
+追加ケース:
+- ケースG: 同日複数スナップMAX集計 → 2/28 = +4 ✅
+- ケースH〜H-3: normalizeKey（全角→半角、スペース除去）✅
 
-### 実ダッシュボードへの影響（デプロイ後に確認）
+### API 検証
 
-以下をデプロイ後に Yoshihitoさんが確認:
-1. `curl "${API_URL}?type=meta"` → `scriptVersion: "1.3.0-2026-03-02"` であること
-2. `inspectDailyDataSnapshots()` → 2/28 周辺のスナップ分布を確認
-3. `testIncrementBaseline()` → 12テスト全通過
-4. ダッシュボード 30日間表示 → 2/28 スパイク解消
+```
+curl "...?type=meta"
+→ {"status":"success","scriptVersion":"1.3.0-2026-03-02","generatedAt":"2026-03-02T08:17:40.954Z"}
+```
+
+30日間 API の主要日付:
+- 2/16: +234（実際のDL、二重行もMAXで正値）
+- 2/28: **+4**（スパイク解消 ✅）
+- 3/1: +0
+- 3/2: +0
+
+### ダッシュボード目視確認（2026-03-02 17:19）
+
+30日間表示:
+- GaQ (Mac): 42 DL
+- GaQ (Windows): 50 DL
+- PoPuP (Mac): 31 DL
+- PoPuP (Windows): 123 DL
+- 合計: 246 DL
+- 2/28・2/24・2/27 のスパイクは消滅 ✅
 
 ## 4. 残リスクと追加提案
 
 ### 残リスク
 
-| リスク | 詳細 | 対応状況 |
+| リスク | 詳細 | 推奨対応 |
 |--------|------|----------|
-| 仮説A/B の確定 | デプロイ前のため、実際のスナップ分布は未確認 | `inspectDailyDataSnapshots()` で確認予定 |
-| 仮説C（未知原因） | A/B いずれも否定された場合、新たな原因調査が必要 | 現時点で証拠なし |
-| normalizeKey の副作用 | 過去データのキーが変化し、ベースラインとの不整合が起きる可能性 | ベースラインも同一関数で正規化済みのため影響なし |
+| upload_to_sheets.py 二重実行の根本原因 | launchd または呼び出し元が二重起動する状況が未解明 | track_downloads.sh の冪等性強化を検討 |
+| 2/16・2/28・3/1 の重複行が DailyData に残存 | MAX 方式で計算は正しいが、データとしては汚染状態 | cleanupDuplicateRows() などでクリーニング可能 |
+| normalizeKey の副作用 | ベースライン計算も同一関数で正規化済みのため現状は影響なし | 問題は発生していない |
 
 ### 追加提案
 
-1. **cleanupDuplicateSpikeDates の後続実行**:
-   v1.3.0 の MAX 選択方式では 2/24・2/27 の行が残っていても二重計上は発生しないが、
-   DailyData をクリーンに保つため、引き続きクリーンアップを推奨。
+1. **upload_to_sheets.py の冪等性強化**:
+   同一日の同一データが append されないよう、アップロード前に
+   当日分の行を全削除してから挿入する方式（現行はチェック済みの行のみスキップ）
+   に変更することを推奨。二重実行しても DailyData の行数が増えなくなる。
 
-2. **inspectDailyDataSnapshots の実行**:
-   仮説A/B の採否確定のため、デプロイ後に必ず実行してください。
-   出力結果を次回 Codex に報告することで、根本原因の完全確定が可能。
-
-3. **track_downloads.sh の「中間スナップ」抑止**:
-   万一 launchd が 23:59 以前に途中結果を記録するケースがあれば、
-   スクリプト側でデータ記録時刻を 23:59 以降のみとする制御も検討余地あり。
-   ただし現行運用（1日1回 23:59 実行）では発生頻度は低いと推測。
+2. **DailyData クリーンアップ**:
+   2/16・2/28・3/1 の重複86行を削除し、各43行に戻すワンショット関数の追加
+   を検討（cleanupDuplicateSpikeDates() の応用）。
+   ただし v1.3.0 の MAX 方式で計算は正しいため、緊急度は低い。
 
 ---
 
 ## 5. コミット情報
 
-- コミット: d225bff
+- 実装コミット: d225bff（v1.3.0）
+- 報告書コミット: f03aa4f
 - ブランチ: main
-- 変更ファイル: config/google_apps_script.js、DECISIONS.md、LOG/2026-03-02.md
+- デプロイ: バージョン11（2026-03-02 17:16）
+- デプロイID: AKfycbxZx9xCYNYVepuxRsPpWwd4k4zpuq1yivyC6P3nWEEnbYHaIyelOdgVAGvHhi7-rzYeYw
 
 ---
 From: Claude Code
 日時: 2026-03-02
-コミット: d225bff
 ```
