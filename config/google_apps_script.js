@@ -2,8 +2,9 @@
  * Google Apps Script Web API
  * GitHub Releases ダウンロード統計を提供
  *
- * @version 1.1.0 (2026-02-17)
+ * @version 1.2.0 (2026-03-02)
  * @changelog
+ *   - 1.2.0: maxSeenCount導入による重複スパイク防止（同一累積値の二重計上を排除）
  *   - 1.1.0: ベースライン考慮による初日スパイク修正、classifyAsset()関数化
  *   - 1.0.0: 初回リリース（parseTimestamp追加、タイムゾーン処理堅牢化）
  */
@@ -284,19 +285,26 @@ function getTimelineData(days) {
       }
     });
 
-    // バージョンごとに日次増分を計算（ベースライン考慮）
+    // バージョンごとに日次増分を計算（ベースライン考慮 + 重複スパイク防止）
     versionNames.forEach(versionName => {
       const dailyData = [];
       // 期間前のベースライン値で初期化（存在しない場合は0 = 新規バージョン）
       let prevCount = (baselineData[appName] && baselineData[appName][versionName]) || 0;
+      // maxSeenCount: これまでに見た最大累積値を追跡し、prevCountがリセットされても
+      // 同一累積値の二重計上（スパイク再発）を防ぐ
+      let maxSeenCount = prevCount;
 
       dateList.forEach(date => {
         // データが存在する日付のみ累積値を取得
         if (appData[appName][date] && appData[appName][date][versionName] !== undefined) {
           const currentCount = appData[appName][date][versionName];
-          const increment = Math.max(0, currentCount - prevCount);
+          // effectivePrev: prevCountとmaxSeenCountの大きい方を基準に増分を計算
+          // これにより prevCount が何らかの理由でリセットされた場合も二重計上を防ぐ
+          const effectivePrev = Math.max(prevCount, maxSeenCount);
+          const increment = Math.max(0, currentCount - effectivePrev);
           dailyData.push(increment);
           prevCount = currentCount;
+          maxSeenCount = Math.max(maxSeenCount, currentCount);
         } else {
           // データが存在しない日は0
           dailyData.push(0);
@@ -436,6 +444,75 @@ function createJsonResponse(data) {
 }
 
 /**
+ * DailyData の特定日付の行を削除する（データクリーンアップ用）
+ *
+ * 重複スパイク問題で汚染された日付のデータを削除する。
+ * 削除対象: 2026-02-24 と 2026-02-27（2/16 と同一累積値の重複データ）
+ *
+ * 【実行方法】
+ * 1. Apps Script エディタでこの関数を選択
+ * 2. 「実行」ボタンをクリック
+ * 3. 初回は権限承認が必要
+ * 4. ログで削除件数を確認
+ *
+ * 【注意】
+ * - 削除前にスプレッドシートのバックアップを推奨
+ * - getTimelineData() の maxSeenCount 修正後に実行（修正だけでも表示は正常になる）
+ */
+function cleanupDuplicateSpikeDates() {
+  const DATES_TO_DELETE = ['2026-02-24', '2026-02-27'];
+
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_NAME);
+
+  if (!sheet) {
+    throw new Error('シート "' + SHEET_NAME + '" が見つかりません');
+  }
+
+  const dataRange = sheet.getDataRange();
+  const values = dataRange.getValues();
+
+  if (values.length <= 1) {
+    Logger.log('データがありません（ヘッダーのみ）');
+    return;
+  }
+
+  // 削除対象行のインデックスを収集（後ろから削除するため逆順）
+  const rowsToDelete = [];
+  for (let i = 1; i < values.length; i++) {
+    const timestamp = values[i][0];
+    const timestampDate = parseTimestamp(timestamp);
+    if (timestampDate === null) continue;
+
+    const dateStr = formatDate(timestampDate);
+    if (DATES_TO_DELETE.includes(dateStr)) {
+      rowsToDelete.push(i + 1); // シートの行番号は1始まり、ヘッダーが1行目
+    }
+  }
+
+  if (rowsToDelete.length === 0) {
+    Logger.log('削除対象の行が見つかりませんでした（すでに削除済みの可能性）');
+    return;
+  }
+
+  Logger.log('削除対象行数: ' + rowsToDelete.length + ' 行');
+  Logger.log('対象日付: ' + DATES_TO_DELETE.join(', '));
+
+  // 後ろから削除（行番号がズレないように）
+  rowsToDelete.reverse();
+  for (let i = 0; i < rowsToDelete.length; i++) {
+    sheet.deleteRow(rowsToDelete[i]);
+    // 大量削除時のAPIレート制限を避けるため適宜待機
+    if (i > 0 && i % 50 === 0) {
+      Utilities.sleep(1000);
+    }
+  }
+
+  Logger.log('✅ 削除完了: ' + rowsToDelete.length + ' 行を削除しました');
+  Logger.log('削除後の確認: Apps Script API で timeline データを取得して確認してください');
+}
+
+/**
  * DailyDataシートの記録日時列をDateTime型に統一（ワンショット実行用）
  *
  * 既存データで文字列 "YYYY-MM-DD HH:MM:SS" として保存されている記録日時を、
@@ -556,17 +633,20 @@ function testIncrementBaseline() {
     }
   }
 
-  // テスト用の増分計算関数（本体ロジックと同一）
+  // テスト用の増分計算関数（本体ロジックと同一: maxSeenCount対応）
   function calcIncrements(cumulativeByDate, dateList, baseline) {
     const dailyData = [];
     let prevCount = baseline;
+    let maxSeenCount = baseline;
 
     dateList.forEach(date => {
       if (cumulativeByDate[date] !== undefined) {
         const currentCount = cumulativeByDate[date];
-        const increment = Math.max(0, currentCount - prevCount);
+        const effectivePrev = Math.max(prevCount, maxSeenCount);
+        const increment = Math.max(0, currentCount - effectivePrev);
         dailyData.push(increment);
         prevCount = currentCount;
+        maxSeenCount = Math.max(maxSeenCount, currentCount);
       } else {
         dailyData.push(0);
       }
@@ -767,6 +847,44 @@ function testIncrementBaseline() {
 
     var baseline = collectBaseline2(rows, startDate);
     assertEqual('ケースE-2: 複数日+同日複数TS - 最新日(1/14)最新TS(23:59)のみ', baseline['v1.0.0'], 55);
+  }
+
+  // --- ケースF: 同一累積値の重複スパイク防止（maxSeenCount効果の検証）---
+  // 2026-02-16 に +78 の正規スパイク後、2026-02-24・2026-02-27 に
+  // 同一累積値 78 が再度記録された場合（データ汚染）、
+  // maxSeenCount により 2026-02-24 と 2026-02-27 の増分が 0 になるべき
+  {
+    const dateList = ['2026-02-03', '2026-02-04', '2026-02-15', '2026-02-16',
+                      '2026-02-17', '2026-02-24', '2026-02-27', '2026-02-28'];
+    const cumulative = {
+      '2026-02-03': 42,   // +2
+      '2026-02-04': 44,   // +2
+      '2026-02-15': 45,   // +1
+      '2026-02-16': 123,  // +78 正規スパイク（cumulative が 45 → 123 に増加）
+      '2026-02-24': 123,  // 同一累積値 → 重複（本来 0 であるべき）
+      '2026-02-27': 123,  // 同一累積値 → 重複
+      '2026-02-28': 127   // +4 正規増分
+    };
+    const baseline = 40;
+    const result = calcIncrements(cumulative, dateList, baseline);
+    assertEqual('ケースF: 同一累積値の重複スパイク防止（2/24, 2/27 は 0）',
+      result, [2, 2, 1, 78, 0, 0, 0, 4]);
+  }
+
+  // --- ケースF-2: prevCountリセット再現シミュレーション ---
+  // prevCount が 0 にリセットされた状態で同一累積値が来た場合、
+  // maxSeenCount によって 0 になるべき（実際のバグ状況の再現）
+  {
+    const dateList = ['2026-02-16', '2026-02-24'];
+    const cumulative = {
+      '2026-02-16': 78,
+      '2026-02-24': 78   // 同一累積値
+    };
+    const baseline = 0;  // prevCountリセット状態をシミュレート
+    const result = calcIncrements(cumulative, dateList, baseline);
+    // 2/16: 78 - 0 = +78（正規スパイク）
+    // 2/24: maxSeenCount=78 により 78 - 78 = 0（重複防止）
+    assertEqual('ケースF-2: prevCountリセット後の重複スパイク防止', result, [78, 0]);
   }
 
   Logger.log('');

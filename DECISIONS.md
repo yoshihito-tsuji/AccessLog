@@ -137,3 +137,26 @@
 - **理由**: 3案（A: ベースライン初期化、B: 初日0扱い、C: 表示期間制限）のうち、データ正確性と設計意図への忠実さでAを採用
 - **影響範囲**: `config/google_apps_script.js`、`scripts/diagnose.sh`
 - **反映手順**: Apps Scriptエディタでコードを更新後、`testIncrementBaseline()` を実行して全テスト通過を確認
+
+### 2026-03-02: 重複スパイク問題の修正（maxSeenCount導入）
+
+- **決定者**: Claude Code（Codex指示プロンプトに基づく）
+- **背景**:
+  - ダッシュボード 30日間表示で +234 DL が 3 回計上（2/16・2/24・2/27）
+  - PoPuP Win v1.2.0 が +78 × 3 = 234 DL と主張するが、GitHub API の PoPuP 合計は 145 DL → 数学的に不可能 → 二重計上が確定
+  - 削除実験（2/23・2/26 行を手動削除）でスパイクが 1 日ずつ移動 → DailyData に複数日の同一累積スナップショットが存在と判明
+  - `getTimelineData()` で `prevCount` が日付間で正しく引き継がれず、同一累積値を「新規増分」として計上するバグが疑われる
+- **決定内容**:
+  1. `getTimelineData()` に `maxSeenCount`（これまで見た最大累積値）を導入し、`effectivePrev = max(prevCount, maxSeenCount)` で増分計算
+  2. `prevCount` がリセットされても `maxSeenCount` が過去最大を保持し、同一累積値の二重計上を防止
+  3. Apps Script に `cleanupDuplicateSpikeDates()` 関数を追加（2/24・2/27 行の一括削除用）
+  4. `testIncrementBaseline()` にケースF・F-2 を追加（重複スパイク防止の検証）
+  5. バージョンを 1.1.0 → 1.2.0 に更新
+- **理由**: `maxSeenCount` 方式は prevCount リセットの原因に依存せず効果を発揮し、正常データ（単調増加）への副作用もない
+- **影響範囲**: `config/google_apps_script.js`
+- **反映手順**:
+  1. Apps Script エディタで `config/google_apps_script.js` の内容を全て貼り付けて保存
+  2. `testIncrementBaseline()` を実行して 10 テスト全通過を確認
+  3. `cleanupDuplicateSpikeDates()` を実行して 2/24・2/27 の行を削除
+  4. ダッシュボード 30 日間表示で +234 スパイクが解消されたことを確認
+- **残リスク**: prevCount リセットの根本原因（DailyData のデータ構造の詳細）は未解明。直接 Sheets アクセスがある環境での実査を推奨
