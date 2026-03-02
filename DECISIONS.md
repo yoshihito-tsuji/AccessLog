@@ -138,6 +138,35 @@
 - **影響範囲**: `config/google_apps_script.js`、`scripts/diagnose.sh`
 - **反映手順**: Apps Scriptエディタでコードを更新後、`testIncrementBaseline()` を実行して全テスト通過を確認
 
+### 2026-03-02: 2/28スパイク修正・仮説A/B対応（allRowsByDate + MAX + normalizeKey）
+
+- **決定者**: Claude Code（Codex Round 2 指示プロンプトに基づく）
+- **背景**:
+  - v1.2.0 デプロイ・cleanupDuplicateSpikeDates 実行後、2/28 に新たな +238 スパイクが出現
+  - 仮説A: 全角/半角差異でタグキーが重複し、カウントが合算される
+  - 仮説B: 23:59 より前の中間スナップショット（不完全）が最終値として採用され、翌日差分が水増しされる
+- **決定内容**:
+  1. `normalizeKey(value)` 関数を追加（NFKC正規化 + trim）— 仮説A 対応
+  2. `getTimelineData()` を `allRowsByDate`（全TS収集） + MAX 選択方式に変更 — 仮説B 対応
+  3. ベースライン計算も MAX 選択方式に統一
+  4. `doGet()` に `?type=meta` ハンドラを追加（デプロイバージョン確認用）
+  5. `inspectDailyDataSnapshots()` 診断関数を追加（仮説A/B の根本原因特定用）
+  6. `testIncrementBaseline()` にケースG・H を追加（合計 12 テスト）
+  7. バージョンを 1.2.0 → 1.3.0 に更新
+- **理由**:
+  - 仮説A/B いずれが真因でも同時対応できるロジックを採用
+  - `allRowsByDate` + MAX 方式は、不完全スナップショットを完全スナップショットで上書きするため仮説B に対応
+  - NFKC 正規化は同一バージョンの重複集計を防ぐため仮説A に対応
+  - `inspectDailyDataSnapshots()` により、実際のデプロイ後に仮説A/B の採否を確定できる
+- **影響範囲**: `config/google_apps_script.js`
+- **反映手順**:
+  1. Apps Script エディタで `config/google_apps_script.js` の内容を全て貼り付けて保存
+  2. `curl "${API_URL}?type=meta"` で `scriptVersion: "1.3.0-2026-03-02"` を確認
+  3. `inspectDailyDataSnapshots()` を実行して仮説A/B の採否を特定
+  4. `testIncrementBaseline()` を実行して 12 テスト全通過を確認
+  5. ダッシュボード 30 日間表示で 2/28 スパイクが解消されたことを確認
+- **残リスク**: 仮説A/B の採否は `inspectDailyDataSnapshots()` 実行後に確定。万一いずれも否定された場合は新たな仮説Cの調査が必要
+
 ### 2026-03-02: 重複スパイク問題の修正（maxSeenCount導入）
 
 - **決定者**: Claude Code（Codex指示プロンプトに基づく）

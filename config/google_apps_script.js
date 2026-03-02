@@ -2,8 +2,11 @@
  * Google Apps Script Web API
  * GitHub Releases ダウンロード統計を提供
  *
- * @version 1.2.0 (2026-03-02)
+ * @version 1.3.0 (2026-03-02)
  * @changelog
+ *   - 1.3.0: normalizeKey導入（タグキー正規化）、日次データ選別をMAX累積値方式に変更、
+ *            type=meta追加（デプロイ確認用）、inspectDailyDataSnapshots追加（法医学調査用）、
+ *            testIncrementBaselineにケースG/H追加（計12テスト）
  *   - 1.2.0: maxSeenCount導入による重複スパイク防止（同一累積値の二重計上を排除）
  *   - 1.1.0: ベースライン考慮による初日スパイク修正、classifyAsset()関数化
  *   - 1.0.0: 初回リリース（parseTimestamp追加、タイムゾーン処理堅牢化）
@@ -29,6 +32,17 @@ const EXCLUDED_ASSET_SUFFIXES = [
 function isExcludedAsset(assetName) {
   const lower = assetName.toLowerCase();
   return EXCLUDED_ASSET_SUFFIXES.some(suffix => lower.endsWith(suffix));
+}
+
+/**
+ * タグ/バージョン文字列を正規化（NFKC正規化 + trim）
+ * 全角・半角の差異や前後の空白・不可視文字によるキー不一致を防ぐ
+ *
+ * @param {*} value - 正規化する値
+ * @returns {string} 正規化済み文字列
+ */
+function normalizeKey(value) {
+  return String(value).normalize('NFKC').trim();
 }
 
 /**
@@ -92,6 +106,15 @@ function doGet(e) {
     const type = e.parameter.type || 'timeline';
     const days = parseInt(e.parameter.days || '30');
 
+    // デプロイ確認用エンドポイント（仮説A: デプロイ不一致の即時判定）
+    if (type === 'meta') {
+      return createJsonResponse({
+        status: 'success',
+        scriptVersion: '1.3.0-2026-03-02',
+        generatedAt: new Date().toISOString()
+      });
+    }
+
     if (type === 'timeline') {
       const data = getTimelineData(days);
       return createJsonResponse(data);
@@ -111,6 +134,11 @@ function doGet(e) {
 
 /**
  * 日別推移データを取得
+ *
+ * 1.3.0 変更点:
+ * - 日次データの選別方式を変更: 「最新タイムスタンプのみ採用」→「全タイムスタンプを集計し app×version ごとに最大累積値を採用」
+ * - タグキーに normalizeKey() を適用（全角/半角差異・前後空白による不一致を防止）
+ * - ベースライン（期間前データ）にも同様の MAX 集計を適用
  */
 function getTimelineData(days) {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
@@ -120,17 +148,13 @@ function getTimelineData(days) {
     throw new Error('シート "' + SHEET_NAME + '" が見つかりません');
   }
 
-  // 全データを取得
   const dataRange = sheet.getDataRange();
   const values = dataRange.getValues();
 
   if (values.length <= 1) {
-    // ヘッダーのみの場合は空データを返す
     return createEmptyTimelineData(days);
   }
 
-  // ヘッダーを除外
-  const headers = values[0];
   const records = values.slice(1);
 
   // 日付範囲を計算
@@ -147,7 +171,7 @@ function getTimelineData(days) {
     dateList.push(formatDate(date));
   }
 
-  // データを整理
+  // アプリ別・日別・バージョン別データ（MAX累積値を格納）
   const appData = {
     'GaQ (Mac)': {},
     'GaQ (Windows)': {},
@@ -155,91 +179,80 @@ function getTimelineData(days) {
     'PoPuP (Windows)': {}
   };
 
-  // 日付ごとに最新のタイムスタンプのレコードのみを保持
-  const latestRecordsByDate = {};
+  // 期間内: 全行を日付+タイムスタンプで収集（タイムスタンプ絞り込みを行わない）
+  // { dateStr: { tsMsKey: rows[] } }
+  const allRowsByDate = {};
 
-  // ベースライン用: 期間開始日より前の最新日・最新タイムスタンプのデータのみ保持
+  // ベースライン用: 期間前の最新日のすべてのタイムスタンプを収集
   let preperiodLatestDate = null;
-  let preperiodLatestTimestamp = null;
-  let preperiodLatestRows = [];
+  let preperiodRowsByTs = {}; // { tsMsKey: rows[] }
 
   records.forEach(row => {
-    const timestamp = row[0];
-
-    // parseTimestamp()で統一的にDate変換
-    const timestampDate = parseTimestamp(timestamp);
-
-    // Invalid Dateの場合はスキップ
-    if (timestampDate === null) {
-      return;
-    }
+    const timestampDate = parseTimestamp(row[0]);
+    if (timestampDate === null) return;
 
     const dateStr = formatDate(timestampDate);
 
     if (dateList.includes(dateStr)) {
-      // 対象期間内: 既存ロジックと同様に処理
-      if (!latestRecordsByDate[dateStr]) {
-        latestRecordsByDate[dateStr] = { timestamp: timestampDate, rows: [] };
-      }
+      // 対象期間内: すべての行を収集（タイムスタンプで絞り込まない）
+      if (!allRowsByDate[dateStr]) allRowsByDate[dateStr] = {};
+      const tsMsKey = String(timestampDate.getTime());
+      if (!allRowsByDate[dateStr][tsMsKey]) allRowsByDate[dateStr][tsMsKey] = [];
+      allRowsByDate[dateStr][tsMsKey].push(row);
 
-      const current = latestRecordsByDate[dateStr];
-
-      if (current.timestamp.getTime() < timestampDate.getTime()) {
-        latestRecordsByDate[dateStr] = { timestamp: timestampDate, rows: [row] };
-      } else if (current.timestamp.getTime() === timestampDate.getTime()) {
-        current.rows.push(row);
-      }
     } else if (timestampDate < startDate) {
-      // 期間開始日より前: 最新日・最新タイムスタンプのみ保持（ベースライン用）
-      // 期間内と同じ「最新タイムスタンプ選別」ロジックを適用
+      // 期間前: 最新日のすべてのタイムスタンプを収集（ベースライン用）
       if (preperiodLatestDate === null || dateStr > preperiodLatestDate) {
         // より新しい日付が見つかった → 全置換
         preperiodLatestDate = dateStr;
-        preperiodLatestTimestamp = timestampDate;
-        preperiodLatestRows = [row];
+        preperiodRowsByTs = {};
+        const tsMsKey = String(timestampDate.getTime());
+        preperiodRowsByTs[tsMsKey] = [row];
       } else if (dateStr === preperiodLatestDate) {
-        // 同日内: タイムスタンプで最新のみを保持
-        if (preperiodLatestTimestamp.getTime() < timestampDate.getTime()) {
-          // より新しいタイムスタンプ → 行を置換
-          preperiodLatestTimestamp = timestampDate;
-          preperiodLatestRows = [row];
-        } else if (preperiodLatestTimestamp.getTime() === timestampDate.getTime()) {
-          // 同一タイムスタンプ → 行を追加
-          preperiodLatestRows.push(row);
-        }
-        // 古いタイムスタンプは無視
+        // 同日: タイムスタンプ別に収集
+        const tsMsKey = String(timestampDate.getTime());
+        if (!preperiodRowsByTs[tsMsKey]) preperiodRowsByTs[tsMsKey] = [];
+        preperiodRowsByTs[tsMsKey].push(row);
       }
     }
   });
 
-  // 最新レコードのみを処理（classifyAsset()でアプリ判定を統一）
-  Object.keys(latestRecordsByDate).forEach(dateStr => {
-    const latestData = latestRecordsByDate[dateStr];
+  // 期間内データ: タイムスタンプごとに app×version の合計を計算し、MAX累積値を採用
+  // 理由: 不完全なスナップショット1件に引きずられないようにする
+  Object.keys(allRowsByDate).forEach(dateStr => {
+    const tsByRows = allRowsByDate[dateStr];
 
-    latestData.rows.forEach(row => {
-      const repo = row[1];
-      const tag = row[3];
-      const assetName = row[4];
-      const count = parseInt(row[5]) || 0;
+    // タイムスタンプごとに app×version の合計を計算
+    const perTsSum = {}; // { tsMsKey: { appName: { versionName: count } } }
+    Object.keys(tsByRows).forEach(tsMsKey => {
+      perTsSum[tsMsKey] = {};
+      tsByRows[tsMsKey].forEach(row => {
+        const appName = classifyAsset(row[1], row[4], true, row[3]);
+        if (!appName) return;
+        const versionName = normalizeKey(row[3]);
+        const count = parseInt(row[5]) || 0;
 
-      const appName = classifyAsset(repo, assetName, true, tag);
-      if (!appName) return;
+        if (!perTsSum[tsMsKey][appName]) perTsSum[tsMsKey][appName] = {};
+        perTsSum[tsMsKey][appName][versionName] = (perTsSum[tsMsKey][appName][versionName] || 0) + count;
+      });
+    });
 
-      const versionName = tag;
-
-      if (!appData[appName][dateStr]) {
-        appData[appName][dateStr] = {};
-      }
-      if (!appData[appName][dateStr][versionName]) {
-        appData[appName][dateStr][versionName] = 0;
-      }
-
-      // ダウンロード数を加算（同じ日の複数アセットを合計）
-      appData[appName][dateStr][versionName] += count;
+    // app×version ごとに最大累積値を appData に格納
+    Object.keys(perTsSum).forEach(tsMsKey => {
+      Object.keys(perTsSum[tsMsKey]).forEach(appName => {
+        if (!appData[appName][dateStr]) appData[appName][dateStr] = {};
+        Object.keys(perTsSum[tsMsKey][appName]).forEach(versionName => {
+          const count = perTsSum[tsMsKey][appName][versionName];
+          appData[appName][dateStr][versionName] = Math.max(
+            appData[appName][dateStr][versionName] || 0,
+            count
+          );
+        });
+      });
     });
   });
 
-  // ベースライン集計: 期間開始日より前の最新日データから、アプリ×バージョンの累積値を取得
+  // ベースライン集計: 期間前最新日の app×version ごとの MAX 累積値を取得
   const baselineData = {
     'GaQ (Mac)': {},
     'GaQ (Windows)': {},
@@ -247,25 +260,37 @@ function getTimelineData(days) {
     'PoPuP (Windows)': {}
   };
 
-  if (preperiodLatestRows.length > 0) {
-    preperiodLatestRows.forEach(row => {
-      const repo = row[1];
-      const tag = row[3];
-      const assetName = row[4];
-      const count = parseInt(row[5]) || 0;
+  if (preperiodLatestDate !== null) {
+    // タイムスタンプごとに集計
+    const prePerTsSum = {};
+    Object.keys(preperiodRowsByTs).forEach(tsMsKey => {
+      prePerTsSum[tsMsKey] = {};
+      preperiodRowsByTs[tsMsKey].forEach(row => {
+        const appName = classifyAsset(row[1], row[4], false, row[3]);
+        if (!appName) return;
+        const versionName = normalizeKey(row[3]);
+        const count = parseInt(row[5]) || 0;
 
-      const appName = classifyAsset(repo, assetName, false, tag);
-      if (!appName) return;
+        if (!prePerTsSum[tsMsKey][appName]) prePerTsSum[tsMsKey][appName] = {};
+        prePerTsSum[tsMsKey][appName][versionName] = (prePerTsSum[tsMsKey][appName][versionName] || 0) + count;
+      });
+    });
 
-      const versionName = tag;
-      if (!baselineData[appName][versionName]) {
-        baselineData[appName][versionName] = 0;
-      }
-      baselineData[appName][versionName] += count;
+    // MAX 採用
+    Object.keys(prePerTsSum).forEach(tsMsKey => {
+      Object.keys(prePerTsSum[tsMsKey]).forEach(appName => {
+        Object.keys(prePerTsSum[tsMsKey][appName]).forEach(versionName => {
+          const count = prePerTsSum[tsMsKey][appName][versionName];
+          baselineData[appName][versionName] = Math.max(
+            baselineData[appName][versionName] || 0,
+            count
+          );
+        });
+      });
     });
   }
 
-  // 累積ダウンロード数から日次増分を計算（ベースライン考慮）
+  // 累積ダウンロード数から日次増分を計算（ベースライン考慮 + maxSeenCount による重複スパイク防止）
   const result = {
     status: 'success',
     dates: dateList,
@@ -276,7 +301,7 @@ function getTimelineData(days) {
     const versions = {};
     const versionNames = new Set();
 
-    // すべてのバージョンを収集
+    // すべてのバージョンを収集（normalizeKey済みのキー）
     dateList.forEach(date => {
       if (appData[appName][date]) {
         Object.keys(appData[appName][date]).forEach(version => {
@@ -288,25 +313,18 @@ function getTimelineData(days) {
     // バージョンごとに日次増分を計算（ベースライン考慮 + 重複スパイク防止）
     versionNames.forEach(versionName => {
       const dailyData = [];
-      // 期間前のベースライン値で初期化（存在しない場合は0 = 新規バージョン）
       let prevCount = (baselineData[appName] && baselineData[appName][versionName]) || 0;
-      // maxSeenCount: これまでに見た最大累積値を追跡し、prevCountがリセットされても
-      // 同一累積値の二重計上（スパイク再発）を防ぐ
       let maxSeenCount = prevCount;
 
       dateList.forEach(date => {
-        // データが存在する日付のみ累積値を取得
         if (appData[appName][date] && appData[appName][date][versionName] !== undefined) {
           const currentCount = appData[appName][date][versionName];
-          // effectivePrev: prevCountとmaxSeenCountの大きい方を基準に増分を計算
-          // これにより prevCount が何らかの理由でリセットされた場合も二重計上を防ぐ
           const effectivePrev = Math.max(prevCount, maxSeenCount);
           const increment = Math.max(0, currentCount - effectivePrev);
           dailyData.push(increment);
           prevCount = currentCount;
           maxSeenCount = Math.max(maxSeenCount, currentCount);
         } else {
-          // データが存在しない日は0
           dailyData.push(0);
         }
       });
@@ -314,7 +332,6 @@ function getTimelineData(days) {
       versions[versionName] = dailyData;
     });
 
-    // 合計を計算
     const total = dateList.map((_, idx) => {
       return Object.values(versions).reduce((sum, data) => sum + data[idx], 0);
     });
@@ -349,78 +366,41 @@ function createEmptyTimelineData(days) {
     status: 'success',
     dates: dateList,
     apps: {
-      'GaQ (Mac)': {
-        versions: {},
-        total: zeros
-      },
-      'GaQ (Windows)': {
-        versions: {},
-        total: zeros
-      },
-      'PoPuP (Mac)': {
-        versions: {},
-        total: zeros
-      },
-      'PoPuP (Windows)': {
-        versions: {},
-        total: zeros
-      }
+      'GaQ (Mac)': { versions: {}, total: zeros },
+      'GaQ (Windows)': { versions: {}, total: zeros },
+      'PoPuP (Mac)': { versions: {}, total: zeros },
+      'PoPuP (Windows)': { versions: {}, total: zeros }
     }
   };
 }
 
 /**
  * タイムスタンプを安全にDateオブジェクトに変換
- *
- * Apps Scriptでは "YYYY-MM-DD HH:MM:SS" 形式の文字列をnew Date()で解釈すると
- * タイムゾーンの扱いが不安定になる可能性があるため、手動でパースする。
- *
- * @param {Date|string} value - Dateオブジェクトまたは "YYYY-MM-DD HH:MM:SS" 形式の文字列
- * @returns {Date|null} - JSTタイムゾーンでのDateオブジェクト、または無効な場合はnull
  */
 function parseTimestamp(value) {
-  // すでにDateオブジェクトの場合はそのまま返す
   if (value instanceof Date) {
-    // Invalid Dateチェック
-    if (isNaN(value.getTime())) {
-      return null;
-    }
+    if (isNaN(value.getTime())) return null;
     return value;
   }
 
-  // 文字列の場合は "YYYY-MM-DD HH:MM:SS" 形式を手動でパース
   const str = value.toString().trim();
-
-  // 正規表現で年月日時分秒を抽出
   const match = str.match(/^(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})$/);
 
   if (match) {
-    // 手動でDate生成（月は0始まりなので-1が必要）
-    const year = parseInt(match[1], 10);
-    const month = parseInt(match[2], 10) - 1;
-    const day = parseInt(match[3], 10);
-    const hour = parseInt(match[4], 10);
-    const minute = parseInt(match[5], 10);
-    const second = parseInt(match[6], 10);
-
-    const date = new Date(year, month, day, hour, minute, second);
-
-    // Invalid Dateチェック
-    if (isNaN(date.getTime())) {
-      return null;
-    }
-
+    const date = new Date(
+      parseInt(match[1], 10),
+      parseInt(match[2], 10) - 1,
+      parseInt(match[3], 10),
+      parseInt(match[4], 10),
+      parseInt(match[5], 10),
+      parseInt(match[6], 10)
+    );
+    if (isNaN(date.getTime())) return null;
     return date;
   }
 
-  // フォールバック: 標準的なDate解析
   const fallbackDate = new Date(value);
-
-  // Invalid Dateチェック
-  if (isNaN(fallbackDate.getTime())) {
-    return null;
-  }
-
+  if (isNaN(fallbackDate.getTime())) return null;
   return fallbackDate;
 }
 
@@ -477,16 +457,12 @@ function cleanupDuplicateSpikeDates() {
     return;
   }
 
-  // 削除対象行のインデックスを収集（後ろから削除するため逆順）
   const rowsToDelete = [];
   for (let i = 1; i < values.length; i++) {
-    const timestamp = values[i][0];
-    const timestampDate = parseTimestamp(timestamp);
+    const timestampDate = parseTimestamp(values[i][0]);
     if (timestampDate === null) continue;
-
-    const dateStr = formatDate(timestampDate);
-    if (DATES_TO_DELETE.includes(dateStr)) {
-      rowsToDelete.push(i + 1); // シートの行番号は1始まり、ヘッダーが1行目
+    if (DATES_TO_DELETE.includes(formatDate(timestampDate))) {
+      rowsToDelete.push(i + 1);
     }
   }
 
@@ -496,51 +472,25 @@ function cleanupDuplicateSpikeDates() {
   }
 
   Logger.log('削除対象行数: ' + rowsToDelete.length + ' 行');
-  Logger.log('対象日付: ' + DATES_TO_DELETE.join(', '));
-
-  // 後ろから削除（行番号がズレないように）
   rowsToDelete.reverse();
   for (let i = 0; i < rowsToDelete.length; i++) {
     sheet.deleteRow(rowsToDelete[i]);
-    // 大量削除時のAPIレート制限を避けるため適宜待機
-    if (i > 0 && i % 50 === 0) {
-      Utilities.sleep(1000);
-    }
+    if (i > 0 && i % 50 === 0) Utilities.sleep(1000);
   }
 
   Logger.log('✅ 削除完了: ' + rowsToDelete.length + ' 行を削除しました');
-  Logger.log('削除後の確認: Apps Script API で timeline データを取得して確認してください');
 }
 
 /**
  * DailyDataシートの記録日時列をDateTime型に統一（ワンショット実行用）
- *
- * 既存データで文字列 "YYYY-MM-DD HH:MM:SS" として保存されている記録日時を、
- * Date型に変換して書き戻す。すでにDate型のセルはスキップする。
- *
- * 【実行方法】
- * 1. Apps Script エディタでこの関数を選択
- * 2. 「実行」ボタンをクリック
- * 3. 初回は権限承認が必要
- * 4. 処理完了後、ログで変換件数を確認
- *
- * 【注意】
- * - この処理は一度だけ実行すれば良い
- * - 大量データがある場合は時間がかかる可能性あり
- * - タイムゾーンはJST（Asia/Tokyo）前提
  */
 function normalizeDailyDataTimestamps() {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   const sheet = ss.getSheetByName(SHEET_NAME);
 
-  if (!sheet) {
-    throw new Error('シート "' + SHEET_NAME + '" が見つかりません');
-  }
+  if (!sheet) throw new Error('シート "' + SHEET_NAME + '" が見つかりません');
 
-  // 全データを取得
-  const dataRange = sheet.getDataRange();
-  const values = dataRange.getValues();
-
+  const values = sheet.getDataRange().getValues();
   if (values.length <= 1) {
     Logger.log('データがありません（ヘッダーのみ）');
     return;
@@ -549,27 +499,16 @@ function normalizeDailyDataTimestamps() {
   let convertedCount = 0;
   let skippedCount = 0;
   let invalidCount = 0;
-
-  // A列の値を更新用配列として準備（ヘッダー行を除く）
   const timestampColumn = [];
 
-  // ヘッダー行をスキップして2行目から処理
   for (let i = 1; i < values.length; i++) {
-    const timestamp = values[i][0]; // A列（記録日時）
-
-    // すでにDate型の場合はそのまま維持
+    const timestamp = values[i][0];
     if (timestamp instanceof Date) {
       timestampColumn.push([timestamp]);
       skippedCount++;
-      continue;
-    }
-
-    // 文字列の場合はDate型に変換
-    if (typeof timestamp === 'string' && timestamp.trim() !== '') {
+    } else if (typeof timestamp === 'string' && timestamp.trim() !== '') {
       const dateObj = parseTimestamp(timestamp);
-
       if (dateObj === null) {
-        // Invalid Dateの場合は元の値を維持
         timestampColumn.push([timestamp]);
         invalidCount++;
       } else {
@@ -577,45 +516,180 @@ function normalizeDailyDataTimestamps() {
         convertedCount++;
       }
     } else {
-      // 空文字列や他の型はそのまま維持
       timestampColumn.push([timestamp]);
     }
   }
 
-  // 一括更新（バッチ処理で高速化）
   if (convertedCount > 0) {
-    Logger.log('変換開始: ' + convertedCount + '件');
-
-    // A列の2行目以降を一括更新
     const range = sheet.getRange(2, 1, timestampColumn.length, 1);
     range.setValues(timestampColumn);
-    range.setNumberFormat('yyyy-mm-dd hh:mm:ss'); // 表示形式を一括設定
-
+    range.setNumberFormat('yyyy-mm-dd hh:mm:ss');
     Logger.log('✅ 変換完了: ' + convertedCount + '件を変換しました');
   } else {
     Logger.log('変換対象のデータがありませんでした');
   }
 
-  if (invalidCount > 0) {
-    Logger.log('⚠️  無効な日付: ' + invalidCount + '件（変換スキップ）');
-  }
+  if (invalidCount > 0) Logger.log('⚠️  無効な日付: ' + invalidCount + '件（変換スキップ）');
   Logger.log('スキップ: ' + skippedCount + '件（すでにDate型）');
   Logger.log('合計処理: ' + (convertedCount + skippedCount + invalidCount) + '件');
 }
 
 /**
- * セルフテスト: ベースライン考慮の日次増分計算が正しいことを検証
+ * DailyData 生データの法医学調査（仮説B確認用）
+ *
+ * 指定期間内の各日について、タイムスタンプ一覧・行数・app×version件数・
+ * タグ正規化差異・複数スナップショットの完全性を Logger に出力する。
+ *
+ * 【実行方法】
+ * 1. Apps Script エディタでこの関数を選択
+ * 2. 「実行」ボタンをクリック（デフォルト: 2026-02-14〜2026-03-02）
+ * 3. ログで出力を確認
+ *
+ * @param {string} startDateStr - 開始日 'YYYY-MM-DD'（省略時: '2026-02-14'）
+ * @param {string} endDateStr   - 終了日 'YYYY-MM-DD'（省略時: '2026-03-02'）
+ */
+function inspectDailyDataSnapshots(startDateStr, endDateStr) {
+  startDateStr = startDateStr || '2026-02-14';
+  endDateStr   = endDateStr   || '2026-03-02';
+
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) throw new Error('シート "' + SHEET_NAME + '" が見つかりません');
+
+  const values = sheet.getDataRange().getValues();
+  if (values.length <= 1) { Logger.log('データがありません'); return; }
+
+  const records = values.slice(1);
+
+  // { dateStr: { tsMsKey: { timestamp, rows, appVersionCount, tagIssues } } }
+  const dateData = {};
+
+  records.forEach(row => {
+    const timestampDate = parseTimestamp(row[0]);
+    if (timestampDate === null) return;
+
+    const dateStr = formatDate(timestampDate);
+    if (dateStr < startDateStr || dateStr > endDateStr) return;
+
+    if (!dateData[dateStr]) dateData[dateStr] = {};
+    const tsMsKey = String(timestampDate.getTime());
+    if (!dateData[dateStr][tsMsKey]) {
+      dateData[dateStr][tsMsKey] = {
+        timestamp: timestampDate,
+        rows: [],
+        appVersionCount: {},
+        tagIssues: []
+      };
+    }
+
+    const entry = dateData[dateStr][tsMsKey];
+    entry.rows.push(row);
+
+    // タグ正規化差異を検出
+    const tagRaw        = String(row[3]);
+    const tagTrimmed    = tagRaw.trim();
+    const tagNormalized = normalizeKey(tagRaw);
+    if (tagRaw !== tagTrimmed || tagRaw !== tagNormalized) {
+      entry.tagIssues.push({
+        assetName: row[4], tagRaw, tagTrimmed, tagNormalized
+      });
+    }
+
+    // app×version カウント
+    const appName = classifyAsset(row[1], row[4], false, row[3]);
+    if (appName) {
+      const key = appName + '::' + tagNormalized;
+      entry.appVersionCount[key] = (entry.appVersionCount[key] || 0) + 1;
+    }
+  });
+
+  // 出力
+  const dates = Object.keys(dateData).sort();
+  Logger.log('=== DailyData スナップショット調査: ' + startDateStr + ' 〜 ' + endDateStr + ' ===');
+  Logger.log('対象日数: ' + dates.length);
+  Logger.log('');
+
+  dates.forEach(dateStr => {
+    const tsMap = dateData[dateStr];
+    const tsMsKeys = Object.keys(tsMap).sort();
+
+    Logger.log('--- ' + dateStr + ' (' + tsMsKeys.length + ' タイムスタンプ) ---');
+
+    // タイムスタンプごとの詳細
+    tsMsKeys.forEach(tsMsKey => {
+      const entry = tsMap[tsMsKey];
+      Logger.log('  タイムスタンプ: ' + entry.timestamp.toLocaleString('ja-JP'));
+      Logger.log('  行数: ' + entry.rows.length);
+
+      const avKeys = Object.keys(entry.appVersionCount).sort();
+      Logger.log('  app×version 件数: ' + avKeys.length);
+      avKeys.forEach(k => Logger.log('    ' + k + ': ' + entry.appVersionCount[k] + '件'));
+
+      if (entry.tagIssues.length > 0) {
+        Logger.log('  ⚠️ タグ正規化差異:');
+        entry.tagIssues.forEach(issue => {
+          Logger.log('    assetName      : ' + issue.assetName);
+          Logger.log('    tagRaw         : ' + JSON.stringify(issue.tagRaw));
+          Logger.log('    tagTrimmed     : ' + JSON.stringify(issue.tagTrimmed));
+          Logger.log('    tagNormalized  : ' + JSON.stringify(issue.tagNormalized));
+        });
+      }
+      Logger.log('');
+    });
+
+    // 複数スナップショットがある日は完全性を分析
+    if (tsMsKeys.length > 1) {
+      Logger.log('  📋 複数スナップショット分析（' + dateStr + '）:');
+
+      // タイムスタンプごとの app×version 合計を計算
+      const tsSums = {};
+      tsMsKeys.forEach(tsMsKey => {
+        tsSums[tsMsKey] = {};
+        tsMap[tsMsKey].rows.forEach(row => {
+          const appName = classifyAsset(row[1], row[4], false, row[3]);
+          if (!appName) return;
+          const key = appName + '::' + normalizeKey(row[3]);
+          tsSums[tsMsKey][key] = (tsSums[tsMsKey][key] || 0) + (parseInt(row[5]) || 0);
+        });
+      });
+
+      // 全タイムスタンプに存在するキーと一部にのみ存在するキーを判定
+      const allKeys = new Set();
+      tsMsKeys.forEach(k => Object.keys(tsSums[k]).forEach(key => allKeys.add(key)));
+
+      allKeys.forEach(key => {
+        const counts = tsMsKeys.map(k => (tsSums[k][key] !== undefined ? tsSums[k][key] : null));
+        const hasGap = counts.some(c => c === null);
+        const label = hasGap ? '⚠️ 一部欠損' : '全TS存在';
+        Logger.log('    ' + label + ' ' + key + ' = ' + JSON.stringify(counts));
+      });
+      Logger.log('');
+    }
+  });
+
+  Logger.log('=== 調査完了 ===');
+}
+
+/**
+ * セルフテスト: ベースライン考慮の日次増分計算が正しいことを検証（計12テスト）
  *
  * 【実行方法】
  * 1. Apps Script エディタでこの関数を選択
  * 2. 「実行」ボタンをクリック
  * 3. ログで pass/fail を確認
  *
- * テストケース:
- * A: 期間前ベースラインあり（50→55）で初日増分が5になる
- * B: ベースラインなし（新規バージョン）で初日増分が累積値になる
- * C: 期間内でデータ欠損日がある場合、復帰日の増分が正しい
- * E: 同日複数タイムスタンプのベースライン選別（最新タイムスタンプのみ採用）
+ * テストケース一覧:
+ * A   : 期間前ベースラインあり（50→55）で初日増分が5になる
+ * A-2 : ベースライン50、初日55で増分5
+ * B   : 新規バージョン（baseline=0）で初日に累積値が増分
+ * C   : 欠損日あり、復帰日の増分が正しい
+ * D   : ベースラインあり→スパイクなし、D-2: 新規→スパイクあり
+ * E   : 同日複数タイムスタンプ→最新(23:59)のみベースラインに採用
+ * E-2 : 複数日+同日複数TS→最新日の最新TSのみ採用
+ * F   : 同一累積値の重複スパイク防止（2/24, 2/27 は 0）
+ * F-2 : prevCountリセット後の重複スパイク防止
+ * G   : 同日複数スナップショット（MAX集計後）での正常増分
+ * H   : normalizeKey による全角/半角・前後空白の正規化
  */
 function testIncrementBaseline() {
   let passed = 0;
@@ -655,175 +729,97 @@ function testIncrementBaseline() {
     return dailyData;
   }
 
-  // --- ケースA: 期間前ベースラインあり ---
-  // ベースライン=50, 期間内で50→55→55→58
+  // --- ケースA ---
   {
     const dateList = ['2026-01-01', '2026-01-02', '2026-01-03', '2026-01-04'];
-    const cumulative = {
-      '2026-01-01': 50,
-      '2026-01-02': 55,
-      '2026-01-03': 55,
-      '2026-01-04': 58
-    };
-    const baseline = 50;
-    const result = calcIncrements(cumulative, dateList, baseline);
-    assertEqual('ケースA: ベースライン50, 初日50→増分0', result, [0, 5, 0, 3]);
+    const cumulative = { '2026-01-01': 50, '2026-01-02': 55, '2026-01-03': 55, '2026-01-04': 58 };
+    assertEqual('ケースA: ベースライン50, 初日50→増分0', calcIncrements(cumulative, dateList, 50), [0, 5, 0, 3]);
   }
 
-  // --- ケースA-2: ベースラインと初日の間に増加あり ---
-  // ベースライン=50, 初日累積=55
+  // --- ケースA-2 ---
   {
     const dateList = ['2026-01-01', '2026-01-02'];
-    const cumulative = {
-      '2026-01-01': 55,
-      '2026-01-02': 58
-    };
-    const baseline = 50;
-    const result = calcIncrements(cumulative, dateList, baseline);
-    assertEqual('ケースA-2: ベースライン50→初日55で増分5', result, [5, 3]);
+    const cumulative = { '2026-01-01': 55, '2026-01-02': 58 };
+    assertEqual('ケースA-2: ベースライン50→初日55で増分5', calcIncrements(cumulative, dateList, 50), [5, 3]);
   }
 
-  // --- ケースB: ベースラインなし（新規バージョン） ---
-  // ベースライン=0, 期間内で初出=10→12
+  // --- ケースB ---
   {
     const dateList = ['2026-01-01', '2026-01-02', '2026-01-03'];
-    const cumulative = {
-      '2026-01-02': 10,
-      '2026-01-03': 12
-    };
-    const baseline = 0;
-    const result = calcIncrements(cumulative, dateList, baseline);
-    assertEqual('ケースB: 新規バージョン, 初出10で増分10', result, [0, 10, 2]);
+    const cumulative = { '2026-01-02': 10, '2026-01-03': 12 };
+    assertEqual('ケースB: 新規バージョン, 初出10で増分10', calcIncrements(cumulative, dateList, 0), [0, 10, 2]);
   }
 
-  // --- ケースC: データ欠損日がある ---
-  // ベースライン=30, 1日目=32, 2日目=欠損, 3日目=35
+  // --- ケースC ---
   {
     const dateList = ['2026-01-01', '2026-01-02', '2026-01-03'];
-    const cumulative = {
-      '2026-01-01': 32,
-      '2026-01-03': 35
-    };
-    const baseline = 30;
-    const result = calcIncrements(cumulative, dateList, baseline);
-    assertEqual('ケースC: 欠損日あり, 復帰日の増分が正しい', result, [2, 0, 3]);
+    const cumulative = { '2026-01-01': 32, '2026-01-03': 35 };
+    assertEqual('ケースC: 欠損日あり, 復帰日の増分が正しい', calcIncrements(cumulative, dateList, 30), [2, 0, 3]);
   }
 
-  // --- ケースD: 旧バグ再現テスト ---
-  // ベースラインなし(0), 初日累積=78 → 旧ロジックでは78がスパイク表示されていた
+  // --- ケースD ---
   {
     const dateList = ['2026-01-01', '2026-01-02', '2026-01-03'];
-    const cumulative = {
-      '2026-01-01': 78,
-      '2026-01-02': 78,
-      '2026-01-03': 79
-    };
-    // ベースラインがある場合（78）: スパイクは出ない
-    const resultWithBaseline = calcIncrements(cumulative, dateList, 78);
-    assertEqual('ケースD: ベースライン78でスパイクなし', resultWithBaseline, [0, 0, 1]);
-    // ベースラインなし（新規）: 初日にそのまま出る（これは正しい動作）
-    const resultNoBaseline = calcIncrements(cumulative, dateList, 0);
-    assertEqual('ケースD-2: 新規(baseline=0)は初日78が増分', resultNoBaseline, [78, 0, 1]);
+    const cumulative = { '2026-01-01': 78, '2026-01-02': 78, '2026-01-03': 79 };
+    assertEqual('ケースD: ベースライン78でスパイクなし', calcIncrements(cumulative, dateList, 78), [0, 0, 1]);
+    assertEqual('ケースD-2: 新規(baseline=0)は初日78が増分', calcIncrements(cumulative, dateList, 0), [78, 0, 1]);
   }
 
-  // --- ケースE: 同日複数タイムスタンプのベースライン選別 ---
-  // 期間前の同一日に2回実行（10:00と23:59）があった場合、
-  // 最新タイムスタンプ（23:59）のデータのみがベースラインに採用されること
+  // --- ケースE ---
   {
-    // ベースライン選別ロジックの再現（getTimelineData内と同一アルゴリズム）
     function collectBaseline(rows, startDate) {
-      var latestDate = null;
-      var latestTimestamp = null;
-      var latestRows = [];
-
+      var latestDate = null, latestTimestamp = null, latestRows = [];
       rows.forEach(function(row) {
-        var ts = row[0];
-        var dateStr = formatDate(ts);
-
+        var ts = row[0], dateStr = formatDate(ts);
         if (ts < startDate) {
           if (latestDate === null || dateStr > latestDate) {
-            latestDate = dateStr;
-            latestTimestamp = ts;
-            latestRows = [row];
+            latestDate = dateStr; latestTimestamp = ts; latestRows = [row];
           } else if (dateStr === latestDate) {
-            if (latestTimestamp.getTime() < ts.getTime()) {
-              latestTimestamp = ts;
-              latestRows = [row];
-            } else if (latestTimestamp.getTime() === ts.getTime()) {
-              latestRows.push(row);
-            }
+            if (latestTimestamp.getTime() < ts.getTime()) { latestTimestamp = ts; latestRows = [row]; }
+            else if (latestTimestamp.getTime() === ts.getTime()) { latestRows.push(row); }
           }
         }
       });
-
-      // 集計
       var baseline = {};
       latestRows.forEach(function(row) {
-        var version = row[3];
-        var count = parseInt(row[5]) || 0;
+        var version = row[3], count = parseInt(row[5]) || 0;
         if (!baseline[version]) baseline[version] = 0;
         baseline[version] += count;
       });
       return baseline;
     }
 
-    // 期間開始日: 2026-01-15
     var startDate = new Date(2026, 0, 15, 0, 0, 0);
-
-    // 2026-01-14 に 10:00 と 23:59 の2回実行
     var ts10 = new Date(2026, 0, 14, 10, 0, 0);
     var ts23 = new Date(2026, 0, 14, 23, 59, 0);
-
-    // row format: [timestamp, repo, ?, tag, assetName, count]
     var rows = [
-      // 10:00実行分（古いタイムスタンプ → ベースラインに含めるべきでない）
       [ts10, 'GaQ', '', 'v1.0.0', 'GaQ_mac.dmg', '50'],
       [ts10, 'GaQ', '', 'v1.0.0', 'GaQ_windows.exe', '30'],
-      // 23:59実行分（最新タイムスタンプ → こちらのみベースラインに採用）
       [ts23, 'GaQ', '', 'v1.0.0', 'GaQ_mac.dmg', '55'],
       [ts23, 'GaQ', '', 'v1.0.0', 'GaQ_windows.exe', '35']
     ];
-
     var baseline = collectBaseline(rows, startDate);
-
-    // 23:59のデータのみが採用: v1.0.0 = 55 + 35 = 90
     assertEqual('ケースE: 同日複数タイムスタンプ - 最新(23:59)のみ採用', baseline['v1.0.0'], 90);
-
-    // もし旧バグ（タイムスタンプ未考慮）なら 50+30+55+35=170 になってしまう
-    // 正しくは 55+35=90
   }
 
-  // --- ケースE-2: 期間前に複数日あり、最新日の最新タイムスタンプのみ採用 ---
+  // --- ケースE-2 ---
   {
     function collectBaseline2(rows, startDate) {
-      var latestDate = null;
-      var latestTimestamp = null;
-      var latestRows = [];
-
+      var latestDate = null, latestTimestamp = null, latestRows = [];
       rows.forEach(function(row) {
-        var ts = row[0];
-        var dateStr = formatDate(ts);
-
+        var ts = row[0], dateStr = formatDate(ts);
         if (ts < startDate) {
           if (latestDate === null || dateStr > latestDate) {
-            latestDate = dateStr;
-            latestTimestamp = ts;
-            latestRows = [row];
+            latestDate = dateStr; latestTimestamp = ts; latestRows = [row];
           } else if (dateStr === latestDate) {
-            if (latestTimestamp.getTime() < ts.getTime()) {
-              latestTimestamp = ts;
-              latestRows = [row];
-            } else if (latestTimestamp.getTime() === ts.getTime()) {
-              latestRows.push(row);
-            }
+            if (latestTimestamp.getTime() < ts.getTime()) { latestTimestamp = ts; latestRows = [row]; }
+            else if (latestTimestamp.getTime() === ts.getTime()) { latestRows.push(row); }
           }
         }
       });
-
       var baseline = {};
       latestRows.forEach(function(row) {
-        var version = row[3];
-        var count = parseInt(row[5]) || 0;
+        var version = row[3], count = parseInt(row[5]) || 0;
         if (!baseline[version]) baseline[version] = 0;
         baseline[version] += count;
       });
@@ -831,60 +827,59 @@ function testIncrementBaseline() {
     }
 
     var startDate = new Date(2026, 0, 15, 0, 0, 0);
-
     var ts13 = new Date(2026, 0, 13, 23, 59, 0);
     var ts14_10 = new Date(2026, 0, 14, 10, 0, 0);
     var ts14_23 = new Date(2026, 0, 14, 23, 59, 0);
-
     var rows = [
-      // 1/13のデータ（古い日付 → 採用しない）
       [ts13, 'GaQ', '', 'v1.0.0', 'GaQ_mac.dmg', '40'],
-      // 1/14 10:00（同日だが古いタイムスタンプ → 採用しない）
       [ts14_10, 'GaQ', '', 'v1.0.0', 'GaQ_mac.dmg', '50'],
-      // 1/14 23:59（最新日の最新タイムスタンプ → これのみ採用）
       [ts14_23, 'GaQ', '', 'v1.0.0', 'GaQ_mac.dmg', '55']
     ];
-
-    var baseline = collectBaseline2(rows, startDate);
-    assertEqual('ケースE-2: 複数日+同日複数TS - 最新日(1/14)最新TS(23:59)のみ', baseline['v1.0.0'], 55);
+    assertEqual('ケースE-2: 複数日+同日複数TS - 最新日(1/14)最新TS(23:59)のみ', collectBaseline2(rows, startDate)['v1.0.0'], 55);
   }
 
-  // --- ケースF: 同一累積値の重複スパイク防止（maxSeenCount効果の検証）---
-  // 2026-02-16 に +78 の正規スパイク後、2026-02-24・2026-02-27 に
-  // 同一累積値 78 が再度記録された場合（データ汚染）、
-  // maxSeenCount により 2026-02-24 と 2026-02-27 の増分が 0 になるべき
+  // --- ケースF ---
   {
     const dateList = ['2026-02-03', '2026-02-04', '2026-02-15', '2026-02-16',
                       '2026-02-17', '2026-02-24', '2026-02-27', '2026-02-28'];
     const cumulative = {
-      '2026-02-03': 42,   // +2
-      '2026-02-04': 44,   // +2
-      '2026-02-15': 45,   // +1
-      '2026-02-16': 123,  // +78 正規スパイク（cumulative が 45 → 123 に増加）
-      '2026-02-24': 123,  // 同一累積値 → 重複（本来 0 であるべき）
-      '2026-02-27': 123,  // 同一累積値 → 重複
-      '2026-02-28': 127   // +4 正規増分
+      '2026-02-03': 42, '2026-02-04': 44, '2026-02-15': 45,
+      '2026-02-16': 123, '2026-02-24': 123, '2026-02-27': 123, '2026-02-28': 127
     };
-    const baseline = 40;
-    const result = calcIncrements(cumulative, dateList, baseline);
     assertEqual('ケースF: 同一累積値の重複スパイク防止（2/24, 2/27 は 0）',
-      result, [2, 2, 1, 78, 0, 0, 0, 4]);
+      calcIncrements(cumulative, dateList, 40), [2, 2, 1, 78, 0, 0, 0, 4]);
   }
 
-  // --- ケースF-2: prevCountリセット再現シミュレーション ---
-  // prevCount が 0 にリセットされた状態で同一累積値が来た場合、
-  // maxSeenCount によって 0 になるべき（実際のバグ状況の再現）
+  // --- ケースF-2 ---
   {
     const dateList = ['2026-02-16', '2026-02-24'];
+    const cumulative = { '2026-02-16': 78, '2026-02-24': 78 };
+    assertEqual('ケースF-2: prevCountリセット後の重複スパイク防止', calcIncrements(cumulative, dateList, 0), [78, 0]);
+  }
+
+  // --- ケースG: 同日複数スナップショット（MAX集計後）での正常増分 ---
+  // 状況:
+  //   2/28 Snapshot A (10:00): PoPuP Win v1.2.0 = 78 (古い値 / 不完全スナップショット)
+  //   2/28 Snapshot B (23:59): PoPuP Win v1.2.0 = 82 (実DL後の正しい値)
+  //   MAX集計 → 2/28 の累積値 = 82
+  // 期待: 2/28 の増分 = 82 - 78 = +4
+  {
+    const dateList = ['2026-02-16', '2026-02-24', '2026-02-27', '2026-02-28'];
     const cumulative = {
-      '2026-02-16': 78,
-      '2026-02-24': 78   // 同一累積値
+      '2026-02-16': 78, // 正規スパイク
+      '2026-02-24': 78, // DLなし（maxSeenCount で 0）
+      '2026-02-27': 78, // DLなし（maxSeenCount で 0）
+      '2026-02-28': 82  // MAX集計結果（Snapshot B = 82 > Snapshot A = 78）
     };
-    const baseline = 0;  // prevCountリセット状態をシミュレート
-    const result = calcIncrements(cumulative, dateList, baseline);
-    // 2/16: 78 - 0 = +78（正規スパイク）
-    // 2/24: maxSeenCount=78 により 78 - 78 = 0（重複防止）
-    assertEqual('ケースF-2: prevCountリセット後の重複スパイク防止', result, [78, 0]);
+    assertEqual('ケースG: 同日複数スナップショットMAX集計後の正常増分（2/28 = +4）',
+      calcIncrements(cumulative, dateList, 0), [78, 0, 0, 4]);
+  }
+
+  // --- ケースH: normalizeKey による全角/半角・前後空白の正規化 ---
+  {
+    assertEqual('ケースH: 全角英数字の正規化', normalizeKey('ｖ１．２．０'), 'v1.2.0');
+    assertEqual('ケースH-2: 前後空白の除去', normalizeKey('  v1.2.0  '), 'v1.2.0');
+    assertEqual('ケースH-3: 正常な文字列はそのまま', normalizeKey('v1.2.0'), 'v1.2.0');
   }
 
   Logger.log('');
