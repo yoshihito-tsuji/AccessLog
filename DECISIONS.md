@@ -215,3 +215,19 @@
 - **影響範囲**: `scripts/track_downloads.sh`、`scripts/upload_to_sheets.py`
 - **反映手順**: 次回 23:59 の launchd 実行から自動的に有効（plist 変更・再登録不要）
 - **残リスク**: launchd が二重発火する根本トリガー（スリープ/ウェイクのタイミング）は OS レベルのため未解決。PID ロックにより実害は防止される
+
+### 2026-03-02: 日付フィルタ最終強化・noclobber 排他制御（Round 4）
+
+- **決定者**: Claude Code（Codex Round 4 指示プロンプトに基づく）
+- **背景**:
+  - `_filter_rows_by_date` が `YYYY/MM/DD`（ゼロ埋めあり）に未対応のリスクが残存
+  - PID ロックファイルの作成に TOCTOU 窓（`-f` 確認 → `>` 書き込み）が存在
+- **決定内容**:
+  1. `_extract_date_str(cell_str)` 関数を追加（`YYYY-MM-DD` / `YYYY/M/D` / `YYYY/MM/DD` を全て `YYYY-MM-DD` に正規化）
+  2. `_filter_rows_by_date()` を文字列プレフィックス比較から `_extract_date_str()` による日付一致判定に全面変更
+  3. `_test_filter_rows_by_date()` 単体テスト関数を追加（9ケース、`--test` 引数で実行可能）
+  4. `track_downloads.sh` のロック作成を `( set -o noclobber; echo $$ > "${LOCK_FILE}" )` に変更（`O_CREAT|O_EXCL` 相当で原子的）
+- **理由**: フォーマット正規化によりメンテナンス負担を削減、noclobber で TOCTOU 窓を実質閉鎖
+- **影響範囲**: `scripts/upload_to_sheets.py`、`scripts/track_downloads.sh`
+- **テスト結果**: `python3 scripts/upload_to_sheets.py --test` → 9/9 PASS
+- **残リスク**: stale ロック上書き時の TOCTOU は残存するが、stale は稀かつ実害なし

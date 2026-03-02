@@ -52,20 +52,28 @@ CURRENT_DATETIME=$(date "+%Y-%m-%d %H:%M:%S")
 ERROR_LOG="${LOG_DIR}/tracker_error.log"
 
 # 排他制御（二重起動防止）: flock が macOS 非対応のため PID ロックファイル方式
+# noclobber オプション（bash の O_EXCL 相当）でロックファイル作成を原子的に行う。
+# 2プロセスが同時到達しても一方のみが作成に成功し、TOCTOU 競合を最小化する。
 LOCK_FILE="${LOG_DIR}/.track_downloads.lock"
-if [ -f "${LOCK_FILE}" ]; then
-    EXISTING_PID=$(cat "${LOCK_FILE}" 2>/dev/null)
+mkdir -p "${LOG_DIR}"
+
+if ( set -o noclobber; echo $$ > "${LOCK_FILE}" ) 2>/dev/null; then
+    # ロック取得成功: EXIT/INT/TERM 時にロックファイルを自動削除
+    trap "rm -f '${LOCK_FILE}'" EXIT INT TERM
+else
+    # ロック取得失敗: ファイルが既に存在する
+    EXISTING_PID=$(cat "${LOCK_FILE}" 2>/dev/null || echo "")
     if [ -n "${EXISTING_PID}" ] && kill -0 "${EXISTING_PID}" 2>/dev/null; then
-        mkdir -p "${LOG_DIR}"
+        # 実行中のプロセスが存在する → 二重起動をスキップ
         echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: 二重起動をスキップします: 別インスタンスが実行中 (PID: ${EXISTING_PID}, lock: ${LOCK_FILE})" >> "${ERROR_LOG}"
         echo -e "${YELLOW}⚠ 別のインスタンスが実行中のためスキップします (PID: ${EXISTING_PID})${NC}"
         exit 0
     fi
-    # プロセスが終了しているなら古いロックを除去
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] WARNING: 古いロックファイルを除去します (stale PID: ${EXISTING_PID})" >> "${ERROR_LOG}"
+    # プロセスが存在しない古いロック（stale）→ 上書き取得
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] WARNING: 古いロックファイルを除去して取得します (stale PID: ${EXISTING_PID})" >> "${ERROR_LOG}"
+    echo $$ > "${LOCK_FILE}"
+    trap "rm -f '${LOCK_FILE}'" EXIT INT TERM
 fi
-echo $$ > "${LOCK_FILE}"
-trap "rm -f '${LOCK_FILE}'" EXIT INT TERM
 
 # エラーハンドリング関数
 log_error() {

@@ -189,35 +189,111 @@ def aggregate_by_version(data):
     return gaq_mac_versions, gaq_win_versions, popup_mac_versions, popup_win_versions
 
 
+def _extract_date_str(cell_str):
+    """
+    セル値から YYYY-MM-DD 形式の日付文字列を抽出・正規化する。
+
+    以下のフォーマットに対応（gspread が返す全パターンを網羅）:
+      - 'YYYY-MM-DD HH:MM:SS'  （CSV 文字列 / RAW 書き込み後）
+      - 'YYYY/M/D HH:MM:SS'   （gspread Date 型・ゼロ埋めなし）
+      - 'YYYY/MM/DD HH:MM:SS' （gspread Date 型・ゼロ埋めあり）
+      - 'YYYY-MM-DD'          （日付のみ）
+      - 'YYYY/M/D'            （日付のみ）
+
+    Returns:
+        'YYYY-MM-DD' 形式の文字列、解析失敗時は None
+    """
+    if not cell_str:
+        return None
+    # 先頭の日付部分のみ取得（空白・T 区切りで時刻を除外）
+    date_part = cell_str.strip().split(' ')[0].split('T')[0]
+    # 区切り文字を判別して分割
+    if '/' in date_part:
+        parts = date_part.split('/')
+    elif '-' in date_part:
+        parts = date_part.split('-')
+    else:
+        return None
+    if len(parts) != 3:
+        return None
+    try:
+        y, m, d = int(parts[0]), int(parts[1]), int(parts[2])
+        # 簡易バリデーション
+        if not (1900 <= y <= 2100 and 1 <= m <= 12 and 1 <= d <= 31):
+            return None
+        return f"{y:04d}-{m:02d}-{d:02d}"
+    except ValueError:
+        return None
+
+
 def _filter_rows_by_date(rows, target_date, match_prefix):
+    """
+    rows から target_date に一致するレコード行を除外（または一致するもののみ保持）する。
+
+    match_prefix=True  : target_date の行を除外（当日データの削除用）
+    match_prefix=False : target_date に完全一致しない行を除外（exact match 用）
+
+    セル値のフォーマットは _extract_date_str() で正規化するため、
+    'YYYY-MM-DD' / 'YYYY/M/D' / 'YYYY/MM/DD' のいずれでも正しく動作する。
+    """
     if not rows:
         return rows
     header = rows[0]
     filtered = [header]
 
-    # gspread が日付セルを 'YYYY/M/D H:MM:SS'（ゼロ埋めなし）で返す場合に対応
-    # 例: '2026-02-28' → '2026/2/28' に変換してプレフィックス比較に使用
-    try:
-        dt = datetime.strptime(target_date, '%Y-%m-%d')
-        target_slash = f"{dt.year}/{dt.month}/{dt.day}"  # e.g., '2026/2/28'
-    except ValueError:
-        target_slash = None
-
     for row in rows[1:]:
         if not row:
             continue
         cell = str(row[0]) if row[0] is not None else ''
+        cell_date = _extract_date_str(cell)
+
         if match_prefix:
-            # 'YYYY-MM-DD HH:MM:SS' 形式または 'YYYY/M/D H:MM:SS' 形式（gspread Date型）
-            matches = cell.startswith(target_date) or (
-                target_slash is not None and cell.startswith(target_slash)
-            )
-            if not matches:
+            # cell_date が target_date に一致する行を除外
+            if cell_date != target_date:
                 filtered.append(row)
         else:
             if cell != target_date:
                 filtered.append(row)
     return filtered
+
+
+def _test_filter_rows_by_date():
+    """
+    _filter_rows_by_date の単体テスト。
+    `python upload_to_sheets.py --test` で実行可能。
+    """
+    cases = [
+        # (cell_value,                target_date,   match_prefix, expect_removed)
+        ('2026-02-28 23:59:00',       '2026-02-28',  True,         True),   # 削除対象: ハイフン形式
+        ('2026/2/28 23:59:00',        '2026-02-28',  True,         True),   # 削除対象: スラッシュ/ゼロ埋めなし
+        ('2026/02/28 23:59:00',       '2026-02-28',  True,         True),   # 削除対象: スラッシュ/ゼロ埋めあり
+        ('2026-02-27 23:59:00',       '2026-02-28',  True,         False),  # 保持: 前日
+        ('2026-03-01 23:59:00',       '2026-02-28',  True,         False),  # 保持: 翌日
+        ('2026-02-28',                '2026-02-28',  False,        True),   # exact match: 一致
+        ('2026-02-27',                '2026-02-28',  False,        False),  # exact match: 不一致
+        ('',                          '2026-02-28',  True,         False),  # 空セル: 保持
+        ('invalid-value',             '2026-02-28',  True,         False),  # 不正値: 保持
+    ]
+
+    passed = 0
+    failed = 0
+    for cell, target, prefix, expect_removed in cases:
+        rows = [['日時', 'データ'], [cell, 'dummy'], ['other_row', 'dummy']]
+        result = _filter_rows_by_date(rows, target, prefix)
+        # cell の行が結果に含まれているか
+        cell_in_result = any(row and row[0] == cell for row in result[1:])
+        actual_removed = not cell_in_result
+        status = 'PASS' if actual_removed == expect_removed else 'FAIL'
+        if status == 'PASS':
+            passed += 1
+        else:
+            failed += 1
+        marker = '✅' if status == 'PASS' else '❌'
+        print(f"  {marker} [{status}] cell={repr(cell):35s} target={target}  prefix={prefix}  "
+              f"removed={actual_removed} (expected={expect_removed})")
+
+    print(f"\n結果: {passed} 通過 / {failed} 失敗 / {len(cases)} ケース")
+    return failed == 0
 
 
 def _update_sheet_with_rows(sheet, rows):
@@ -437,7 +513,13 @@ def main():
 
     parser = argparse.ArgumentParser(description="Upload daily CSV to Google Sheets.")
     parser.add_argument("--date", help="対象日付 (YYYY-MM-DD)。省略時は当日。")
+    parser.add_argument("--test", action="store_true", help="フィルタ単体テストを実行して終了。")
     args = parser.parse_args()
+
+    if args.test:
+        print("=== _filter_rows_by_date 単体テスト ===\n")
+        ok = _test_filter_rows_by_date()
+        return 0 if ok else 1
 
     # 対象日のCSVファイルを読み込み
     target_date = args.date or datetime.now().strftime('%Y-%m-%d')
