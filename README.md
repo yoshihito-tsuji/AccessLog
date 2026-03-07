@@ -1,6 +1,22 @@
 # リリースダウンロード統計システム
 
+> **⚠️ 運用停止済み（2026-03-07）**
+> 自動収集・launchd定期実行は停止しました。DL数確認は手動 `gh` コマンドで行います。
+> このリポジトリはアーカイブ参照用として残しています。
+
 GaQ Transcriber（Mac/Windows）と PoPuP の GitHub Releases ダウンロード数を毎日収集し、Google Sheets と Web ダッシュボードで可視化するための最小構成をまとめています。詳細仕様や長文ガイドは `docs/` に分割しました。
+
+## 手動DL数確認コマンド（停止後の代替手順）
+
+```bash
+# popup-releases のDL数確認（popup-releases作成後に使用）
+gh api repos/yoshihito-tsuji/popup-releases/releases \
+  | jq '.[] | {tag: .tag_name, downloads: [.assets[].download_count] | add}'
+
+# GaQ_app のDL数確認
+gh api repos/yoshihito-tsuji/GaQ_app/releases \
+  | jq '.[] | {tag: .tag_name, downloads: [.assets[].download_count] | add}'
+```
 
 ---
 
@@ -60,8 +76,12 @@ GaQ Transcriber（Mac/Windows）と PoPuP の GitHub Releases ダウンロード
 - Google Sheets (`DailyData`) に最新データを反映し、Apps Script から JSON API を公開する
 - `docs/index.html` で主要アプリ・バージョン別の推移を 1 ページで確認できるようにする
 
-## 運用のキモ
-### 自動実行（デフォルト）
+## 運用のキモ（2026-03-07 運用停止済み）
+
+### 自動実行（停止済み）
+
+> launchd ジョブは 2026-03-07 に `launchctl unload` で停止済み。以下は参考記録です。
+
 - `config/com.releases.download-tracker.plist` を `~/Library/LaunchAgents` に配置し、`launchctl load ~/Library/LaunchAgents/com.releases.download-tracker.plist` で登録
 - 毎日 23:59 に `scripts/track_downloads.sh` が実行され、**GitHub API取得 → CSV記録 → Google Sheets自動アップロード**まで完全自動化（2025-11-17改善、2025-12-17に23:59へ変更）
   - **変更理由**: GitHub APIの累積値を「その日の最終データ」として正確に記録するため、翌日00:05ではなく当日23:59に取得
